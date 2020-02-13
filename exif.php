@@ -134,6 +134,6 @@ $objIPTC->setValue(IPTC_HEADLINE, "A title for this picture");
 
 //set description
 $objIPTC->setValue(IPTC_CAPTION, "Some words describing what can be seen in this picture.");
-
+$objIPTC->setValue(IPTC_KEYWORDS, "prova palio aceto");
 echo $objIPTC->getValue(IPTC_HEADLINE);
 ?>
