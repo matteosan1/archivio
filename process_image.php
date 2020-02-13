@@ -18,7 +18,7 @@ $maxsize = 200000000;
 if (isset($_POST['submit'])) {
 	
 	if (!isset($_FILES['userfile'])) { // || !is_uploaded_file($_FILES['userfile']['tmp_name'])) {
-                echo 'No file uploaded...';
+                echo 'No file uploaded...\n';
                 exit;
         }
 
