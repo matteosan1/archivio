@@ -4,7 +4,12 @@
 <link href="./view/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div>
+  <div id="head" align="center">
+    <a href="http://www.istrice.org">
+      <img src="img/titolo.png"/>
+    </a>
+  </div>
+  <div>
         <form action="login-action.php" method="post" id="frmLogin" onSubmit="return validate();">
             <div class="demo-table">
 
