@@ -1,0 +1,9 @@
+~/Downloads/solr-8.3.0/bin/solr delete -c biblioteca
+~/Downloads/solr-8.3.0/bin/solr create -c biblioteca
+curl 'http://localhost:8983/solr/biblioteca/update?commit=true' --data-binary @example/exampledocs/BIBLIOTECA\ FALASSI.csv -H 'Content-type:application/csv'
+
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"codice_archivio","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/falassi/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"anno","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/falassi/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"cdd","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/falassi/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"timestamp","type":"pdates","docValues":false,"multiValued":false,"indexed":true,"stored":true,"default":"NOW"}}' http://localhost:8983/solr/falassi/schema
