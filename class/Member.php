@@ -13,6 +13,16 @@ class Member
         $this->ds = new DataSource();
     }
 
+    function getAllCategories()
+    {
+    	$query = "SELECT * FROM book_categories;";
+    	$paramType = array();
+    	$paramArray = array();
+    	$result = $this->ds->select($query, $paramType, $paramArray);
+    
+    	return $result;
+    }
+
     function getAllMembers()
     {
     	$query = "SELECT * FROM registered_users;";
@@ -56,9 +66,25 @@ class Member
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
 	   return true;
     }
+    
+    public function addCategory($name, $username, $password, $role, $email) {
+	   $query = "INSERT INTO book_categories ('category') VALUES (?);";
+	   $paramType = array(SQLITE3_TEXT);
+	   $paramArray = array($name);
+	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
+	   return true;
+    }
 
     public function removeUser($id) {
 	   $query = "DELETE FROM registered_users WHERE id = ?;";
+	   $paramType = array(SQLITE3_INTEGER);
+	   $paramArray = array($id);
+	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
+	   return true;
+    }
+
+    public function removeCategory($id) {
+	   $query = "DELETE FROM book_categories WHERE id = ?;";
 	   $paramType = array(SQLITE3_INTEGER);
 	   $paramArray = array($id);
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);

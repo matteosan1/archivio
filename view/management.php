@@ -4,6 +4,7 @@ require ("../class/Member.php");
 
 $member = new Member();
 $users = $member->getAllMembers();
+$categories = $member->getAllCategories();
 ?> 
 
 <!DOCTYPE html>
@@ -27,47 +28,44 @@ $users = $member->getAllMembers();
 
 var request;
 $(document).ready(function() {
-    $('.delete_class').click(function(){
+    $('.delete_user').click(function(){
         var tr = $(this).closest('tr'),
         del_id = $(this).attr('id');
 	console.log(del_id);
         $.ajax({
             url: "../class/remove_user.php?delete_id="+del_id,
-	    //type: 'post',
-	    //contentType: 'application/json; charset=utf-8',
-	    //data: {"id": del_id},
-	    //dataType: 'json',
-	//    data: dati,
            cache: false,
            success:function(result){
-	      console.log(result);
 	      tr.fadeOut(1000, function(){
 	          $(this).remove();
 	      });
 	   }
 	});
     });
-
-//    $("#removeBtn9").click(function() {
-//        if (confirm('Are you sure you want to delete this entry?')) {
-//        var dati = $("#remove").serialize();
-//        request = $.ajax({
-//            url: "../class/remove_user.php",
-//            type: 'POST',
-//            data: dati
-//	});
-//
-//	request.done(function(response) {
-//	    //window.location.href = "management.php";
-//	    return true;
-//	});
-//	};
-//    });
+    $('.delete_category').click(function(){
+        var tr = $(this).closest('tr'),
+        del_id = $(this).attr('id');
+	console.log(del_id);
+        $.ajax({
+           url: "../class/remove_category.php?delete_id="+del_id,
+           cache: false,
+           success:function(result){
+	      tr.fadeOut(1000, function(){
+	          $(this).remove();
+	      });
+	   }
+	});
+    });
 });
 
 function relocate_home()
 {
      location.href = "new_registration.php";
+}
+
+function relocate_home2()
+{
+     location.href = "new_category.php";
 }
 </script>
          <style>
@@ -104,16 +102,34 @@ function relocate_home()
    			    echo "<td>".$user['display_name']."</td>";
     			    echo "<td>".$user['email']."</td>";
     			    echo "<td>".$user['role']."</td>";
-			    //echo '<td><form enctype="multipart/form-data" action method="POST" id="remove">';
-			    //echo '<input type="hidden" id="id" name="id" value="'.$user['id'].'">';
-			    //echo '<button type="button" id="removeBtn"'.$user['id'].'" class="btn btn-success"> Rimuovi </button>';
-			    echo "<td><button class=\"btn btn-sm btn-danger delete_class\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
-         		    //echo "</form></td>";
+			    echo "<td><button class=\"btn btn-sm btn-danger delete_user\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
 		    }
 		?>     
     	    </table>
 	    </div>
+	    <br>
+	    <div align=center>
+	    <form enctype="multipart/form-data" action method="POST" id="new_user">
+	    <input type="button" class="btn btn-info" value="Nuova Categoria Libri" onclick="relocate_home2()">
+	    </form>
+	    <br><br>
+	    <div id="result_libri"></div>
+	    <table>
+		<col width="130">
+  		<col width="200">
+		<tr>
+		<th> CATEGORIA </th>
+		<th> COMANDO </th>
+		</tr>
+		<?php
+		    foreach ($categories as $category) {
+		    	    echo "<tr>";
+			    echo "<td>".$category['category']."</td>";
+			    echo "<td><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
+			    echo "</tr>";			    
+		    }
+		?>     
+    	    </table>
 	</body>
 </html>
-<!-- FIXME AGGIUNGERE GESTIONE CATEGORIE LIBRI -->

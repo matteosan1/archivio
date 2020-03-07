@@ -8,17 +8,17 @@ if (!isset($_SESSION)) {
 }
 
 if(empty($_SESSION["userId"])) {
-  header ("Location: /site/Usered/index.php");
+  header ("Location: /index.php");
 } else { 
   $datetime2 = strtotime($_SESSION['time']);
   $datetime1 = strtotime(date('Y-m-d H:i:s'));
   $minutes = ($datetime1 - $datetime2)/60;
-  if ($minutes < 10) {
+  if ($minutes < 30) {
      $_SESSION['time'] = date('Y-m-d H:i:s');
      $displayName = $_SESSION["name"];
      $role = $_SESSION["role"];
   } else {
      unset($_SESSION['userId']);
-     header ("Location: /site/Usered/index.php");
+     header ("Location: /index.php");
   }
 }

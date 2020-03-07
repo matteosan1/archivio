@@ -35,12 +35,11 @@ if ($role == "admin") {
     if ($role != "photo") {
         echo '<tr>';
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Inserisci Libro/Catalogo</button></td>', "'/view/insert_book.php'");
-	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Aggiorna Libro</button></td>', "'/view/update_book.php'");
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Rimuovi Libro</button></td>', "'/view/remove_book.php'");
 	echo '</tr>';
 	echo '<tr>';
+	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Aggiorna Libro</button></td>', "'/view/update_book.php'");
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Backup Biblioteca</button></td>', "'/view/backup.php'");
-	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton2" class="float-left submit-button" style="height:80px;width:150px">Restore Biblioteca</button></td>', "'/view/restore.php'");
 	echo '</tr>';
 }?>
 	<tr>
