@@ -28,33 +28,45 @@ $categories = $member->getAllCategories();
 
 var request;
 $(document).ready(function() {
-    $('.delete_user').click(function(){
-        var tr = $(this).closest('tr'),
-        del_id = $(this).attr('id');
-	console.log(del_id);
-        $.ajax({
-            url: "../class/remove_user.php?delete_id="+del_id,
-           cache: false,
-           success:function(result){
-	      tr.fadeOut(1000, function(){
-	          $(this).remove();
-	      });
-	   }
-	});
+    $('.delete_user').click(function() {
+	var name = $(this).closest('tr').find('.display_name').text();
+	var r = confirm("Sicuro di voler rimuovere l'utente " + name + " ?");
+  	if (r == true) {
+	    var tr = $(this).closest('tr'),
+            del_id = $(this).attr('id');
+            $.ajax({
+               url: "../class/remove_user.php?delete_id="+del_id,
+               cache: false,
+               success:function(result){
+	          tr.fadeOut(1000, function(){
+	              $(this).remove();
+	          });
+	       }
+	    });
+       } else {
+          return false;
+       }    
     });
-    $('.delete_category').click(function(){
-        var tr = $(this).closest('tr'),
-        del_id = $(this).attr('id');
-	console.log(del_id);
-        $.ajax({
-           url: "../class/remove_category.php?delete_id="+del_id,
-           cache: false,
-           success:function(result){
-	      tr.fadeOut(1000, function(){
-	          $(this).remove();
-	      });
-	   }
-	});
+    
+    $('.delete_category').click(function() {
+        var name = $(this).closest('tr').find('.category').text();
+	var r = confirm("Sicuro di voler eliminare la tipologia " + name + " ?");
+  	if (r == true) {
+            var tr = $(this).closest('tr'),
+            del_id = $(this).attr('id');
+
+            $.ajax({
+               url: "../class/remove_category.php?delete_id="+del_id,
+               cache: false,
+               success:function(result){
+	          tr.fadeOut(1000, function(){
+	              $(this).remove();
+	          });
+	       }
+	    });
+	} else {
+	    return false;
+	}
     });
 });
 
@@ -79,7 +91,7 @@ function relocate_home2()
 	    <br>
 	    <div align=center>
 	    <form enctype="multipart/form-data" action method="POST" id="new_user">
-	    <input type="button" class="btn btn-info" value="Nuovo Utente" onclick="relocate_home()">
+	    <input type="button" class="btn btn-info" value="Nuovo utente" onclick="relocate_home()">
 	    </form>
 	    <br><br>
 	    <div id="result"></div>
@@ -99,7 +111,7 @@ function relocate_home2()
 		    foreach ($users as $user) {
 		    	    echo "<tr>";
 			    echo "<td>".$user['user_name']."</td>";
-   			    echo "<td>".$user['display_name']."</td>";
+   			    echo "<td class='display_name'>".$user['display_name']."</td>";
     			    echo "<td>".$user['email']."</td>";
     			    echo "<td>".$user['role']."</td>";
 			    echo "<td><button class=\"btn btn-sm btn-danger delete_user\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
@@ -111,7 +123,7 @@ function relocate_home2()
 	    <br>
 	    <div align=center>
 	    <form enctype="multipart/form-data" action method="POST" id="new_user">
-	    <input type="button" class="btn btn-info" value="Nuova Categoria Libri" onclick="relocate_home2()">
+	    <input type="button" class="btn btn-info" value="Nuova categoria libri" onclick="relocate_home2()">
 	    </form>
 	    <br><br>
 	    <div id="result_libri"></div>
@@ -125,7 +137,7 @@ function relocate_home2()
 		<?php
 		    foreach ($categories as $category) {
 		    	    echo "<tr>";
-			    echo "<td>".$category['category']."</td>";
+			    echo "<td class='category'>".$category['category']."</td>";
 			    echo "<td><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
 		    }

@@ -248,7 +248,7 @@ $(document).ready(function() {
 		    	 <td>
                          <label for="fname" class="fname">Descrizione:</label>
 			 </td><td>
-                         <input type="text" size="25" id="descrizione" name="descrizione" placeholder="XX p. : ill. ; YY cm">
+                         <input type="text" size="35" id="descrizione" name="descrizione" placeholder="XX p. : ill. ; YY cm">
 			 </td>
                     </div>
 		    </tr>
@@ -257,7 +257,7 @@ $(document).ready(function() {
 		    	 <td>
 		    	 <label for="fname" class="fname">CDD:</label>
 			 </td><td>
-                         <input type="text" size="12" id="cdd" name="cdd" placeholder="123.456789">
+                         <input type="text" size="20" id="cdd" name="cdd" placeholder="123.456789">
 			 </td>
                     </div>
 		    </tr>

@@ -64,11 +64,14 @@ $(function(){
 		<div id="header" align="center"></div>
 		<br>
                 <div id=registered></div>
+		<div align="center">
 		<form class="register" name="new category" id="category" action method="POST">
 		<table>
 		<tr><td>Categoria</td><td><input type="text" name="name" value="" /></td></tr>
 		</table>
+		<br>
 		<button type="button" id="registerBtn" class="btn btn-success"> Registra </button>
 		</form>
+		</div>
 	</body>
 </html>
