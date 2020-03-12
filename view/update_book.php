@@ -111,7 +111,7 @@ $(document).ready(function() {
 		    	<td>
                         <label for="fname" class="fname">Codice archivio:</label>
 			</td><td>
-			<input type="text" size="25" id="codice_archivio" name="codice_archivio" placeholder="XXXX.YY">
+			<input type="text" size="25" id="codice_archivio" name="codice_archivio" disabled placeholder="XXXX.YY">
 			</td>
 		    </div>
 		    </tr>

@@ -72,13 +72,16 @@ $(document).ready(function() {
 <br>
 
 <h2 align="center">Backup Catalogo</h2>
-
+<br>
+<div align="center">
 <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
   <label for="backup_data">Data di backup:</label>
   <input type="date" id="last_upload" name="last_upload">
   <input type="hidden" name="func" value="backup">
   <button type="submit" id="submit" name="import" class="btn-info btn-backup">Backup</button>
 </form>
+<br>
 <div id="link"></div>
+</div>
 </body>
 </html>

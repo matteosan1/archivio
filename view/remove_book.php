@@ -75,6 +75,7 @@ $(document).ready(function() {
     <br>	 
     <h2 align="center">Rimuovi libri dal catalogo</h2>
     <br>
+    <div align="center">
     <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
     	  <label for="cars">Scegli i volumi da rimuovere:</label>
   	  <select width=100px id="volumi[]" name="volumi[]" size="15" multiple>
@@ -82,5 +83,6 @@ $(document).ready(function() {
   	  </select><br><br>
   	  <button type="submit" id="submit" name="import" class="btn-info delete_volumes">Rimuovi volumi selezionati</button>  
     </form>
+    </div>
     </body>
 </html>
