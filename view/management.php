@@ -5,6 +5,7 @@ require ("../class/Member.php");
 $member = new Member();
 $users = $member->getAllMembers();
 $categories = $member->getAllCategories();
+$categories_ebook = $member->getAllCategories("ebook_categories");
 ?> 
 
 <!DOCTYPE html>
@@ -19,9 +20,9 @@ $categories = $member->getAllCategories();
 		<script>
 		$(function(){
 		  $("#header").load("/view/header.html"); 
-		    //$("#footer").load("/view/footer.html"); 
-		    });
-		    </script>
+		  $("#footer").load("/view/footer.html"); 
+		});
+		</script>
 	    	</head>
 
 <script type="text/javascript">
@@ -56,7 +57,28 @@ $(document).ready(function() {
             del_id = $(this).attr('id');
 
             $.ajax({
-               url: "../class/remove_category.php?delete_id="+del_id,
+               url: "../class/remove_category.php?table=book&delete_id="+del_id,
+               cache: false,
+               success:function(result){
+	          tr.fadeOut(1000, function(){
+	              $(this).remove();
+	          });
+	       }
+	    });
+	} else {
+	    return false;
+	}
+    });
+
+    $('.delete_ebook_category').click(function() {
+        var name = $(this).closest('tr').find('.ebook_category').text();
+	var r = confirm("Sicuro di voler eliminare la tipologia " + name + " ?");
+  	if (r == true) {
+            var tr = $(this).closest('tr'),
+            del_id = $(this).attr('id');
+
+            $.ajax({
+               url: "../class/remove_category.php?table=ebook&delete_id="+del_id,
                cache: false,
                success:function(result){
 	          tr.fadeOut(1000, function(){
@@ -75,9 +97,9 @@ function relocate_home()
      location.href = "new_registration.php";
 }
 
-function relocate_home2()
+function relocate_home2(type)
 {
-     location.href = "new_category.php";
+    location.href = "new_category.php?type=" + type;
 }
 </script>
          <style>
@@ -120,28 +142,56 @@ function relocate_home2()
 		?>     
     	    </table>
 	    </div>
-	    <br>
+	    <hr width="80%">
 	    <div align=center>
-	    <form enctype="multipart/form-data" action method="POST" id="new_user">
-	    <input type="button" class="btn btn-info" value="Nuova categoria libri" onclick="relocate_home2()">
-	    </form>
-	    <br><br>
+	    <form enctype="multipart/form-data" action method="POST" id="new_book">
+	    <input type="button" class="btn btn-info" value="Nuova categoria libri" onclick="relocate_home2('book')">
+	    <input type="hidden" id="book" name="book" value="">
+	    </form>	    
 	    <div id="result_libri"></div>
+	    <br>
 	    <table>
 		<col width="130">
-  		<col width="200">
+		<col align="center">
 		<tr>
 		<th> CATEGORIA </th>
-		<th> COMANDO </th>
+		<th align="center"> COMANDO </th>
 		</tr>
 		<?php
 		    foreach ($categories as $category) {
 		    	    echo "<tr>";
 			    echo "<td class='category'>".$category['category']."</td>";
-			    echo "<td><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
+			    echo "<td align=center><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$category['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
 		    }
 		?>     
     	    </table>
-	</body>
+    	    <hr width="80%">	
+	    <div align=center>
+	    <form enctype="multipart/form-data" action method="POST" id="new_ebook">
+	    <input type="button" class="btn btn-info" value="Nuova categoria eDoc" onclick="relocate_home2('ebook')">
+       	    <input type="hidden" id="ebook" name="ebook" value="">	
+	    </form>
+	    
+	    <div id="result_edoc"></div>
+	    <br>
+	    <table>
+		<col width="130">
+		<tr>
+		<th> CATEGORIA </th>
+		<th> COMANDO </th>
+		</tr>
+		<?php
+		    foreach ($categories_ebook as $category) {
+		    	    echo "<tr>";
+			    echo "<td class='ebook_category'>".$category['category']."</td>";
+			    echo "<td><button class=\"btn btn-sm btn-danger delete_ebook_category\" id=\"".$category['id']."\" >RIMUOVI</button></td>";
+			    echo "</tr>";			    
+		    }
+		?>     
+    	    </table>
+
+<div id="footer" align="center"></div>
+
+</body>
 </html>

@@ -1,19 +1,13 @@
 <?php
 if (isset($_POST)) {
-      $cat = $_POST['name'];
-      if(strpos($mystring, " ") !== false) {
-          $cat = str_replace(" ","_", $cat);
-      			
-      } 
+   $cat = $_POST['name'];
 
-      require_once ("Member.php");
-      $m = new Member();
-      $res = $m->addCategory($cat);
-      exit();
-    } else {
-      header('Content-Type: application/json');
-      echo json_encode(array('error' => "Categoria non valida..."));
-      exit;
-    }
+   require_once ("Member.php");
+   $m = new Member();
+   if (isset($_POST['ebook'])) {
+      $res = $m->addCategory("ebook_categories", $cat);
+   } else {
+      $res = $m->addCategory("book_categories", $cat);
+   }     
 }
 ?>

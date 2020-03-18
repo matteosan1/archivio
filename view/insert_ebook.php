@@ -7,7 +7,7 @@ require_once "../view/session.php";
 require_once "../class/Member.php";
 
 $m = new Member();
-$categories = $m->getAlleBookCategories();
+$categories = $m->getAllCategories("ebook_categories");
 ?>
 
 <!DOCTYPE html>
@@ -18,80 +18,33 @@ $categories = $m->getAlleBookCategories();
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <meta charset="UTF-8" />
         <title>Inserimento eDoc</title>
-	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    crossorigin="anonymous">
-</script>	
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
+</script>
 <script>
 $(function(){
   $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
-</script>
+    </script>
     </head>
 <script type="text/javascript">
 var request;
 $(document).ready(function() {
-    $('.insert_catalogue').click(function() {
-    	var formData = new FormData(document.getElementById("new_catalogue"));
-        
+   $('.btn_ocr').click(function() {
+	var formData = new FormData(document.getElementById("new_ebook"));
         if (request) {
             request.abort();
         }
 
-	request = $.ajax({
-                url: "../class/validate_new_book.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-		//console.log(response);
-		//$('#exit_status').html(response);
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-		    alert (response['error']);
-                } else {
-                    window.location.href = "../view/dashboard.php";
-		    return true;
-                }
-        });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
-
-    });
-
-    $('.insert_book').click(function() {
-	var formData = new FormData(document.getElementById("new_book"));
-        
-        if (request) {
-            request.abort();
-        }
-
-        if (document.getElementById('codice_archivio').value == "") {
-	   alert ("Il codice_archivio deve essere specificato.");
+        if (document.getElementById('edoc').value == "") {
+	   alert ("Il documento da analizzare deve essere specificato.");
 	   return false;
 	}
 
-        if (document.getElementById('tipologia').value == "----") {
-	   alert ("La tipologia deve essere specificata.");
-	   return false;
-	}
+	// FIXME CHECK FILE TYPE HERE !!!!
 
-        if (document.getElementById('titolo').value == "") {
-	   alert ("Volume senza titolo ? uhm...");
-	   return false;
-	}
-	
         request = $.ajax({
-                url: "../class/validate_new_book.php",
+                url: "../class/check_ocr.php",
                 type: "post",
                 data: formData,
                 contentType: false,
@@ -100,14 +53,8 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-	        //$('#exit_status').html(response);
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-		    alert (response['error']);
-                } else {
-                    window.location.href = "../view/dashboard.php";
-		    return true;
-                }
+	        $('#testo_ocr').html(response);
+	        return false;
         });
 
         request.fail(function (response){			    
@@ -126,6 +73,7 @@ $(document).ready(function() {
     <span class="error" style="color:red"><?php echo $error;?></span>
      <div align=center id=exit_status style="color:red"></div>-->
  <br>
+ <div align="center">
  <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
  <table style="width:80%">
    <tr>
@@ -147,7 +95,7 @@ $(document).ready(function() {
     <tr>
        <div class="col-1">
     	 <td>
-    	 <label for="fname" class="fname">Documento elettronico (PDF, JPG, PNG, TIFF, DOC, DOCX, EML):</label>
+    	 <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, PNG, TIFF, DOC, DOCX, EML):</label>
 	 </td><td>
 	 <input name="edoc" id="edoc" type="file" value=""><br><br>
 	 </td>
@@ -164,24 +112,31 @@ $(document).ready(function() {
     </tr>
     <tr>
     <td>
-    <input type="checkbox" id="do_ocr" name="do_ocr" value="Salva documento con testo OCR">
+    <label for="do_ocr">Salva documento con testo OCR </label>
+    <input type="checkbox" id="do_ocr" name="do_ocr" value="OCR">
     </td>
     </tr>
     <tr>
     <td>
-    <button type="submit" id="submit" name="import" class="btn-info btn-ocr">Prova OCR</button>
+    <button id="test_ocr" class="btn-info btn_ocr">Prova OCR</button>
     </td>
     </tr>
-    </table>
-    <button type="submit" id="submit" name="import" class="btn-info insert_ebook">Inserisci</button>
-    </form>
-    <div class="col-1">
-	<td>
-	<label for="fname" class="fname">Testo OCR:</label>
+    <tr>
+     <div class="col-1">
+     <td>
+      <label for="fname" class="fname">Testo OCR:</label>
 	</td>
 	<td>
-	<textarea name="note" rows="10" cols="80" placeholder="OCR"></textarea>
+	<textarea id="testo_ocr" name="testo_ocr" rows="10" cols="80" placeholder="OCR"></textarea>
 	</td>
       </div>
+    </tr>
+    </table>
+    <!---- <button name="import" class="btn-info insert_ebook">Inserisci</button> --->
+    </div>
+    </form>
+
    </body>
+   <br>
+   <div id="footer" align="center"></div>
 </html>

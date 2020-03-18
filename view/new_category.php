@@ -1,5 +1,9 @@
 <?php
 require_once "session.php";
+if (isset($_GET['type'])) {
+   $type = $_GET['type'];
+}
+// FIXME ERRORE !!!
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -12,7 +16,7 @@ $(document).ready(function() {
 	if (request) {
 	    request.abort();
 	}
-
+	console.log(formData);
 	request = $.ajax({
 	        url: "../class/validate_new_category.php",
 		type: "post",
@@ -23,6 +27,7 @@ $(document).ready(function() {
 	});
 
         request.done(function (response){
+	        console.log(response);
 		if(response.hasOwnProperty('error')){
 		    $('#registered').html(response['error']);
 	       	} else {
@@ -56,7 +61,7 @@ $(document).ready(function() {
 		<script>
 $(function(){
   $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
 </script>
         </head>
@@ -66,6 +71,13 @@ $(function(){
                 <div id=registered></div>
 		<div align="center">
 		<form class="register" name="new category" id="category" action method="POST">
+		<?php
+		if ($type == 'ebook') {
+		   echo '<input type="hidden" id="ebook" name="ebook" value="">';
+		} elseif ($type == 'book')  {
+		   echo '<input type="hidden" id="book" name="book" value="">';
+		}
+		?>
 		<table>
 		<tr><td>Categoria</td><td><input type="text" name="name" value="" /></td></tr>
 		</table>
@@ -73,5 +85,6 @@ $(function(){
 		<button type="button" id="registerBtn" class="btn btn-success"> Registra </button>
 		</form>
 		</div>
+	<div id="footer" align="center"></div>
 	</body>
 </html>

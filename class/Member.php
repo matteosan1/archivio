@@ -13,9 +13,19 @@ class Member
         $this->ds = new DataSource();
     }
 
-    function getAllCategories()
+    function getAllCategories($table_name="book_categories")
     {
-    	$query = "SELECT * FROM book_categories;";
+    	$query = "SELECT * FROM ".$table_name.";";
+    	$paramType = array();
+    	$paramArray = array();
+    	$result = $this->ds->select($query, $paramType, $paramArray);
+    
+    	return $result;
+    }
+    
+    function getAlleBookCategories()
+    {
+    	$query = "SELECT * FROM ebook_categories;";
     	$paramType = array();
     	$paramArray = array();
     	$result = $this->ds->select($query, $paramType, $paramArray);
@@ -67,9 +77,10 @@ class Member
 	   return true;
     }
     
-    public function addCategory($name, $username, $password, $role, $email) {
-	   $query = "INSERT INTO book_categories ('category') VALUES (?);";
+    public function addCategory($table_name, $name) {
+	   $query = "INSERT INTO ".$table_name." ('category') VALUES (?);";
 	   $paramType = array(SQLITE3_TEXT);
+	   $name = strtoupper(str_replace(" ", "_", $name));
 	   $paramArray = array($name);
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
 	   return true;
@@ -83,8 +94,8 @@ class Member
 	   return true;
     }
 
-    public function removeCategory($id) {
-	   $query = "DELETE FROM book_categories WHERE id = ?;";
+    public function removeCategory($table_name, $id) {
+	   $query = "DELETE FROM ".$table_name." WHERE id = ?;";
 	   $paramType = array(SQLITE3_INTEGER);
 	   $paramArray = array($id);
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);

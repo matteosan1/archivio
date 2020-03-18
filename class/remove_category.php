@@ -5,11 +5,15 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 
 if (isset($_GET)) {
-      $id = $_GET['delete_id'];
+   if ($_GET['table'] == 'ebook') {
+      $table = 'ebook_categories';
+   } elseif ($_GET['table'] == 'book') {
+      $table = 'book_categories';
+   }
+   $id = $_GET['delete_id'];
       
-      require_once ("Member.php");
-      $m = new Member();
-      $res = $m->removeCategory($id);
-      exit();
+   require_once ("Member.php");
+   $m = new Member();
+   $res = $m->removeCategory($table, $id);
 }
 ?>

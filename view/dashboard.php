@@ -12,7 +12,7 @@ require_once "session.php";
 <script>
 $(function(){
   $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
 </script>
 </head>
@@ -41,6 +41,10 @@ if ($role == "admin") {
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Aggiorna Libro</button></td>', "'/view/update_book.php'");
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Backup Biblioteca</button></td>', "'/view/backup.php'");
 	echo '</tr>';
+	echo '<tr>';
+	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Inserisci eDoc</button></td>', "'/view/insert_ebook.php'");
+	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Aggiorna eDoc</button></td>', "'/view/update_ebook.php'");
+	echo '</tr>';
 }?>
 	<tr>
 	    <td align="center"><button onclick="location.href = '/view/upload_image.php';" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Carica Fotografie</button>
@@ -48,5 +52,7 @@ if ($role == "admin") {
 	</tr>
 	</table>
     </div>
+    <br>
+<div id="footer" align="center"></div>
 </body>
 </html>
