@@ -29,6 +29,35 @@ function upload_csv($filename) {
     return $result;
 }
 
+function upload_json_string($json_data) {
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator='.$sep.'');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $result = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    return $result;
+}
+
+function getLastByYear($search) {
+//curl "http..../query?fl=codice_archivio&q=codice_archivio:".$search."*&sort=codice_archivio desc&rows=1"
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator='.$sep.'');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $result = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    return $result;
+}
+
 function listCodiceArchivio() {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?fl=codice_archivio&q=*&sort=codice_archivio+asc&wt=json&rows='.$GLOBALS['MAX_ROWS']);

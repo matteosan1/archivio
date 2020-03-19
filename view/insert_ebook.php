@@ -30,39 +30,97 @@ $(function(){
 <script type="text/javascript">
 var request;
 $(document).ready(function() {
+   $('.insert_ebook').click(function() {
+	var formData = new FormData(document.getElementById("new_ebook"));
+        if (request) {
+            request.abort();
+        }
+
+	var filename = document.getElementById('edoc').value;
+        if (filename == "") {
+	   alert ("Il documento da analizzare deve essere specificato.");
+	   return false;
+	} else {
+	  var parts = filename.split('.');
+ 	  var ext = parts[parts.length - 1];
+
+	  switch (ext.toLowerCase()) {
+    	  	 case 'jpg':
+		 case 'jpeg':
+		 case 'tiff':
+		 case 'tif':
+		 case 'png':
+		 case 'pdf':
+		 case 'doc':
+		 case 'docx':
+		 case 'eml':
+		 request = $.ajax({
+                 	 url: "../class/validate_new_ebook.php",
+                	 type: "post",
+                	 data: formData,
+                	 contentType: false,
+               		 cache: false,
+                	 processData:false                       
+        	});
+
+        	request.done(function (
+		    //console.log(response);
+                    //$('#exit_status').html(response);
+                    response = JSON.parse(response);
+                    if(response.hasOwnProperty('error')){
+			alert (response['error']);
+                    } else {
+                      window.location.href = "../view/dashboard.php";
+                      return true;
+                    }
+        	});
+		return false;
+      	  }
+	  alert ("Non è possibile inserire documento in formato " + ext.toLowerCase());
+  	  return false;
+      }
+   });
+
    $('.btn_ocr').click(function() {
 	var formData = new FormData(document.getElementById("new_ebook"));
         if (request) {
             request.abort();
         }
 
-        if (document.getElementById('edoc').value == "") {
+	var filename = document.getElementById('edoc').value;
+        if (filename == "") {
 	   alert ("Il documento da analizzare deve essere specificato.");
 	   return false;
-	}
+	} else {
+	  var parts = filename.split('.');
+ 	  var ext = parts[parts.length - 1];
 
-	// FIXME CHECK FILE TYPE HERE !!!!
+	  switch (ext.toLowerCase()) {
+    	  	 case 'jpg':
+		 case 'jpeg':
+		 case 'tiff':
+		 case 'tif':
+		 case 'png':
+		 case 'pdf':
+		 request = $.ajax({
+                 	 url: "../class/check_ocr.php",
+                	 type: "post",
+                	 data: formData,
+                	 contentType: false,
+               		 cache: false,
+                	 processData:false                       
+        	});
 
-        request = $.ajax({
-                url: "../class/check_ocr.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
+        	request.done(function (
+		    $('#testo_ocr').html(response);
+	            return false;
+        	});
 
-        request.done(function (response){
-	        $('#testo_ocr').html(response);
-	        return false;
-        });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
+		return false;
+      	  }
+	  alert ("Non è possibile fare analisi OCR con file " + ext.toLowerCase());
+  	  return false;
+      }
    });
 });
 </script>
@@ -132,7 +190,7 @@ $(document).ready(function() {
       </div>
     </tr>
     </table>
-    <!---- <button name="import" class="btn-info insert_ebook">Inserisci</button> --->
+    <button id="import" class="btn-info insert_ebook">Inserisci</button>
     </div>
     </form>
 
