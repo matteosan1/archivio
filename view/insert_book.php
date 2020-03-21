@@ -25,7 +25,7 @@ $categories = $m->getAllCategories();
 <script>
 $(function(){
   $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
 </script>
     </head>
@@ -310,5 +310,7 @@ $(document).ready(function() {
     </td>
   </tr>
 </table> 
+<br>
+<div id="footer" align="center"></div>
     </body>
 </html>

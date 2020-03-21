@@ -8,18 +8,17 @@ require_once "session.php";
 <link href="./view/css/style.css" rel="stylesheet" type="text/css" />
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous">
-</script>	
+</script>
 <script>
 $(function(){
-  $("#header").load("/view/header.html"); 
   $("#footer").load("/view/footer.html"); 
 });
 </script>
 </head>
 <body>
-<div id="header" align="center"></div>
-<br>
-Benvenuto <?php echo $displayName.".";?> 
+<?php
+include "header.php";
+?>
 <br>
 <table align="center" width=75%>
 <column width=33% height=100px>

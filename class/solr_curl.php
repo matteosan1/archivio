@@ -5,12 +5,12 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
 
-function customError($errno, $errstr) {
-  echo json_encode(array('error' => $errstr));
-  exit;
-}
-
-set_error_handler("customError");
+//function customError($errno, $errstr) {
+//  echo json_encode(array('error' => $errstr));
+//  exit;
+//}
+//
+//set_error_handler("customError");
 
 function upload_csv($filename) {
     $csv_file = file_get_contents($filename);
@@ -32,7 +32,7 @@ function upload_csv($filename) {
 function upload_json_string($json_data) {
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator='.$sep.'');
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update/json/docs');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST,           true);
     curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data);
@@ -43,16 +43,14 @@ function upload_json_string($json_data) {
     return $result;
 }
 
-function getLastByYear($search) {
-//curl "http..../query?fl=codice_archivio&q=codice_archivio:".$search."*&sort=codice_archivio desc&rows=1"
+function getLastByIndex($search) {
     $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator='.$sep.'');
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&fl=codice_archivio&rows=1");
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST,           true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+    		     			       'Accept: application/json'));
+					       
     $result = json_decode(curl_exec($ch), true);
     curl_close($ch);
     return $result;

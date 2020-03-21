@@ -43,6 +43,16 @@ class Member
     	return $result;
     }
 
+    function getAllRoles()
+    {
+	$query = "SELECT * FROM roles;";
+    	$paramType = array();
+    	$paramArray = array();
+    	$result = $this->ds->select($query, $paramType, $paramArray);
+    
+    	return $result;
+    }
+
     function getMemberById($memberId)
     {
         $query = "SELECT * FROM registered_users WHERE id = ?";
@@ -99,6 +109,50 @@ class Member
 	   $paramType = array(SQLITE3_INTEGER);
 	   $paramArray = array($id);
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
+	   return true;
+    }
+
+    public function addNote($sender, $recipient, $recipientg, $note, $timestamp) {
+	   $query = "INSERT INTO note ('sender', 'recipient', 'recipientg', 'text', 'date') VALUES (?, ?, ?, ?, ?);";
+	   $paramType = array(SQLITE3_TEXT, SQLITE3_TEXT, SQLITE3_TEXT, SQLITE3_TEXT, SQLITE3_TEXT);
+	   $paramArray = array($sender, $recipient, $recipientg, $note, $timestamp);
+	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
+	   
+	   return true;
+    }
+
+    public function getNNotes($displayName, $role) {
+    	   $query = "SELECT * FROM note WHERE (recipient = ? OR recipientg = ?) AND status = 0;";
+           $paramType = array(SQLITE3_TEXT, SQLITE3_TEXT);
+           $paramArray = array($displayName, $role);
+	   $memberResult = $this->ds->select($query, $paramType, $paramArray);
+	   if (empty($memberResult)) {
+	      return 0;
+	   } else {
+	   	return count($memberResult);
+	   }
+    }
+
+    public function getAllNotes($displayName, $role) {
+    	   $query = "UPDATE note SET status = 1 WHERE recipient = ? OR recipientg = ?;";
+	   $paramType = array(SQLITE3_TEXT, SQLITE3_TEXT);
+           $paramArray = array($displayName, $role);
+	   $memberResult = $this->ds->execute($query, $paramType, $paramArray);
+	   
+    	   $query = "SELECT * FROM note WHERE recipient = ? OR recipientg = ?";
+           $paramType = array(SQLITE3_TEXT, SQLITE3_TEXT);
+           $paramArray = array($displayName, $role);
+	   $memberResult = $this->ds->select($query, $paramType, $paramArray);
+	   
+	   return $memberResult;
+    }
+
+    public function removeNote($id) {
+	   $query = "DELETE FROM note WHERE id = ?;";
+	   $paramType = array(SQLITE3_INTEGER);
+	   $paramArray = array($id);
+	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
+	   
 	   return true;
     }
 }

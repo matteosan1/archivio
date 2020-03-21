@@ -22,7 +22,6 @@ $categories = $m->getAllCategories("ebook_categories");
 </script>
 <script>
 $(function(){
-  $("#header").load("/view/header.html"); 
   $("#footer").load("/view/footer.html"); 
 });
     </script>
@@ -30,8 +29,10 @@ $(function(){
 <script type="text/javascript">
 var request;
 $(document).ready(function() {
-   $('.insert_ebook').click(function() {
+   $('.btn-insert-ebook').click(function() {
 	var formData = new FormData(document.getElementById("new_ebook"));
+	console.log("PIPPO");
+	console.log(formData);
         if (request) {
             request.abort();
         }
@@ -42,18 +43,16 @@ $(document).ready(function() {
 	   return false;
 	} else {
 	  var parts = filename.split('.');
- 	  var ext = parts[parts.length - 1];
+ 	  var ext = parts[parts.length - 1].toLowerCase();
 
-	  switch (ext.toLowerCase()) {
-    	  	 case 'jpg':
-		 case 'jpeg':
-		 case 'tiff':
-		 case 'tif':
-		 case 'png':
-		 case 'pdf':
-		 case 'doc':
-		 case 'docx':
-		 case 'eml':
+	  if (ext != 'jpg' && ext != 'jpeg' &&
+	      ext != 'tiff' && ext != 'tif' &&
+	      ext != 'png' && ext != 'doc' &&
+      	      ext != 'docx' && ext != 'eml' &&
+      	      ext != 'pdf') {
+		 alert ("Non è possibile inserire documento in formato " + ext);
+  	  	 return false;
+	  } else {
 		 request = $.ajax({
                  	 url: "../class/validate_new_ebook.php",
                 	 type: "post",
@@ -63,22 +62,22 @@ $(document).ready(function() {
                 	 processData:false                       
         	});
 
-        	request.done(function (
-		    //console.log(response);
+        	request.done(function(response) {
+		    console.log(response);
                     //$('#exit_status').html(response);
                     response = JSON.parse(response);
-                    if(response.hasOwnProperty('error')){
+                    if(response.hasOwnProperty('error')) {
 			alert (response['error']);
+			return false
                     } else {
                       window.location.href = "../view/dashboard.php";
                       return true;
                     }
         	});
-		return false;
       	  }
-	  alert ("Non è possibile inserire documento in formato " + ext.toLowerCase());
-  	  return false;
       }
+      
+      return false;
    });
 
    $('.btn_ocr').click(function() {
@@ -93,38 +92,35 @@ $(document).ready(function() {
 	   return false;
 	} else {
 	  var parts = filename.split('.');
- 	  var ext = parts[parts.length - 1];
+ 	  var ext = parts[parts.length - 1].toLowerCase();
 
-	  switch (ext.toLowerCase()) {
-    	  	 case 'jpg':
-		 case 'jpeg':
-		 case 'tiff':
-		 case 'tif':
-		 case 'png':
-		 case 'pdf':
-		 request = $.ajax({
-                 	 url: "../class/check_ocr.php",
-                	 type: "post",
-                	 data: formData,
-                	 contentType: false,
-               		 cache: false,
-                	 processData:false                       
-        	});
-
-        	request.done(function (
-		    $('#testo_ocr').html(response);
-	            return false;
-        	});
-
-		return false;
+	  if (ext != 'jpg' && ext != 'jpeg' &&
+	      ext != 'tiff' && ext != 'tif' &&
+	      ext != 'png') {
+		 alert ("Non è possibile fare analisi OCR con file " + ext);
+  	  	 return false;
+	  } else {
+	     request = $.ajax({
+               	 url: "../class/check_ocr.php",
+               	 type: "post",
+               	 data: formData,
+               	 contentType: false,
+                 cache: false,
+                 processData:false                       
+              });
+		    
+              request.done(function (response) {				
+	          $('#testo_ocr').html(response);
+	          return false;
+              });
       	  }
-	  alert ("Non è possibile fare analisi OCR con file " + ext.toLowerCase());
-  	  return false;
-      }
+       }
+       return false;
    });
 });
 </script>
     <body>
+    <?php include "../view/header.php"; ?>
     <div id="header" align="center"></div>
     <br>	 
     <!-- <div align=center id=exit_status style="color:red"><?php echo $exit_status;?></div>
@@ -190,7 +186,7 @@ $(document).ready(function() {
       </div>
     </tr>
     </table>
-    <button id="import" class="btn-info insert_ebook">Inserisci</button>
+    <button id="import" class="btn-info btn-insert-ebook">Inserisci</button>
     </div>
     </form>
 
