@@ -41,4 +41,29 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"na
 
 #curl 'http://localhost:8983/solr/biblioteca/update?commit=true' --data-binary @example/exampledocs/BIBLIOTECA\ FALASSI.csv -H 'Content-type:application/csv'
 
+# pdates, plongs, text_general multivalued false
 
+
+
+        "Content-Length":[4789970],
+        "Content-Type":["application/pdf"],
+        "Creation-Date":["2020-03-22T11:48:54Z"],
+        "resourceName":["197202003.jpg"],
+        "codice_archivio":"SON.00001",
+        "tipologia":"SONETTO",
+        "note":"Questa e` una prova",
+        "text":["\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFLASH SULL’INCONTENIBILE GIOIA DELL’IMMEDIATO DOPO - CORSA \n\n  \nUn quartetto da quadretto \n\n  E giovane: è la prima volta che vede lIstrice primo: il pianto scioglie \nla sua passione, simbolo della gioventù istriciaiola \n\n  \nFiguranti ..... sfigurati dalla non repressa passione\n\n\n"],
+        "dc_format":["application/pdf; version=1.5"],
+        "dcterms_created":["2020-03-22T11:48:54Z"],
+        "meta_creation-date":["2020-03-22T11:48:54Z"],
+        "pdf_PDFVersion":[1.5],
+        "pdf_charsPerPage":[271],
+        "pdf_docinfo_created":["2020-03-22T11:48:54Z"],
+        "pdf_docinfo_producer":["Tesseract 4.1.1"],
+        "pdf_encrypted":[false],
+        "pdf_hasXFA":[false],
+        "pdf_hasXMP":[false],
+        "pdf_unmappedUnicodeCharsPerPage":[0],
+        "xmpTPg_NPages":[1],
+        "timestamp":"2020-03-22T12:00:17.014Z",
+        "_version_":1661865471004114944}]

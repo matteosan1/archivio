@@ -82,6 +82,7 @@ function relocate_home2(type)
 		<th> </th>
 		</tr>
 		<?php
+		    if (!empty($notes)) {
 		    foreach ($notes as $note) {
 		    	    echo "<tr>";
 			    echo "<td>".$note['sender']."</td>";
@@ -89,6 +90,7 @@ function relocate_home2(type)
     			    echo "<td>".$note['text']."</td>";
 			    echo "<td><button class=\"btn btn-sm btn-danger delete_note\" id=\"".$note['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
+		    }
 		    }
 		?>     
     	    </table>

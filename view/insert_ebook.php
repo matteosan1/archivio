@@ -31,9 +31,8 @@ var request;
 $(document).ready(function() {
    $('.btn-insert-ebook').click(function() {
 	var formData = new FormData(document.getElementById("new_ebook"));
-	console.log("PIPPO");
-	console.log(formData);
-        if (request) {
+
+	if (request) {
             request.abort();
         }
 
@@ -63,14 +62,12 @@ $(document).ready(function() {
         	});
 
         	request.done(function(response) {
-		    console.log(response);
-                    //$('#exit_status').html(response);
                     response = JSON.parse(response);
                     if(response.hasOwnProperty('error')) {
 			alert (response['error']);
 			return false
                     } else {
-                      window.location.href = "../view/dashboard.php";
+                      //window.location.href = "../view/dashboard.php";
                       return true;
                     }
         	});
@@ -181,7 +178,7 @@ $(document).ready(function() {
       <label for="fname" class="fname">Testo OCR:</label>
 	</td>
 	<td>
-	<textarea id="testo_ocr" name="testo_ocr" rows="10" cols="80" placeholder="OCR"></textarea>
+	<textarea readonly id="testo_ocr" name="testo_ocr" rows="10" cols="80" placeholder="OCR"></textarea>
 	</td>
       </div>
     </tr>

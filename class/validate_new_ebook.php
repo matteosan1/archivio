@@ -1,9 +1,29 @@
 <?php
 require_once "../view/config.php";
 require_once "../class/solr_curl.php";
+require_once "../class/resize_image.php";
+
+function array2csv($data, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
+{
+    $f = fopen('php://memory', 'r+');
+    
+    fputcsv($f, array_keys($data), $delimiter, $enclosure, $escape_char);
+    fputcsv($f, $data, $delimiter, $enclosure, $escape_char);
+    rewind($f);
+
+    return stream_get_contents($f);
+}
 
 if (isset($_POST)) {
+
+   $resourceName = basename($_FILES['edoc']['name']);
+   if (lookForEDocDuplicates($resourceName)) {
+      echo "Il documento e` gia` stato indicizzato";
+      exit();
+   }
+   
    $tmp_filename = $_FILES['edoc']['tmp_name'];
+   $orig_ext = explode(".", $_FILES['edoc']['name']);
 
    if (isset($_POST['do_ocr'])) {
       $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr -l ita pdf";
@@ -12,7 +32,7 @@ if (isset($_POST)) {
       $ext = "pdf";
    } else {
       $tmp = explode(".", $_FILES['edoc']['name']);
-      $ext = end($tmp);
+      $ext = strtolower(end($tmp));
    }
    
    if ($_POST['tipologia'] == "----") {
@@ -28,28 +48,43 @@ if (isset($_POST)) {
 //   $OldDate = $data['created']; //"2011-09-30";
 //   $oldDateUnix = strtotime($OldDate);
 //   $year = date("Y", $oldDateUnix);
-   $index = getLastByIndex($prefix);
-   $index = $index['response']['numFound'] + 1;
+   $index = getLastByIndex($prefix) + 1;
    $ca = $prefix.".".str_pad($index, 5, "0", STR_PAD_LEFT);
 
    $data["codice_archivio"] = $ca;
    $data["tipologia"] = $_POST['tipologia'];
    $data["note"] = $_POST['note'];
-   $data["resourceName"] = basename($_FILES['edoc']['name']);
+   $data["resourceName"] = $resourceName;
    if (isset($data['X-TIKA:content'])) {
       $data['text'] = $data['X-TIKA:content'];
       unset($data['X-TIKA:content']);
    }
-   
-   print_r ($data);
 
-//   $ret = upload_json_string($data);
-//   $target_directory = $GLOBALS['EDOC_DIR'].$ca.".".end($ext);
-//   if (!move_uploaded_file($tmp_filename, $target_directory)) {
-//       echo json_encode(array('error' => "Errore nella fase di copia dell'edoc."));
-//       exit;
-//   }
+   if (isset($data['X-Parsed-By'])) {
+      unset($data['X-Parsed-By']);
+   }
+
+   $orig_ext = strtolower(end($orig_ext));
+   if ($orig_ext == "png" or $orig_ext == "jpg" or $orig_ext == "jpeg") {
+      $resize = new ResizeImage($_FILES['edoc']['tmp_name']);
+      $resize->resizeTo(200, 200, 'maxWidth');
+      $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
+   }
+
+   $target_directory = $GLOBALS['EDOC_DIR'].$ca.".".$ext;
+   $moved = rename($tmp_filename, $target_directory);
+   if ($moved != 1) {
+       echo json_encode(array('error' => "Errore nella fase di copia dell'edoc."));
+       exit;
+   }
+
+   $ret = upload_csv2(array2csv($data));
+   unlink($tmp_filename);
+
+   if ($ret['responseHeader']['status'] != 0) {
+      echo json_encode(array('error' => $ret['error']['msg']));  
+   } else {
+      echo json_encode(array('result' => "eDoc ".$data['codice_archivio']." inserito correttamente."));
+  }
 }
-// FIXME LOOK FOR DUPLICATES
-// FIXME ADD THUMBNAILS !!!
 ?>

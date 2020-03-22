@@ -29,18 +29,54 @@ function upload_csv($filename) {
     return $result;
 }
 
-function upload_json_string($json_data) {
+function upload_csv2($filename, $sep=",") {
+    //$csv_file = file_get_contents($filename);
+    //$line = fgets(fopen($filename, 'r'));
+    //$sep = explode("codice_archivio", $line)[1][0];	
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update/json/docs');
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator='.$sep.'');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST,           true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $filename);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv'));
 
     $result = json_decode(curl_exec($ch), true);
     curl_close($ch);
     return $result;
+}
+
+function upload_json_string($json_data) {
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     json_encode($json_data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $result = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    return ($result);
+    return $result;
+}
+
+function lookForEDocDuplicates($resourceName) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?fl=codice_archivio&q=resourceName:"'.$resourceName.'"');
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+    		     			       'Accept: application/json'));
+					       
+    $result = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+
+    if (isset($result['error']) or (!isset($result['error']) and $result['response']['numFound'] == 0)) {
+       return false;
+    } else {
+       return true;
+    }
 }
 
 function getLastByIndex($search) {
@@ -53,7 +89,8 @@ function getLastByIndex($search) {
 					       
     $result = json_decode(curl_exec($ch), true);
     curl_close($ch);
-    return $result;
+    
+    return $result['response']['numFound'];
 }
 
 function listCodiceArchivio() {
