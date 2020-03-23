@@ -15,7 +15,15 @@ class Member
 
     function getAllCategories($table_name="book_categories")
     {
-    	$query = "SELECT * FROM ".$table_name.";";
+	$group = 1;
+	if ($table_name == 'ebook_categories') {
+	    $group = 2;
+	}
+	if ($table_name == 'all') {
+	    $query = "SELECT * FROM categories";
+	}else {
+    	    $query = "SELECT * FROM categories WHERE group=".$group.";";
+	};
     	$paramType = array();
     	$paramArray = array();
     	$result = $this->ds->select($query, $paramType, $paramArray);
@@ -23,16 +31,6 @@ class Member
     	return $result;
     }
     
-    function getAlleBookCategories()
-    {
-    	$query = "SELECT * FROM ebook_categories;";
-    	$paramType = array();
-    	$paramArray = array();
-    	$result = $this->ds->select($query, $paramType, $paramArray);
-    
-    	return $result;
-    }
-
     function getAllMembers()
     {
     	$query = "SELECT * FROM registered_users;";

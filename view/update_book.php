@@ -25,8 +25,7 @@ foreach ($json['response']['docs'] as $select) {
 </script>	
 <script>
 $(function(){
-  $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
 </script>
 </head>
@@ -91,7 +90,7 @@ $(document).ready(function() {
 </script>
 
 <body>
-    <div id="header" align="center"></div>
+    <?php include "../view/header.php"; ?>
     <br>	 
     <form class="upd_volume" name="upd_volume" id="upd_volume" action method="post">
     	  <label for="cars">Scegli volume:</label>
@@ -263,5 +262,7 @@ $(document).ready(function() {
 		    <button class="btn btn-sm btn-info update_book" id="inserisci">Aggiorna</button>
                 </div>
             </form>
+<br>
+ <div id="footer" align="center"></div>
     </body>
 </html>
