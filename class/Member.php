@@ -13,6 +13,31 @@ class Member
         $this->ds = new DataSource();
     }
 
+    function getL1Tags() {
+    	$query = "SELECT id, name FROM tags WHERE parent_id=-1;";
+	$result = $this->ds->select($query, array(), array());
+
+	return $result;
+    }
+
+    function getTagNameById($id) {
+        $query = "SELECT name FROM tags WHERE id=?;";
+	$paramType = array(SQLITE_INTEGER);
+    	$paramArray = array($id);
+	$result = $this->ds->select($query, $paramType, $paramArray);
+
+	return $result[0];
+    }
+
+    function getL2Tags($tagl1) {
+    	$query = "SELECT * FROM tags WHERE parent_id=?;";
+	$paramType = array(SQLITE_INTEGER);
+    	$paramArray = array($tagl1);
+	$result = $this->ds->select($query, $paramType, $paramArray);
+
+	return $result;
+    }
+    
     function getAllCategories($table_name="book_categories")
     {
     	$query = "SELECT * FROM ".$table_name.";";
@@ -29,6 +54,13 @@ class Member
     	$paramType = array();
     	$paramArray = array();
     	$result = $this->ds->select($query, $paramType, $paramArray);
+    
+    	return $result;
+    }
+
+    function findTypeGroup($tipologia) {
+    	$query = "SELECT group FROM category WHERE category=\"".$tipologia."\";";
+	$result = $this->ds->select($query, array(), array());
     
     	return $result;
     }

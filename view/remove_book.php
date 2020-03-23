@@ -20,14 +20,13 @@ foreach ($json['response']['docs'] as $select) {
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <meta charset="UTF-8" />
-        <title>Rimuovi Libro</title>
+        <title>Rimuovi Documento</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous">
 </script>	
 <script>
 $(function(){
-  $("#header").load("/view/header.html"); 
-  //$("#footer").load("/view/footer.html"); 
+  $("#footer").load("/view/footer.html"); 
 });
 </script>
 </head>
@@ -71,18 +70,20 @@ $(document).ready(function() {
 });
 </script>
 <body>
-    <div id="header" align="center"></div>
+    <?php include "../view/header.php"; ?>
     <br>	 
-    <h2 align="center">Rimuovi libri dal catalogo</h2>
+    <h2 align="center">Rimuovi documenti dal catalogo</h2>
     <br>
     <div align="center">
     <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
-    	  <label for="cars">Scegli i volumi da rimuovere:</label>
+    	  <label for="cars">Scegli i documenti da rimuovere:</label>
   	  <select width=100px id="volumi[]" name="volumi[]" size="15" multiple>
 	  <?php echo $selects; ?>
   	  </select><br><br>
   	  <button type="submit" id="submit" name="import" class="btn-info delete_volumes">Rimuovi volumi selezionati</button>  
     </form>
     </div>
+    <br>
+    <div id="footer" align="center"></div>
     </body>
 </html>

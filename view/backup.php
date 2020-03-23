@@ -10,7 +10,7 @@ require_once "../class/solr_curl.php";
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Backup Catalogo</title>
+    <title>Backup</title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
@@ -18,8 +18,7 @@ require_once "../class/solr_curl.php";
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
 	$(function(){
-	  $("#header").load("/view/header.html"); 
-	    //$("#footer").load("/view/footer.html"); 
+	  $("#footer").load("/view/footer.html"); 
 	});
     </script>
 </head>
@@ -68,20 +67,24 @@ $(document).ready(function() {
 </script>
 
 <body>
-<div id="header" align="center"></div>
+<?php include "../view/header.php"; ?> 
 <br>
 
-<h2 align="center">Backup Catalogo</h2>
+<h2 align="center">Backup Archivio</h2>
 <br>
 <div align="center">
 <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
   <label for="backup_data">Data di backup:</label>
   <input type="date" id="last_upload" name="last_upload">
   <input type="hidden" name="func" value="backup">
+  <label for="do_ocr">Salva solo catalogo biblioteca </label>
+  <input type="checkbox" id="do_biblio" name="do_biblio" value="biblio">
   <button type="submit" id="submit" name="import" class="btn-info btn-backup">Backup</button>
 </form>
 <br>
 <div id="link"></div>
 </div>
+<br>
+<div id="footer" align="center"></div>
 </body>
 </html>
