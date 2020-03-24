@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
 require_once "../class/solr_curl.php";
+require_once "../class/resize_image.php";
 
 function customError($errno, $errstr) {
   echo json_encode(array('error' => $errstr));
@@ -57,10 +58,15 @@ if (isset($_POST)) {
      	   echo json_encode(array('error' => "La copertina deve essere salvata in jpg.".strtolower(end($ext))));
            exit;
      	}
-     
-	// FIXME resize image      
-     	$target_directory = $GLOBALS['COVER_DIR'].$cover_name;
-     	if (!move_uploaded_file($cover_tmp, $target_directory)) {
+
+	$resize = new ResizeImage($cover_tmp);
+      	$resize->resizeTo(200, 200, 'maxWidth');
+      	$resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
+
+	$res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].$cover_name);
+     	//$target_directory = $GLOBALS['COVER_DIR'].$cover_name;
+	//if (!move_uploaded_file($cover_tmp, $target_directory)) {
+	if ($res != 1) {
 	   echo json_encode(array('error' => "Errore nella fase di copia della copertina."));
 	   exit;
 	}

@@ -19,7 +19,6 @@ $categories_ebook = $member->getAllCategories("ebook_categories");
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script>
 		$(function(){
-		  $("#header").load("/view/header.html"); 
 		  $("#footer").load("/view/footer.html"); 
 		});
 		</script>
@@ -109,7 +108,7 @@ function relocate_home2(type)
             }
 	</style>
 	<body>
-	    <div id="header" align="center"></div>
+	    <?php include "../view/header.php"; ?>
 	    <br>
 	    <div align=center>
 	    <form enctype="multipart/form-data" action method="POST" id="new_user">
@@ -190,7 +189,7 @@ function relocate_home2(type)
 		    }
 		?>     
     	    </table>
-
+<br>
 <div id="footer" align="center"></div>
 
 </body>

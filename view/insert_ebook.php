@@ -46,7 +46,7 @@ $(document).ready(function() {
 
 	  if (ext != 'jpg' && ext != 'jpeg' &&
 	      ext != 'tiff' && ext != 'tif' &&
-	      ext != 'png' && ext != 'doc' &&
+	      ext != 'doc' &&
       	      ext != 'docx' && ext != 'eml' &&
       	      ext != 'pdf') {
 		 alert ("Non è possibile inserire documento in formato " + ext);
@@ -62,6 +62,7 @@ $(document).ready(function() {
         	});
 
         	request.done(function(response) {
+		console.log(response);
                     response = JSON.parse(response);
                     if(response.hasOwnProperty('error')) {
 			alert (response['error']);
@@ -92,8 +93,7 @@ $(document).ready(function() {
  	  var ext = parts[parts.length - 1].toLowerCase();
 
 	  if (ext != 'jpg' && ext != 'jpeg' &&
-	      ext != 'tiff' && ext != 'tif' &&
-	      ext != 'png') {
+	      ext != 'tiff' && ext != 'tif') {
 		 alert ("Non è possibile fare analisi OCR con file " + ext);
   	  	 return false;
 	  } else {
@@ -146,11 +146,19 @@ $(document).ready(function() {
     <tr>
        <div class="col-1">
     	 <td>
-    	 <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, PNG, TIFF, DOC, DOCX, EML):</label>
+    	 <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, TIFF, DOC, DOCX, EML):</label>
 	 </td><td>
-	 <input name="edoc" id="edoc" type="file" value=""><br><br>
+	 <input name="edoc[]" id="edoc" type="file" value=""><br><br>
 	 </td>
          </div>
+    </tr>
+    <tr>
+    <td>
+    <label for="do_ocr">Unisci per creare un singolo documento </label>
+    <td>
+    <input type="checkbox" id="do_merge" name="do_merge" value="merge">
+    </td>
+    </td>
     </tr>
     <tr>
       <div class="col-1">
@@ -164,7 +172,9 @@ $(document).ready(function() {
     <tr>
     <td>
     <label for="do_ocr">Salva documento con testo OCR </label>
+    <td>
     <input type="checkbox" id="do_ocr" name="do_ocr" value="OCR">
+    </td>
     </td>
     </tr>
     <tr>

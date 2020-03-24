@@ -1,4 +1,7 @@
 <?php
+
+// FIXME TOGLIERE OCR PER CERTI TIPI DI FILE
+
 require_once "../view/config.php";
 require_once "../class/solr_curl.php";
 require_once "../class/resize_image.php";
@@ -16,23 +19,34 @@ function array2csv($data, $delimiter = ',', $enclosure = '"', $escape_char = "\\
 
 if (isset($_POST)) {
 
-   $resourceName = basename($_FILES['edoc']['name']);
-   if (lookForEDocDuplicates($resourceName)) {
-      echo "Il documento e` gia` stato indicizzato";
-      exit();
+   $countfiles = count($_FILES['edoc']['name']);
+   for ($i=0; $i<$countfiles; $i++) {
+      $resourceName = basename($_FILES['edoc']['name'][$i]);
+      // FIXME CONTROLLARE DUPLICATI NEL CASO DI multivalued...
+      //$pippo = lookForEDocDuplicates($resourceName);
+      //print_r ($pippo);
+      //exit;
+      if (lookForEDocDuplicates($resourceName)) {
+      	 echo "Il documento e` gia` stato indicizzato";
+      	 exit();
+      }
+   
+      $tmp_filename = $_FILES['edoc']['tmp_name'][$i];
+      $orig_ext = explode(".", $_FILES['edoc']['name'][$i]);
+
+      if (isset($_POST['do_ocr'])) {
+      	 $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
+      	 exec($command);
+      	 $tmp_filename = $GLOBALS['UPLOAD_DIR']."ocr".$i.".pdf";
+      	 $ext = "pdf";
+      } else {
+      	 $tmp = explode(".", $_FILES['edoc']['name'][$i]);
+         $ext = strtolower(end($tmp));
+      }
    }
    
-   $tmp_filename = $_FILES['edoc']['tmp_name'];
-   $orig_ext = explode(".", $_FILES['edoc']['name']);
-
-   if (isset($_POST['do_ocr'])) {
-      $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr -l ita pdf";
-      exec($command);
-      $tmp_filename = $GLOBALS['UPLOAD_DIR']."ocr.pdf";
-      $ext = "pdf";
-   } else {
-      $tmp = explode(".", $_FILES['edoc']['name']);
-      $ext = strtolower(end($tmp));
+   if (isset($_POST['do_merge'])) {
+      // FIXME FAI IL MERGE su ocr0
    }
    
    if ($_POST['tipologia'] == "----") {
@@ -65,7 +79,7 @@ if (isset($_POST)) {
    }
 
    $orig_ext = strtolower(end($orig_ext));
-   if ($orig_ext == "png" or $orig_ext == "jpg" or $orig_ext == "jpeg") {
+   if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
       $resize = new ResizeImage($_FILES['edoc']['tmp_name']);
       $resize->resizeTo(200, 200, 'maxWidth');
       $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
@@ -79,7 +93,9 @@ if (isset($_POST)) {
    }
 
    $ret = upload_csv2(array2csv($data));
-   unlink($tmp_filename);
+   if (isset($_POST['do_ocr'])) {
+       unlink($tmp_filename);
+   }
 
    if ($ret['responseHeader']['status'] != 0) {
       echo json_encode(array('error' => $ret['error']['msg']));  

@@ -10,9 +10,9 @@ class DataSource
     function __construct()
     {
         $this->conn = new SQLite3(__DIR__ . "/../sql/" . $GLOBALS['DATABASENAME']);
-        $create_query = "CREATE TABLE IF NOT EXISTS `registered_users` (`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,`user_name` VARCHAR(255) NOT NULL,`display_name` VARCHAR(255) NOT NULL, `role` VARCHAR(20) NOT NULL, `password` VARCHAR(255) NOT NULL,`email` VARCHAR(255) NOT NULL);";
+        //$create_query = "CREATE TABLE IF NOT EXISTS `registered_users` (`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,`user_name` VARCHAR(255) NOT NULL,`display_name` VARCHAR(255) NOT NULL, `role` VARCHAR(20) NOT NULL, `password` VARCHAR(255) NOT NULL,`email` VARCHAR(255) NOT NULL);";
 
-	$this->conn->exec($create_query);
+	//$this->conn->exec($create_query);
     }
 
     public function select($query, $paramType=array(), $paramArray=array())

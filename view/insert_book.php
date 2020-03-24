@@ -49,8 +49,6 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-		//console.log(response);
-		//$('#exit_status').html(response);
 	        response = JSON.parse(response);
                 if(response.hasOwnProperty('error')){
 		    alert (response['error']);
