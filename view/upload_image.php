@@ -109,6 +109,9 @@ foreach ($result as $row) {
                 </select><br>
         </td></tr>
 	<tr><td valign="top">        
+		Fotografo:</td><td><input type="text" name="author" id="author" size=50 placeholder="Nome Cognome">
+        </td></tr>
+	<tr><td valign="top">        
 		Tag addizionali (comma separated):</td><td><textarea name="list_of_tags" rows="5" cols="30"></textarea>
         </td></tr>
         <tr><td>

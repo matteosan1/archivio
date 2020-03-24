@@ -23,6 +23,11 @@ require_once "session.php";
 <?php
 if ($role == "admin") {
 	echo "<tr>";
+
+<button class="btn btn-default">
+  <img src="http://i.stack.imgur.com/e2S63.png" width="20" /> Sign In with Facebook
+</button>
+
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px">Amministrazione Sito</button>', "'/view/management.php'");
 	echo "</tr>";
 }?>

@@ -13,6 +13,17 @@ require_once "../class/Member.php";
 //
 //set_error_handler("customError");
 
+function array2csv($data, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
+{
+    $f = fopen('php://memory', 'r+');
+    
+    fputcsv($f, array_keys($data), $delimiter, $enclosure, $escape_char);
+    fputcsv($f, $data, $delimiter, $enclosure, $escape_char);
+    rewind($f);
+
+    return stream_get_contents($f);
+}
+
 function upload_csv($filename) {
     $csv_file = file_get_contents($filename);
     $line = fgets(fopen($filename, 'r'));
