@@ -6,16 +6,19 @@ $new_notes = $m->getNNotes($displayName, $role);
 
 echo "<div align=\"center\">";
 echo "<img src=\"/img/titolo.png\"/>";
-echo "</div>";
-echo "<div align=\"center\" class=\"member-dashboard\">";
-echo "<a href=\"/view/dashboard.php\" class=\"button\">Home</a> - <a href=\"/view/note.php\" class=\"button\">Note</a> - <a href=\"/logout.php\" class=\"logout-button\">Logout</a>";
-if ($new_notes != 0) {
-   echo "- <a href=\"/view/view_notes.php\" class=\"button\">Hai ".$new_notes." nuove note</a>";
-   } else {
-   echo "- <a href=\"/view/view_notes.php\" class=\"button\">Note</a>";
-   }
 echo "</div><br>";
 
-echo "Benvenuto ".$displayName;
-echo "<br><br>";
+echo "<p style=\"text-align:left;\">";
+echo "<a href=\"/view/dashboard.php\" class=\"button\"><img src=\"/view/icons/home.png\" hspace=\"20\"></a>";
+
+if ($new_notes != 0) {
+   echo "<a href=\"/view/note.php\" class=\"button\"><img src=\"/view/icons/new_message.png\"></a>";
+} else {
+   echo "<a href=\"/view/note.php\" class=\"button\"><img src=\"/view/icons/message.png\"></a>";
+}
+echo "<span style=\"float:right;\">";
+echo "<img src=\"/view/icons/username.png\" hspace=\"20\">".$displayName;
+echo "<a href=\"/logout.php\" class=\"logout-button\"><img src=\"/view/icons/logout.png\" hspace=\"20\"></a>";
+echo "</span></p>";
+echo "<hr><br><br>";
 ?>
