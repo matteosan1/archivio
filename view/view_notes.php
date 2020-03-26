@@ -74,12 +74,11 @@ function relocate_home2(type)
 		<col width="130">
   		<col width="250">
 		<col width="130">
-  		<col width="200">
 		<tr>
 		<th> Da </th>
 		<th> Data </th>
 		<th> Messaggio </th>
-		<th> </th>
+		<th align="center"> <a href="/note.php" class="logout-button"><img src="/view/icons/write_message.png"</a></th>
 		</tr>
 		<?php
 		    if (!empty($notes)) {
@@ -88,7 +87,7 @@ function relocate_home2(type)
 			    echo "<td>".$note['sender']."</td>";
    			    echo "<td class='display_name'>".$note['date']."</td>";
     			    echo "<td>".$note['text']."</td>";
-			    echo "<td><button class=\"btn btn-sm btn-danger delete_note\" id=\"".$note['id']."\" >RIMUOVI</button></td>";
+			    echo "<td><button class=\"btn btn-sm btn-danger delete_note\" id=\"".$note['id']."\" ><img src=\"/view/icons/trash.png\"></button></td>";
 			    echo "</tr>";			    
 		    }
 		    }

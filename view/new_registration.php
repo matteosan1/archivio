@@ -13,8 +13,7 @@ require_once "../view/session.php";
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		    <script>
 			$(function(){
-			    $("#header").load("/view/header.html"); 
-	    		    //$("#footer").load("/view/footer.html"); 
+	    		    $("#footer").load("/view/footer.html"); 
 			});
     		   </script>
         </head>
@@ -60,7 +59,7 @@ $(document).ready(function() {
 });
 </script>
 	<body>
-	<div id="header" align="center"></div>
+	<?php include "../view/header.php"; ?>
 	<br>
 	<div id="registered"></div>
 	<div align=center>
@@ -70,11 +69,19 @@ $(document).ready(function() {
 		<tr><td>Username </td><td><input type="text" name="username" value="" /></td></tr>
 		<tr><td>Password </td><td><input type="password" name="new-password1" value="" /></td></tr>
 		<tr><td>Password (ripetere) </td><td><input type="password" name="new-password2" value="" /></td></tr>
-		<tr><td>Ruolo</td><td><select name="role"><option>photo</option><option>archive</option><option>admin</option></select></td></tr>
+		<tr><td>Ruolo</td><td>
+		<select name="role">
+		<option>photo</option>
+		<option>archive</option>
+		<option>admin</option>
+		</select></td></tr>
 		<tr><td>e-mail</td><td><input type="text" name="email" value="" placeholder="opzionale"/></td></tr>
 		</table>
+		<br>
 		<button type="button" id="registerBtn" class="btn btn-success"> Registra </button>
 		</form>
 	</div>
+	<br>
+	<div id="footer" align="center"></div>	
 	</body>
 </html>

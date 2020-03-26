@@ -24,7 +24,6 @@ $roles = $m->getAllRoles();
 </script>	
 <script>
 $(function(){
-  $("#header").load("/view/header.html"); 
   $("#footer").load("/view/footer.html"); 
 });
 </script>
@@ -80,8 +79,7 @@ $(document).ready(function() {
 });
 </script>
     <body>
-    <div id="header" align="center"></div>
-    <br>
+    <?php include "header.php"; ?>
     
     <!-- <div align=center id=exit_status style="color:red"><?php echo $exit_status;?></div>
     <span class="error" style="color:red"><?php echo $error;?></span>-->

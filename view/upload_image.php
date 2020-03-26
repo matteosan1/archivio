@@ -108,8 +108,14 @@ foreach ($result as $row) {
          	       <option selected="selected" default>----</option>
                 </select><br>
         </td></tr>
-	<tr><td valign="top">        
-		Fotografo:</td><td><input type="text" name="author" id="author" size=50 placeholder="Nome Cognome">
+	<tr><td valign="top"><br>
+	<label>Fotografo: </label></td><td>
+	<input list="author" value="<?php echo $displayName; ?>" name="author">
+            <datalist id="author">
+            <?php echo "<option value='".$displayName."'>"; ?>     
+	    </datalist>
+<!-----		Fotografo:</td><td><input type="text" name="author" id="author" size=50 placeholder="Nome Cognome">
+		<br>---->
         </td></tr>
 	<tr><td valign="top">        
 		Tag addizionali (comma separated):</td><td><textarea name="list_of_tags" rows="5" cols="30"></textarea>

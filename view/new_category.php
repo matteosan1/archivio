@@ -3,6 +3,7 @@ require_once "session.php";
 if (isset($_GET['type'])) {
    $type = $_GET['type'];
 }
+
 // FIXME ERRORE !!!
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -60,13 +61,12 @@ $(document).ready(function() {
 	        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 		<script>
 $(function(){
-  $("#header").load("/view/header.html"); 
   $("#footer").load("/view/footer.html"); 
 });
 </script>
         </head>
 	<body>
-		<div id="header" align="center"></div>
+		<?php include "../view/header.php" ?>
 		<br>
                 <div id=registered></div>
 		<div align="center">
@@ -79,12 +79,20 @@ $(function(){
 		}
 		?>
 		<table>
-		<tr><td>Categoria</td><td><input type="text" name="name" value="" /></td></tr>
+		<tr><td>
+		<?php
+		if ($type == 'ebook') {
+		   echo "Categoria eDoc:  ";
+		} elseif ($type == 'book')  {
+		   echo "Categoria Libri:  ";
+		}
+		?></td><td><input type="text" name="name" value="" /></td></tr>
 		</table>
 		<br>
 		<button type="button" id="registerBtn" class="btn btn-success"> Registra </button>
 		</form>
 		</div>
+		<br>
 	<div id="footer" align="center"></div>
 	</body>
 </html>

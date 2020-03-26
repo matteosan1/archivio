@@ -19,13 +19,54 @@ $categories_ebook = $member->getAllCategories("ebook_categories");
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script>
 		$(function(){
-		  $("#footer").load("/view/footer.html"); 
+		  $("#footer1").load("/view/footer.html");
+		  $("#footer2").load("/view/footer.html");
+		  $("#footer3").load("/view/footer.html"); 
 		});
 		</script>
+		<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
 	    	</head>
 
 <script type="text/javascript">
-
 var request;
 $(document).ready(function() {
     $('.delete_user').click(function() {
@@ -48,47 +89,6 @@ $(document).ready(function() {
        }    
     });
     
-    $('.delete_category').click(function() {
-        var name = $(this).closest('tr').find('.category').text();
-	var r = confirm("Sicuro di voler eliminare la tipologia " + name + " ?");
-  	if (r == true) {
-            var tr = $(this).closest('tr'),
-            del_id = $(this).attr('id');
-
-            $.ajax({
-               url: "../class/remove_category.php?table=book&delete_id="+del_id,
-               cache: false,
-               success:function(result){
-	          tr.fadeOut(1000, function(){
-	              $(this).remove();
-	          });
-	       }
-	    });
-	} else {
-	    return false;
-	}
-    });
-
-    $('.delete_ebook_category').click(function() {
-        var name = $(this).closest('tr').find('.ebook_category').text();
-	var r = confirm("Sicuro di voler eliminare la tipologia " + name + " ?");
-  	if (r == true) {
-            var tr = $(this).closest('tr'),
-            del_id = $(this).attr('id');
-
-            $.ajax({
-               url: "../class/remove_category.php?table=ebook&delete_id="+del_id,
-               cache: false,
-               success:function(result){
-	          tr.fadeOut(1000, function(){
-	              $(this).remove();
-	          });
-	       }
-	    });
-	} else {
-	    return false;
-	}
-    });
 });
 
 function relocate_home()
@@ -109,12 +109,16 @@ function relocate_home2(type)
 	</style>
 	<body>
 	    <?php include "../view/header.php"; ?>
-	    <br>
+<div class="tab">
+  <button id=pippo class="tablinks" onclick="openCity(event, 'gestione_utenti')">Utenti</button>
+  <button class="tablinks" onclick="openCity(event, 'book_cat')">Tipologia Libri</button>
+  <button class="tablinks" onclick="openCity(event, 'ebook_cat')">Tipologia eDoc</button>
+  <button class="tablinks" onclick="openCity(event, 'tags')">Tag Foto</button>
+</div>
+
+<div id="gestione_utenti" class="tabcontent">
+<br>
 	    <div align=center>
-	    <form enctype="multipart/form-data" action method="POST" id="new_user">
-	    <input type="button" class="btn btn-info" value="Nuovo utente" onclick="relocate_home()">
-	    </form>
-	    <br><br>
 	    <div id="result"></div>
 	    <table>
 		<col width="130">
@@ -140,13 +144,16 @@ function relocate_home2(type)
 		    }
 		?>     
     	    </table>
+	    <br>
+	    <form enctype="multipart/form-data" action method="POST" id="new_user">
+	    <input type="button" class="btn btn-info" value="Nuovo utente" onclick="relocate_home()">
+	    </form>
 	    </div>
-	    <hr width="80%">
+	    <br>
+<div id="footer1" align="center"></div>
+</div>
+<div id="book_cat" class="tabcontent">
 	    <div align=center>
-	    <form enctype="multipart/form-data" action method="POST" id="new_book">
-	    <input type="button" class="btn btn-info" value="Nuova categoria libri" onclick="relocate_home2('book')">
-	    <input type="hidden" id="book" name="book" value="">
-	    </form>	    
 	    <div id="result_libri"></div>
 	    <br>
 	    <table>
@@ -154,43 +161,82 @@ function relocate_home2(type)
 		<col align="center">
 		<tr>
 		<th> CATEGORIA </th>
-		<th align="center"> COMANDO </th>
 		</tr>
 		<?php
 		    foreach ($categories as $category) {
 		    	    echo "<tr>";
 			    echo "<td class='category'>".$category['category']."</td>";
-			    echo "<td align=center><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$category['id']."\" >RIMUOVI</button></td>";
+			    //echo "<td align=center><button class=\"btn btn-sm btn-danger delete_category\" id=\"".$category['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
 		    }
 		?>     
     	    </table>
-    	    <hr width="80%">	
-	    <div align=center>
-	    <form enctype="multipart/form-data" action method="POST" id="new_ebook">
-	    <input type="button" class="btn btn-info" value="Nuova categoria eDoc" onclick="relocate_home2('ebook')">
-       	    <input type="hidden" id="ebook" name="ebook" value="">	
-	    </form>
-	    
-	    <div id="result_edoc"></div>
 	    <br>
+	    <form enctype="multipart/form-data" action method="POST" id="new_book">
+	    <input type="button" class="btn btn-info" value="Nuova categoria libri" onclick="relocate_home2('book')">
+	    <input type="hidden" id="book" name="book" value="">
+	    </form>
+	    </div>
+	    <br>
+<div id="footer2" align="center"></div>
+</div>
+<div id="ebook_cat" class="tabcontent">
+<div align=center>
+     <div id="result_edoc"></div>
+     	  <br>
 	    <table>
 		<col width="130">
 		<tr>
 		<th> CATEGORIA </th>
-		<th> COMANDO </th>
 		</tr>
 		<?php
 		    foreach ($categories_ebook as $category) {
 		    	    echo "<tr>";
 			    echo "<td class='ebook_category'>".$category['category']."</td>";
-			    echo "<td><button class=\"btn btn-sm btn-danger delete_ebook_category\" id=\"".$category['id']."\" >RIMUOVI</button></td>";
 			    echo "</tr>";			    
 		    }
 		?>     
     	    </table>
-<br>
-<div id="footer" align="center"></div>
+	    <br>
+    	    <form enctype="multipart/form-data" action method="POST" id="new_ebook">
+    	    <input type="button" class="btn btn-info" value="Nuova categoria eDoc" onclick="relocate_home2('ebook')">
+       	    <input type="hidden" id="ebook" name="ebook" value="">
+	    </form>
+	    </div>
+	    <br>
+<div id="footer3" align="center"></div>
+
+</div>
+<div id="tags" class="tabcontent">
+
+     <label
+	    <input list="browsers" name="browser">
+  	    <datalist id="browsers">
+	    <?php
+		foreach ($categories as $category) {
+		    echo "<option value='".$category['category']."'>";
+		}
+	?>     
+  </datalist>
+</div>
+
+<script>
+document.getElementById("pippo").click();
+
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
 
 </body>
 </html>
