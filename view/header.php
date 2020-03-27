@@ -18,6 +18,9 @@ if ($new_notes != 0) {
 
 echo "<span style=\"float:right;\">";
 echo "<img src=\"/view/icons/username.png\" hspace=\"20\">".$displayName;
+if ($role == "admin") {
+   echo "<a href=\"/managment.php\" class=\"logout-button\"><img src=\"/view/icons/site_admin.png\" hspace=\"20\"></a>";
+}
 echo "<a href=\"/logout.php\" class=\"logout-button\"><img src=\"/view/icons/logout.png\" hspace=\"20\"></a>";
 echo "</span></p>";
 echo "<hr>";//<br><br>";
