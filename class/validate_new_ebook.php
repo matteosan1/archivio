@@ -82,7 +82,7 @@ if (isset($_POST)) {
        $orig_ext = strtolower(end($orig_ext));
        if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
        	  $resize = new ResizeImage($_FILES['edoc']['tmp_name']);
-      	  $resize->resizeTo(200, 200, 'maxWidth');
+      	  $resize->resizeTo(200, 200, 'maxHeight');
       	  $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
        }
 

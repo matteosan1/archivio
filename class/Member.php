@@ -119,10 +119,15 @@ class Member
     }
     
     public function addCategory($table_name, $name) {
-	   $query = "INSERT INTO ".$table_name." ('category') VALUES (?);";
-	   $paramType = array(SQLITE3_TEXT);
+	   $query = "INSERT INTO ".$table_name." ('category') VALUES (?);"
 	   $name = strtoupper(str_replace(" ", "_", $name));
-	   $paramArray = array($name);
+	   if ($table_name == "tags") {		    
+	      $paramType = array(SQLITE3_TEXT, SQLITE3_INTEGER);
+	      $paramArray = array($name, -1);
+	   } else {
+	      $paramType = array(SQLITE3_TEXT);
+	      $paramArray = array($name);	      
+	   }
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
 	   return true;
     }

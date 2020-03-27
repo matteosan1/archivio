@@ -100,7 +100,7 @@ function processImage($tmp_name, $name, $ext, $move=true) {
     $name = $target_directory.$ca.".".strtoupper($ext);
 
     $resize = new ResizeImage($tmp_name);
-    $resize->resizeTo(200, 200, 'maxWidth');
+    $resize->resizeTo(200, 200, 'maxHeight');
     $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($ext));
 
     if ($move) {

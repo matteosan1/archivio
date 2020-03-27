@@ -1,11 +1,12 @@
 <?php
 require_once "../view/session.php";
-require ("../class/Member.php");
+require_once "../class/Member.php";
 
 $member = new Member();
 $users = $member->getAllMembers();
 $categories = $member->getAllCategories();
 $categories_ebook = $member->getAllCategories("ebook_categories");
+$tagl1 = $member->getL1Tags();
 ?> 
 
 <!DOCTYPE html>
@@ -21,7 +22,8 @@ $categories_ebook = $member->getAllCategories("ebook_categories");
 		$(function(){
 		  $("#footer1").load("/view/footer.html");
 		  $("#footer2").load("/view/footer.html");
-		  $("#footer3").load("/view/footer.html"); 
+		  $("#footer3").load("/view/footer.html");
+		  $("#footer4").load("/view/footer.html"); 
 		});
 		</script>
 		<style>
@@ -181,7 +183,7 @@ function relocate_home2(type)
 <div id="footer2" align="center"></div>
 </div>
 <div id="ebook_cat" class="tabcontent">
-<div align=center>
+     <div align=center>
      <div id="result_edoc"></div>
      	  <br>
 	    <table>
@@ -207,17 +209,50 @@ function relocate_home2(type)
 <div id="footer3" align="center"></div>
 
 </div>
-<div id="tags" class="tabcontent">
 
-     <label
-	    <input list="browsers" name="browser">
-  	    <datalist id="browsers">
+<div id="tags" class="tabcontent">
+     <div align=center>
+     <div id="result_edoc"></div>
+     	  <br>
+	    <table>
+		<col width="130">
+		<tr>
+		<th>TAG L1</th>
+		</tr>
+		<?php
+		    foreach ($tagl1 as $tag) {
+			    if ($tag['name'] == "----") {
+			       continue;
+			    }
+		    	    echo "<tr>";
+			    echo "<td class='tagsl1'>".$tag['name']."</td>";
+			    echo "</tr>";			    
+		    }
+		?>     
+    	    </table>
+	    <br>
+    	    <form enctype="multipart/form-data" action method="POST" id="new_tagl1">
+    	    <input type="button" class="btn btn-info" value="Nuovo TAG L1" onclick="relocate_home2('tagl1')">
+       	    <input type="hidden" id="tagl1" name="tagl1" value="">
+	    </form>
+	    </div>
+
+	    <form enctype="multipart/form-data" action method="POST" id="new_tagl2">";
 	    <?php
-		foreach ($categories as $category) {
-		    echo "<option value='".$category['category']."'>";
+	    foreach ($tagl1 as $tl1) {
+	         echo "<label>".$tl1['name']."</label>";
+		 echo "<input id=\"tagl2\" name=\"".$tl1['name']."\"">;
+		 echo "<table>";
+		 $tagl2 = $member->getL2Tags($tl1['id']);
+	         foreach ($tagl2 as $tl2) {
+		    echo "<tr><td>".$tl2['name']."</td></tr>";
 		}
-	?>     
-  </datalist>
+  		echo "</table><br>";
+	    }
+	    ?>     
+	    </form>
+  <br>
+<div id="footer3" align="center"></div>
 </div>
 
 <script>
