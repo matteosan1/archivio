@@ -148,7 +148,7 @@ $(document).ready(function() {
     	 <td>
     	 <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, TIFF, DOC, DOCX, EML):</label>
 	 </td><td>
-	 <input name="edoc[]" id="edoc" type="file" value=""><br><br>
+	 <input name="edoc[]" id="edoc" type="file" value="" multiple><br><br>
 	 </td>
          </div>
     </tr>

@@ -84,7 +84,7 @@ $(document).ready(function() {
         <table>
   	<tr><td valign="top">
     		<form enctype="multipart/form-data" action method="POST" id="upload">
-        	Foto (jpeg, tiff o zip):</td><td><input name="userfile[]" type="file" multiple></br></br>
+        	Foto (jpeg, tiff o zip):</td><td><input name="userfile[]" type="file" multiple accept=".jpeg,.jpg,.tiff,.tif,.zip"></br></br>
  	</td></tr>
 	<tr><td valign="top">
                 Tag 1 :</td><td>

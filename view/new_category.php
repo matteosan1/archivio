@@ -28,7 +28,6 @@ $(document).ready(function() {
 	});
 
         request.done(function (response){
-	        console.log(response);
 		if(response.hasOwnProperty('error')){
 		    $('#registered').html(response['error']);
 	       	} else {
@@ -76,6 +75,8 @@ $(function(){
 		   echo '<input type="hidden" id="ebook" name="ebook" value="">';
 		} elseif ($type == 'book')  {
 		   echo '<input type="hidden" id="book" name="book" value="">';
+		} elseif ($type == 'tagl1') {
+		   echo '<input type="hidden" id="tag" name="tag" value="">';
 		}
 		?>
 		<table>
@@ -85,11 +86,13 @@ $(function(){
 		   echo "Categoria eDoc:  ";
 		} elseif ($type == 'book')  {
 		   echo "Categoria Libri:  ";
+		} elseif ($type == 'tag') {
+		   echo "TAG L1:";
 		}
 		?></td><td><input type="text" name="name" value="" /></td></tr>
 		</table>
 		<br>
-		<button type="button" id="registerBtn" class="btn btn-success"> Registra </button>
+		<button type="button" id="registerBtn" class="btn btn-success"><img src="/view/icons/plus.png"> Aggiungi </button>
 		</form>
 		</div>
 		<br>

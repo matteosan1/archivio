@@ -149,7 +149,7 @@
 		    	 <td>
 		    	 <label for="fname" class="fname">File copertina (JPG):</label>
 			 </td><td>
-			 <input name="copertina" id="copertina" type="file" value=""><br><br>
+			 <input name="copertina" id="copertina" type="file" value="" accept=".jpeg,.jpg"><br><br>
 			 </td>
                     </div>
 		    </tr>

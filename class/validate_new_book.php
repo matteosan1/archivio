@@ -32,9 +32,17 @@ if (isset($_POST)) {
              $zip = new ZipArchive;
              $res = $zip->open($_FILES["filezip"]['tmp_name']);
              if ($res == true) {
-                $zip->extractTo($GLOBALS['COVER_DIR']);
+                $zip->extractTo($GLOBALS['COVER_DIR']); 
                 $zip->close();
              }
+
+	     if ($zip->open($_FILES["filezip"]['tmp_name']) == TRUE) {
+	     	for ($i=0; $i<$zip->numFiles; $i++) {
+	            $filename = $zip->getNameIndex($i);
+		    rename($GLOBALS['COVER_DIR'].$filename, $GLOBALS['COVER_DIR'].strtoupper($filename));
+	     	}
+		$zip->close();
+	     }
          }     
       }
 
@@ -60,10 +68,10 @@ if (isset($_POST)) {
      	}
 
 	$resize = new ResizeImage($cover_tmp);
-      	$resize->resizeTo(200, 200, 'maxWidth');
+      	$resize->resizeTo(200, 200, 'maxHeight');
       	$resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
 
-	$res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].$cover_name);
+	$res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
      	//$target_directory = $GLOBALS['COVER_DIR'].$cover_name;
 	//if (!move_uploaded_file($cover_tmp, $target_directory)) {
 	if ($res != 1) {

@@ -80,7 +80,7 @@ $(document).ready(function() {
     	 <td>
     	 <label for="fname" class="fname">File Video da caricare<br>:</label>
 	 </td><td>
-	 <input name="videos[]" id="videos" type="file" value="" accept=".mpg,.mpeg,.ogg,.mp4,.avi,.wmv,.mov,.flv,.mtk"><br><br>
+	 <input name="videos[]" id="videos" type="file" value="" multiple accept=".mpg,.mpeg,.ogg,.mp4,.avi,.wmv,.mov,.flv,.mtk"><br><br>
 	 </td>
          </div>
     </tr>

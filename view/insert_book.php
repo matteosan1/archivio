@@ -282,7 +282,7 @@ $(document).ready(function() {
 		    	 <td>
 		    	 <label for="fname" class="fname">File copertina (JPG):</label>
 			 </td><td>
-			 <input name="copertina" id="copertina" type="file" value=""><br><br>
+			 <input name="copertina" id="copertina" type="file" value="" accept=".jpg,.jpeg"><br><br>
 			 </td>
                     </div>
 		    </tr>
