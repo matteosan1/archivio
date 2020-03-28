@@ -5,10 +5,9 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/session.php";
 require_once "../class/Member.php";
-//require_once "../class/solr_curl.php";
 
 $m = new Member();
-$categories = $m->getAllCategories();
+$categories = $m->getAllCategories('book_categories');
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +26,7 @@ $(function(){
   $("#footer").load("/view/footer.html"); 
 });
 </script>
-    </head>
+</head>
 <script type="text/javascript">
 var request;
 $(document).ready(function() {
@@ -52,7 +51,8 @@ $(document).ready(function() {
                 if(response.hasOwnProperty('error')){
 		    alert (response['error']);
                 } else {
-                    window.location.href = "../view/dashboard.php";
+		       
+                    //window.location.href = "../view/dashboard.php";
 		    return true;
                 }
         });
@@ -98,12 +98,12 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-	        //$('#exit_status').html(response);
 	        response = JSON.parse(response);
                 if(response.hasOwnProperty('error')){
 		    alert (response['error']);
                 } else {
-                    window.location.href = "../view/dashboard.php";
+   		    $('#result').html('Volume inserito correttamente');
+                    //window.location.href = "../view/dashboard.php";
 		    return true;
                 }
         });
@@ -119,16 +119,17 @@ $(document).ready(function() {
 </script>
     <body>
     <?php include "../view/header.php"; ?>
-    <br>	 
-    <!-- <div align=center id=exit_status style="color:red"><?php echo $exit_status;?></div>
-    <span class="error" style="color:red"><?php echo $error;?></span>
-     <div align=center id=exit_status style="color:red"></div>-->
+    <h2 align="center">Inserimento Libro</h2>
+    <br>
+     <div align=center id=result style="color:green"></div>
+     <div align=center id=error style="color:red"></div>
  <br>
- <table style="width:100%" border=1px>
-  <tr>
+ <div align="center">
+ <table style="width:90%">
+  <!----<tr>
     <th>Inserimento singolo</th>
     <th>Carica Catalogo</th>
-  </tr>
+  </tr> -->
   <tr>
     <td><div class="formme">
 	    <form class="new_book" name="new_book" id="new_book" action method="POST">
@@ -164,7 +165,7 @@ $(document).ready(function() {
 		    	 <td>
                          <label for="fname" class="fname">Titolo:</label>
 			 </td><td>
-			 <textarea name="titolo" id="titolo" rows="3" cols="80" placeholder=Titolo del libro"></textarea>
+			 <textarea name="titolo" id="titolo" rows="4" cols="60" placeholder=Titolo del libro"></textarea>
 			 </td>
                     </div>
 		    </tr>
@@ -173,7 +174,7 @@ $(document).ready(function() {
 		    	 <td>
                          <label for="fname" class="fname">Sottotitolo:</label>
 			 </td><td>
-			 <textarea name="sottotitolo" rows="3" cols="80" placeholder="Eventuale sottotitolo"></textarea>
+			 <textarea name="sottotitolo" rows="4" cols="60" placeholder="Eventuale sottotitolo"></textarea>
 			 </td>
                     </div>
 		    </tr>
@@ -191,7 +192,7 @@ $(document).ready(function() {
 		    	 <td>
                          <label for="fname" class="fname">Altre responsabilit&agrave;:</label>
 			 </td><td>
-                         <input type="text" size="80" id="altre_responsabilita" name="altre_responsabilita">
+                         <input type="text" size="60" id="altre_responsabilita" name="altre_responsabilita">
 			 </td>
                     </div>
 		    </tr>
@@ -263,7 +264,7 @@ $(document).ready(function() {
 		    	 <td>
                          <label for="fname" class="fname">Soggetto:</label>
 			 </td><td>
-                         <input type="text" size="80" id="soggetto" name="soggetto">
+                         <input type="text" size="60" id="soggetto" name="soggetto">
 			 </td>
                     </div>
 		    </tr>
@@ -272,7 +273,7 @@ $(document).ready(function() {
 		    	 <td>
 		    	 <label for="fname" class="fname">Note:</label>
 			 </td><td>
-			 <textarea name="note" rows="10" cols="80" placeholder="note"></textarea>
+			 <textarea name="note" rows="10" cols="60" placeholder="note"></textarea>
 			 </td>
                     </div>
 		    </tr>
@@ -286,27 +287,31 @@ $(document).ready(function() {
                     </div>
 		    </tr>
                 </div>
+		<tr>
+		<td colspan=2 align="center">
+		    <button class="btn btn-sm btn-info insert_book" id="inserisci">Inserisci</button>		 
+		</td>
+		</tr>
 		</table>
-		<br>
-                <div class="btn" align="center">
-		    <button class="btn btn-sm btn-info insert_book" id="inserisci">Inserisci</button>
-                </div>
             </form>
         </div>
     </td>
-    <td>
+<!----    <td>
     <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
-    <label class="col-md-4 control-label">File di Catalogo (.CSV)</label> <input type="file" name="filecsv" id="filecsv" accept=".csv">
+    <label class="col-md-4 control-label">Catalogo (.CSV)</label> <input type="file" name="filecsv" id="filecsv" accept=".csv">
     <br>
-    <label class="col-md-4 control-label">File delle copertine (.ZIP)</label> <input type="file" name="filezip" id="filezip" accept=".zip">
-    <br>
+    <label class="col-md-4 control-label">Copertine (.ZIP)</label> <input type="file" name="filezip" id="filezip" accept=".zip">
+    <br><br>
      <input type="hidden" name="catalogo">
+     <div align="center">
     <button type="submit" id="submit" name="import" class="btn-info insert_catalogue">Inserisci Catalogo</button>
+    </div>
     <div id="labelError"></div>
     </form>
-    </td>
+    </td> --->
   </tr>
 </table> 
+</div>
 <br>
 <div id="footer" align="center"></div>
     </body>

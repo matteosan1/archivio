@@ -15,40 +15,40 @@ function customError($errno, $errstr) {
 set_error_handler("customError");
 
 if (isset($_POST)) {
-   if (isset($_POST["catalogo"])) {
-      if (isset($_FILES['filecsv'])) {
-         if ($_FILES["filecsv"]["size"] > 0) {
-            $result = upload_csv($_FILES['filecsv']['tmp_name']);
-
-	    if (array_key_exists("error", $result)) {
-                echo json_encode(array('error' => $result['error']['msg']));
-	        exit();
-	    }
-         }
-      }	  
-
-      if (isset($_FILES['filezip'])) {
-         if ($_FILES["filezip"]["size"] > 0) {
-             $zip = new ZipArchive;
-             $res = $zip->open($_FILES["filezip"]['tmp_name']);
-             if ($res == true) {
-                $zip->extractTo($GLOBALS['COVER_DIR']); 
-                $zip->close();
-             }
-
-	     if ($zip->open($_FILES["filezip"]['tmp_name']) == TRUE) {
-	     	for ($i=0; $i<$zip->numFiles; $i++) {
-	            $filename = $zip->getNameIndex($i);
-		    rename($GLOBALS['COVER_DIR'].$filename, $GLOBALS['COVER_DIR'].strtoupper($filename));
-	     	}
-		$zip->close();
-	     }
-         }     
-      }
-
-      echo json_encode(array("result" => "Catalogo inserito correttamente."));
-      exit;
-   } else {
+   //if (isset($_POST["catalogo"])) {
+   //   if (isset($_FILES['filecsv'])) {
+   //      if ($_FILES["filecsv"]["size"] > 0) {
+   //         $result = upload_csv($_FILES['filecsv']['tmp_name']);
+   //
+   //	    if (array_key_exists("error", $result)) {
+   //             echo json_encode(array('error' => $result['error']['msg']));
+   //	        exit();
+   //	    }
+   //      }
+   //   }	  
+   //
+   //   if (isset($_FILES['filezip'])) {
+   //      if ($_FILES["filezip"]["size"] > 0) {
+   //          $zip = new ZipArchive;
+   //          $res = $zip->open($_FILES["filezip"]['tmp_name']);
+   //          if ($res == true) {
+   //             $zip->extractTo($GLOBALS['COVER_DIR']); 
+   //             $zip->close();
+   //          }
+   //
+   //	     if ($zip->open($_FILES["filezip"]['tmp_name']) == TRUE) {
+   //	     	for ($i=0; $i<$zip->numFiles; $i++) {
+   //	            $filename = $zip->getNameIndex($i);
+   //		    rename($GLOBALS['COVER_DIR'].$filename, $GLOBALS['COVER_DIR'].strtoupper($filename));
+   //	     	}
+   //		$zip->close();
+   //	     }
+   //      }     
+   //   }
+   //
+   //   echo json_encode(array("result" => "Catalogo inserito correttamente."));
+   //   exit;
+   //} else {
      if (isset($_POST['update_or_insert'])) {
          $version = 1;
      } else {
@@ -91,6 +91,6 @@ if (isset($_POST)) {
      } else {
         echo json_encode(array('result' => "Volume ".$_POST['codice_archivio']." inserito correttamente."));
      }
-  }
+  //}
 }
 ?>

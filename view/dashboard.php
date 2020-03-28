@@ -32,7 +32,7 @@ require_once "session.php";
 	echo '</tr>';
 	echo '<tr>';
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");
-	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Restore</button></td>', "'/view/restore.php'");
+	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Catalogo</button></td>', "'/view/restore.php'");
 	echo '<tr>';
 ?>
 	</table>
