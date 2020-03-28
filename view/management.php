@@ -90,7 +90,42 @@ $(document).ready(function() {
           return false;
        }    
     });
-    
+
+    $(document).on('click', '[id^="mybutton-"]', function() {
+        var dataForm = new FormData(document.getElementById("new_tagl2"));
+	if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/validate_new_category.php",
+                type: "post",
+                data: dataForm,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+//			   console.log(response);
+                if (response != 1) {
+		    $('#registered').html(response);
+		    return false;
+                } else {
+                    window.location.href = "../view/management.php";
+                    return true;
+                }
+        });
+
+        request.fail(function (response){                           
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+        return false;
+
+    });
+//var allButtons = document.querySelectorAll('.button--1, .button--2');
 });
 
 function relocate_home()
@@ -98,10 +133,17 @@ function relocate_home()
      location.href = "new_registration.php";
 }
 
-function relocate_home2(type)
+function relocate_home2(type, id)
 {
     location.href = "new_category.php?type=" + type;
 }
+
+function relocate_home3(type, name, id)
+{
+    location.href = "validate_new_category.php?type=" + type + "&id=" + id + "&name=" + name;
+}
+
+
 </script>
          <style>
    	    table,th,tr,td
@@ -117,6 +159,8 @@ function relocate_home2(type)
   <button class="tablinks" onclick="openCity(event, 'ebook_cat')">Tipologia eDoc</button>
   <button class="tablinks" onclick="openCity(event, 'tags')">Tag Foto</button>
 </div>
+
+<div id="registered" style="color:red"></div>
 
 <div id="gestione_utenti" class="tabcontent">
 <br>
@@ -141,7 +185,7 @@ function relocate_home2(type)
    			    echo "<td class='display_name'>".$user['display_name']."</td>";
     			    echo "<td>".$user['email']."</td>";
     			    echo "<td>".$user['role']."</td>";
-			    echo "<td><button class=\"btn btn-sm btn-danger delete_user\" id=\"".$user['id']."\" >RIMUOVI</button></td>";
+			    echo "<td><button class=\"btn btn-sm btn-danger delete_user\" id=\"".$user['id']."\" ><img src=\"/view/icons/trash.png\"></button></td>";
 			    echo "</tr>";			    
 		    }
 		?>     
@@ -236,23 +280,28 @@ function relocate_home2(type)
        	    <input type="hidden" id="tagl1" name="tagl1" value="">
 	    </form>
 	    </div>
-
-	    <form enctype="multipart/form-data" action method="POST" id="new_tagl2">";
+	    <hr>
+	    <form enctype="multipart/form-data" action method="POST" id="new_tagl2">
+	    <input type="hidden" name="tagl2">
 	    <?php
 	    foreach ($tagl1 as $tl1) {
-	         echo "<label>".$tl1['name']."</label>";
-		 echo "<input id=\"tagl2\" name=\"".$tl1['name']."\"">;
-		 echo "<table>";
-		 $tagl2 = $member->getL2Tags($tl1['id']);
-	         foreach ($tagl2 as $tl2) {
-		    echo "<tr><td>".$tl2['name']."</td></tr>";
-		}
-  		echo "</table><br>";
+    		 $tagl2 = $member->getL2Tags($tl1['id']);
+		 if (isset($tagl2)) {
+	            echo "<label><b>TAG L1: ".$tl1['name']."</b></label><br>";
+		    echo '<input id="tagl2" name="'.$tl1['id'].'">&nbsp;&nbsp;';
+		    echo "<input type=\"button\" id=\"mybutton-".$tl1['name']."\" class=\"btn btn-info\" value=\"Nuovo TAG L2\">";
+		    echo "<table>";
+	            foreach ($tagl2 as $tl2) {
+		        echo "<tr><td>".$tl2['name']."</td></tr>";
+		    }
+  		    echo "</table><br>";
+		    echo '<hr width="50%">';
+		}    
 	    }
 	    ?>     
 	    </form>
   <br>
-<div id="footer3" align="center"></div>
+<div id="footer4" align="center"></div>
 </div>
 
 <script>

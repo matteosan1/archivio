@@ -1,77 +1,85 @@
 <?php
-    require_once "../view/session.php";
-    require_once "../view/config.php";
-
-    $exit_status = "";
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    	if (isset($_FILES['filecsv'])) {
-    	    $fileName = $_FILES["filecsv"]["tmp_name"];
-    
-    	    if ($_FILES["filecsv"]["size"] > 0) {
-               $csv_file = file_get_contents($fileName);
-    
-    	       $ch = curl_init();
-    	       curl_setopt($ch, CURLOPT_URL, $SOLR_URL.'/update?commit=true');
-    	       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    	       curl_setopt($ch, CURLOPT_POST,           true);
-    	       curl_setopt($ch, CURLOPT_POSTFIELDS,     $csv_file); 
-    	       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv'));
-    
-    	       $result = curl_exec ($ch);
-    	       curl_close($ch);
-    
-    	       $exit_status = $result;
-      	    }
-    	}
-    
-    	if (isset($_FILES['filezip'])) {
-      	   if ($_FILES["filezip"]["size"] > 0) {
-      	      $zip = new ZipArchive;
-    	      $res = $zip->open($fileName);
-    	      if ($res == true) {
-      	      	 $zip->extractTo('/myzips/extract_path/');
-    		 $zip->close();
-    	    	 $exit_status = "Copertine unzippate correttamente.";
-    	      } else {
-    	      	 $exit_status = "errore";
-    	      }
-      	   }     
-        }
-    }
+require_once "../view/session.php";
+require_once "../view/config.php";
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Backup Catalogo</title>
+    <title>Ripristina Catalogo</title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
 	$(function(){
-	  $("#header").load("/site/Usered/view/header.html"); 
-	    //$("#footer").load("/site/Usered/view/footer.html"); 
+	    $("#footer").load("/site/Usered/view/footer.html"); 
 	});
     </script>
 </head>
 
+<script type="text/javascript">
+var request;
+$(document).ready(function() {
+    $('.btn-restore').click(function() {
+        var formData = new FormData(document.getElementById("new_catalogue"));
+        
+        if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/solr_curl.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+                var dict = JSON.parse(response);
+                if(dict.hasOwnProperty('error')){
+                    $('#labelError').html(dict['error']);
+                    return false;
+                } else {
+		console.log(dict['responseHeader']);
+                    $('#labelResult').html("Catalogo inserito in " + dict['responseHeader']['QTime'] + " ms");
+                    return true;
+                }
+        });
+	
+        request.fail(function (response){                           
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+        return false;
+    });
+});
+</script>
 <body>
-<div id="header" align="center"></div>
+<?php include "../view/header.php"; ?>
 <br>
 
 <h2 align="center">Ripristina Catalogo</h2>
 
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
-    <label class="col-md-4 control-label">File di Catalogo (.CSV)</label> <input type="file" name="file" id="filecsv" accept=".csv">
-    <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
+<div id="labelResult" style="color:green"></div>
+<div id="labelError" style="color:red"></div>
+<div align=center>
     <br>
-    <label class="col-md-4 control-label">File delle copertine (.ZIP)</label> <input type="file" name="file" id="filezip" accept=".zip">
-    <button type="submit" id="submit" name="import" class="btn-submit">Import</button>
-    <div id="labelError"></div>
-</form>
-
-<div id="status"><?php echo $exit_status; ?></div>
+    <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
+    <label class="col-md-4 control-label">File di Catalogo (.CSV)</label> <input type="file" name="filecsv" id="filecsv" accept=".csv">
+    <br>
+    <label class="col-md-4 control-label">File delle copertine (.ZIP)</label> <input type="file" name="filezip" id="filezip" accept=".zip">
+    <br>
+     <input type="hidden" name="func" value="restore">
+     <br><br>
+    <button type="submit" id="submit" name="import" class="btn-info btn-restore">Inserisci Catalogo</button>
+    </form>
+</div>
+<br>
+<div id="footer" align="center"></div>
 </body>
 </html>

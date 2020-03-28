@@ -12,6 +12,7 @@ class DataSource
         $this->conn = new SQLite3(__DIR__ . "/../sql/" . $GLOBALS['DATABASENAME']);
         //$create_query = "CREATE TABLE IF NOT EXISTS `registered_users` (`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,`user_name` VARCHAR(255) NOT NULL,`display_name` VARCHAR(255) NOT NULL, `role` VARCHAR(20) NOT NULL, `password` VARCHAR(255) NOT NULL,`email` VARCHAR(255) NOT NULL);";
 
+	//$this->conn->enableExceptions(true);
 	//$this->conn->exec($create_query);
     }
 
@@ -27,7 +28,7 @@ class DataSource
 		}
         }
         
-	$res = $stmt->execute();
+        $res = $stmt->execute();
 	while ($row = $res->fetchArray()) {
         	$resultset[] = $row;
         }
@@ -55,7 +56,15 @@ class DataSource
 	    }
 	}
         
-        $res = $stmt->execute();
-        return $res;
+	try {
+            $res = $stmt->execute();
+	    if (!$res) {
+	       return false;
+	    } else {
+               return true;
+            }
+	} catch (Exception $e) {
+	    return $e;
+	}
     }
 }

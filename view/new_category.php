@@ -17,7 +17,7 @@ $(document).ready(function() {
 	if (request) {
 	    request.abort();
 	}
-	console.log(formData);
+
 	request = $.ajax({
 	        url: "../class/validate_new_category.php",
 		type: "post",
@@ -28,8 +28,8 @@ $(document).ready(function() {
 	});
 
         request.done(function (response){
-		if(response.hasOwnProperty('error')){
-		    $('#registered').html(response['error']);
+		if (response != 1) {
+		    $('#registered').html(response);
 	       	} else {
 		    $('#registered').html("CATEGORY INSERTED");
 		    window.location.href = "management.php";
@@ -67,7 +67,7 @@ $(function(){
 	<body>
 		<?php include "../view/header.php" ?>
 		<br>
-                <div id=registered></div>
+                <div id=registered style="color:red"></div>
 		<div align="center">
 		<form class="register" name="new category" id="category" action method="POST">
 		<?php
@@ -76,8 +76,8 @@ $(function(){
 		} elseif ($type == 'book')  {
 		   echo '<input type="hidden" id="book" name="book" value="">';
 		} elseif ($type == 'tagl1') {
-		   echo '<input type="hidden" id="tag" name="tag" value="">';
-		}
+		   echo '<input type="hidden" id="tagl1" name="tag" value="">';
+		} 
 		?>
 		<table>
 		<tr><td>
@@ -86,8 +86,10 @@ $(function(){
 		   echo "Categoria eDoc:  ";
 		} elseif ($type == 'book')  {
 		   echo "Categoria Libri:  ";
-		} elseif ($type == 'tag') {
+		} elseif ($type == 'tagl1') {
 		   echo "TAG L1:";
+		}  elseif ($type == 'tagl2') {
+		   echo "TAG L2:";
 		}
 		?></td><td><input type="text" name="name" value="" /></td></tr>
 		</table>

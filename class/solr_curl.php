@@ -6,6 +6,8 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 require_once "../view/config.php";
 require_once "../class/Member.php";
 
+$m = new Member();
+
 //function customError($errno, $errstr) {
 //  echo json_encode(array('error' => $errstr));
 //  exit;
@@ -136,7 +138,7 @@ function removeBook($cod) {
 }
 
 function findBook2($cod) {
-
+   global $m;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?q=codice_archivio:'.$cod.'&wt=json');
    curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -149,7 +151,6 @@ function findBook2($cod) {
 
    $doc = $result['response']['docs'][0];
    
-   $m = new Member();
    $tip = $m->findTypeGroup($doc['tipologia']);
 
    $json_result = array("doc" => $doc, "type_group" => $tip);
@@ -172,7 +173,9 @@ function findBook($cod) {
    return $result['response']['docs'][0];
 }
 
-function backup($upload_time, $all=true) {
+function backup($upload_time, $all) {
+   global $m;
+
    if ($all) {
        $ch = curl_init();
        // FIXME PROVARE AD USARE UNA SOLA DATA
@@ -187,25 +190,37 @@ function backup($upload_time, $all=true) {
        $data = curl_exec($ch);
        curl_close($ch);
     
+       if ($data == false) {
+           return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
+       }
+
        $csv_filename = $GLOBALS['UPLOAD_DIR'].'backup_'.$date_for_file.'.csv';
        $csv_url = "http://localhost/upload/".'backup_'.$date_for_file.'.csv';
        file_put_contents($csv_filename, $data);
 
        return array("result" => '<a href="'.$csv_url.'">Catalogo  CSV</a>');
    } else {
+       $q_string = urlencode($m->curlFlBiblio());
+
        $ch = curl_init();
        // FIXME PROVARE AD USARE UNA SOLA DATA
        // FIXME SEPARATORE |
        // FIXME _version_ = 0 ?!?!?!?
        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
        $date_for_file = date('Y-m-d', strtotime($upload_time));
-       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q=*:*&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
+
+       // FIXME controllare che il timestamp si possa mettere quando si fa il restore
+       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
        $data = curl_exec($ch);
        curl_close($ch);
     
+       if ($data == false) {
+           return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
+       }
+
        $csv_filename = $GLOBALS['UPLOAD_DIR'].'backup_'.$date_for_file.'.csv';
        $csv_url = "http://localhost/upload/".'backup_'.$date_for_file.'.csv';
        file_put_contents($csv_filename, $data);
@@ -221,9 +236,9 @@ function backup($upload_time, $all=true) {
        $zip = new ZipArchive();
        $zip_filename =  $GLOBALS['UPLOAD_DIR'].'cover_'.$date_for_file.'.zip';
        $zip_url = "http://localhost/upload/".'cover_'.$date_for_file.'.zip';
-       if ($zip->open($zip_filename, ZipArchive::CREATE) === TRUE) {
+       if ($zip->open($zip_filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
           foreach($data['response']['docs'] as $entry) {
-          	$zip->addFile($GLOBALS['COVER_DIR'].$entry['codice_archivio'].".JPG");
+          	$zip->addFile($GLOBALS['COVER_DIR'].$entry['codice_archivio'].".JPG", $entry['codice_archivio'].".JPG");
           }
           $zip->close();
        } else {
@@ -231,8 +246,47 @@ function backup($upload_time, $all=true) {
           exit;
        }
     
-       return array("result" => '<a href="'.$csv_url.'">Catalogo  CSV</a><br>'.' <a href="'.$zip_url.'">Copertine ZIP</a><br>');
+       return array("result" => '<a href="'.$csv_url.'">Catalogo  CSV</a>&nbsp;'.' <a href="'.$zip_url.'">Copertine ZIP</a><br>');
    }
+}
+
+function restore($file, $isCsv) {
+    if ($isCsv) {
+        if ($file["size"] > 0) {
+            $fileName = $file["tmp_name"];
+            $csv_file = file_get_contents($fileName);
+    
+            $ch = curl_init();
+    	    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true');
+    	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    	    curl_setopt($ch, CURLOPT_POST,           true);
+    	    curl_setopt($ch, CURLOPT_POSTFIELDS,     $csv_file); 
+    	    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv'));
+    
+    	    $data = curl_exec ($ch);
+    	    curl_close($ch);
+	    
+	    if ($data == false) {
+                return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
+       	    }
+    
+    	    return $data;
+      	}
+    } else {
+        if ($_FILES["size"] > 0) {
+            $fileName = $file["tmp_name"];
+      	    $zip = new ZipArchive;
+    	    $res = $zip->open($fileName);
+    	    if ($res == true) {
+      	        $zip->extractTo($GLOBALS['COVER_DIR']);
+    		$zip->close();
+	      	echo json_encode(array("result"=>"Copertine aggiornate !"));
+    	    } else {
+	      	echo json_encode(array("error"=>"Problemi nell'estrazione delle copertine ".$zip_filename));
+          	exit;
+    	    }
+      	}     
+    }
 }
 
 if (isset($_POST['func'])) {
@@ -241,11 +295,17 @@ if (isset($_POST['func'])) {
   } elseif ($_POST['func'] == 'find2') {
      echo json_encode(findBook2($_POST['sel']));
   } elseif ($_POST['func'] == 'backup') {
-    if (!isset($_POST['do_biblio'])) {
-       echo json_encode(backup($_POST['last_upload']));
+    if (isset($_POST['do_biblio'])) {
+       echo json_encode(backup($_POST['last_upload'], FALSE));
     } else {
-       echo json_encode(backup($_POST['last_upload']), false);
+       echo json_encode(backup($_POST['last_upload'], TRUE));
     }
+  } elseif ($_POST['func'] == 'restore') {
+      if (isset($_FILES['filecsv'])) {
+          echo restore($_FILES['filecsv'], TRUE);
+      } elseif (isset($_FILES['filezip'])) {
+          echo restore($_FILES['filezip'], FALSE);
+      }
   }
 }
 

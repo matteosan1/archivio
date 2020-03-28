@@ -46,10 +46,12 @@ $(document).ready(function() {
                 processData:false                       
         });
 
-        request.done(function (response){             
+        request.done(function (response){
+        		      console.log(response);
                 response = JSON.parse(response);
                 if(response.hasOwnProperty('error')){
                     alert (response['error']);
+		    return false;
                 } else {
 		  $('#link').html(response['result']);
                   return true;
@@ -74,15 +76,27 @@ $(document).ready(function() {
 <br>
 <div align="center">
 <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
-  <label for="backup_data">Data di backup:</label>
-  <input type="date" id="last_upload" name="last_upload">
-  <input type="hidden" name="func" value="backup">
-  <label for="do_ocr">Salva solo catalogo biblioteca </label>
-  <input type="checkbox" id="do_biblio" name="do_biblio" value="biblio">
+<input type="hidden" name="func" value="backup">
+<table>
+  <tr>
+  <td><label for="backup_data">Data di backup:</label></td>
+  <td><input type="date" id="last_upload" name="last_upload"></td>
+  </tr>
+  <tr>
+  <td><label for="do_ocr">Salva solo catalogo biblioteca </label></td>
+  <td> <input type="checkbox" id="do_biblio" name="do_biblio" value="biblio"></td>
+  </tr>
+  <tr>
+  <td colspan=2 align=center><br>
   <button type="submit" id="submit" name="import" class="btn-info btn-backup">Backup</button>
+  <br></td>
+  </tr>
 </form>
-<br>
-<div id="link"></div>
+<tr>
+<td><label for="backup_res">File di backup:</label></td>
+<td><div id="link"></div></td>
+</tr>
+</table>
 </div>
 <br>
 <div id="footer" align="center"></div>

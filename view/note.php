@@ -133,7 +133,7 @@ $(document).ready(function() {
 </table>
 <br>
 <div class="btn" align="center">
-   <button class="btn btn-sm btn-info insert_note" id="inserisci">Invia</button>
+   <button class="btn btn-sm btn-info insert_note" id="inserisci"><img src="/view/icons/send_note.png"></button>
 </div>
 </form>
 </div>

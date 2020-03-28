@@ -29,7 +29,7 @@ var request;
 $(document).ready(function() {
     $('.delete_note').click(function() {
 	var name = $(this).closest('tr').find('.display_name').text();
-	var r = confirm("Sicuro di voler rimuovere la note ?");
+	var r = confirm("Sicuro di voler rimuovere la nota ?");
   	if (r == true) {
 	    var tr = $(this).closest('tr'),
             del_id = $(this).attr('id');
@@ -78,7 +78,7 @@ function relocate_home2(type)
 		<th> Da </th>
 		<th> Data </th>
 		<th> Messaggio </th>
-		<th align="center"> <a href="/note.php" class="logout-button"><img src="/view/icons/write_message.png"</a></th>
+		<th align="center"> <a href="/view/note.php" class="logout-button"><img src="/view/icons/write_message.png"</a></th>
 		</tr>
 		<?php
 		    if (!empty($notes)) {

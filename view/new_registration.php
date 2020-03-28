@@ -38,8 +38,10 @@ $(document).ready(function() {
 	});
 
         request.done(function (response){
-		if(response.hasOwnProperty('error')){
-		    $('#registered').html(response['error']);
+	        var dict = JSON.parse(response);
+		if(dict.hasOwnProperty('error')){		    
+		    $('#registered').html(dict['error']);
+		    return false;
 	       	} else {
 		    $('#registered').html("USER INSERTED");
 		    window.location.href = "management.php";
@@ -61,7 +63,7 @@ $(document).ready(function() {
 	<body>
 	<?php include "../view/header.php"; ?>
 	<br>
-	<div id="registered"></div>
+	<div id="registered" style="color:red"></div>
 	<div align=center>
 		<form class="register" name="new user registration" id="registration" action method="POST">
 		<table>

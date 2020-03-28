@@ -37,7 +37,7 @@ class Member
 
 	return $result;
     }
-    
+
     function getAllCategories($table_name="book_categories")
     {
 	$group = 1;
@@ -56,9 +56,20 @@ class Member
     
     	return $result;
     }
+
+    function curlFlBiblio() {
+        $cats = $this->getAllCategories("book_categories");
+
+	$res = array();
+	for ($i=0; $i<count($cats); $i++) {
+	    $res[$i] = "tipologia:".$cats[$i][0];
+	}
+
+	return implode(" OR ", $res);
+    }
     
     function findTypeGroup($tipologia) {
-    	$query = "SELECT group FROM category WHERE category=\"".$tipologia."\";";
+    	$query = "SELECT cgroup FROM category WHERE category=\"".$tipologia."\";";
 	$result = $this->ds->select($query, array(), array());
     
     	return $result;
@@ -118,18 +129,29 @@ class Member
 	   return true;
     }
     
-    public function addCategory($table_name, $name) {
-	   $query = "INSERT INTO ".$table_name." ('category') VALUES (?);"
-	   $name = strtoupper(str_replace(" ", "_", $name));
-	   if ($table_name == "tags") {		    
+    public function addCategory($table_name, $name, $id=-1) {
+	   // FIXME merge due if per tagl1 e tagl2
+	   if ($table_name == "tagl1") {
+              $query = "INSERT INTO tags ('name', 'parent_id') VALUES (?, ?);";
 	      $paramType = array(SQLITE3_TEXT, SQLITE3_INTEGER);
 	      $paramArray = array($name, -1);
+	   } elseif ($table_name == "tagl2") {
+              $query = "INSERT INTO tags ('name', 'parent_id') VALUES (?, ?);";
+	      $paramType = array(SQLITE3_TEXT, SQLITE3_INTEGER);
+	      $paramArray = array($name, $id);
 	   } else {
-	      $paramType = array(SQLITE3_TEXT);
-	      $paramArray = array($name);	      
+              $name = strtoupper(str_replace(" ", "_", $name));
+	      $query = "INSERT INTO categories ('category', 'cgroup') VALUES (?, ?);";
+	      $paramType = array(SQLITE3_TEXT, SQLITE3_INTEGER);
+	      if ($table_name == "ebook") {
+      	      	  $paramArray = array($name, 2);
+	      } else {
+	      	  $paramArray = array($name, 1);
+	      }
 	   }
 	   $insertResult = $this->ds->execute($query, $paramType, $paramArray);
-	   return true;
+	   
+	   return $insertResult;
     }
 
     public function removeUser($id) {
@@ -192,3 +214,6 @@ class Member
 	   return true;
     }
 }
+
+//$m = new Member();
+//$m->addCategory("pluto", "pippo");
