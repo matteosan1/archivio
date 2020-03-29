@@ -55,9 +55,14 @@ function upload_csv2($filename, $sep=",") {
     curl_setopt($ch, CURLOPT_POSTFIELDS,     $filename);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv'));
 
-    $result = json_decode(curl_exec($ch), true);
+    $data = json_decode(curl_exec($ch), true);
     curl_close($ch);
-    return $result;
+
+    if ($data == false) {
+       return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
+    }
+
+    return $data;
 }
 
 function upload_json_string($json_data) {
@@ -75,7 +80,7 @@ function upload_json_string($json_data) {
     return $result;
 }
 
-function lookForEDocDuplicates($resourceName) {
+function lookForDuplicates($resourceName) {
     $ch = curl_init();
     $resourceName = urlencode($resourceName);
     curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?fl=codice_archivio&q=resourceName:"'.$resourceName.'"');
@@ -108,9 +113,19 @@ function getLastByIndex($search) {
     return $result['response']['numFound'];
 }
 
-function listCodiceArchivio() {
+function listCodiceArchivio($isBiblio="book_categories") {
+    global $m;
+
+    //$query = 'q=*:*';
+
+    //if ($isBiblio) {
+    $query = "q=".$m->curlFlBiblio($isBiblio);
+    //} else {
+    //   $query = "q=".$m->curlFlBiblio("ebook_categories");
+    //}
+
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?fl=codice_archivio&q=*&sort=codice_archivio+asc&wt=json&rows='.$GLOBALS['MAX_ROWS']);
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?fl=codice_archivio&'.$query.'&sort=codice_archivio+asc&wt=json&rows='.$GLOBALS['MAX_ROWS']);
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
@@ -118,10 +133,11 @@ function listCodiceArchivio() {
 
     $result = json_decode(curl_exec($ch), true);
     curl_close($ch);
+
     return $result;
 }
 
-function removeBook($cod) {
+function removeItems($cod) {
    $result = "";
    $data = array("delete" => array("query" => "codice_archivio:".$cod)); 
    $ch = curl_init();
@@ -209,7 +225,6 @@ function backup($upload_time, $all) {
        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
        $date_for_file = date('Y-m-d', strtotime($upload_time));
 
-       // FIXME controllare che il timestamp si possa mettere quando si fa il restore
        curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -309,4 +324,6 @@ if (isset($_POST['func'])) {
   }
 }
 
+
+//print_r(listCodiceArchivio("video"));
 ?>

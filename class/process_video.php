@@ -4,7 +4,7 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
-require_once "../class/solr_culr.php";
+require_once "../class/solr_curl.php";
 
 $target_directory = $GLOBALS['VIDEO_DIR'];
 $maxsize = $GLOBALS['MAX_UPLOAD_BYTE'];
@@ -14,10 +14,28 @@ for ($i=0; $i<$countfiles; $i++) {
     $filename = $_FILES['videos']['name'][$i];
     $ext = explode(".", $filename);
 
-    if (basicCheckOnFile($i)) {
-        processVideo($i, _FILES['videos']['tmp_name'][$i], basename($_FILES['videos']['name'][$i]), $ext);
+    $ret = basicCheckOnFile($i);
+
+    if ($ret == 1) {
+       echo '{"error":"Il file '.$_FILES['videos']['name'][$i].' esiste gia`."}';
+       exit;
+    }
+    
+    if (!isset($ret['error'])) {
+        $ret = processVideo($i, end($ext));
+
+	if (isset($ret['error'])) {
+	    echo '{"error":"'.$ret['error'].'"';
+	    exit;
+	}
+    } else {
+      	print_r (array("error"=>$ret['error']));
+	exit;
     }
 }	
+
+print_r (array("result"=>"I file sono stati caricati correttamente."));
+exit;
 
 function basicCheckOnFile($i) {
     global $target_directory;
@@ -28,12 +46,11 @@ function basicCheckOnFile($i) {
     }
 
     $resourceName = basename($_FILES['videos']['name'][$i]);
-    if (lookForEDocDuplicates($resourceName)) {
-       echo "Il file ".$_FILE['videos']['name'][$i]." esiste gi&agrave;.";
-       return FALSE
+    if (lookForDuplicates($resourceName)) {
+       return FALSE;
     }
     
-    return TRUE
+    return TRUE;
 }
 
 function processVideo($i, $ext) {
@@ -45,20 +62,21 @@ function processVideo($i, $ext) {
     
     $index = getLastByIndex("VID") + 1;
     $ca = "VID.".str_pad($index, 5, "0", STR_PAD_LEFT);
- 
+
     // FIXME PENSARE AD EVENTUALE THUMBNAIL PER VIDEO
     if (move_uploaded_file($_FILES['videos']['tmp_name'][$i], $target_directory.$ca.".".$ext)) {
         
-        $csv_data = array()
+        $csv_data = array();
 	$csv_data["codice_archivio"] = $ca;
 	$csv_data["tipologia"] = "VIDEO";
 	$csv_data["note"] = $_POST['note'];
 
 	$csv_file = array2csv($csv_data);
 	$ret = upload_csv2($csv_file);
-    	echo 'Il file '.$_FILES['videos']['name'][$i].' è stato caricato.';
+
+	return $ret;
     } else {
-    	echo 'Il caricamento di '.$name.' &egrave; fallito !';
+      return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
     }
 }
 ?>

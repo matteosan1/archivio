@@ -57,15 +57,22 @@ class Member
     	return $result;
     }
 
-    function curlFlBiblio() {
-        $cats = $this->getAllCategories("book_categories");
+    function curlFlBiblio($category="book_categories") {
 
+    	if ($category == "video") {
+	   $cats = array(array("VIDEO"));
+	} else if ($category == "foto") {
+	   $cats = array(array("FOTO"));
+	} else {
+           $cats = $this->getAllCategories($category);
+	}
+	// FIXME check if backup is still working
 	$res = array();
 	for ($i=0; $i<count($cats); $i++) {
 	    $res[$i] = "tipologia:".$cats[$i][0];
 	}
 
-	return implode(" OR ", $res);
+	return implode("+OR+", $res);
     }
     
     function findTypeGroup($tipologia) {
