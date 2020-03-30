@@ -173,6 +173,7 @@ $(document).ready(function() {
 		}
           	document.getElementById(key).value = dict[key];
 	    }
+	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
         });
 	return true;
 
@@ -186,7 +187,7 @@ $(document).ready(function() {
         }
 
         request = $.ajax({
-                url: "../class/validate_new_book.php",
+                url: "../class/validate_new_item.php",
                 type: "post",
                 data: formData,
                 contentType: false,
@@ -195,24 +196,25 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-		    alert (response['error']);
-                } else {
-                    window.location.href = "../view/dashboard.php";
-		    return true;
-                }
+      	    response = JSON.parse(response);
+            if(response.hasOwnProperty('error')){
+		$('#error2').html(response['error']);
+		return false;
+            } else {
+	        $('#result2').html("Il video &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 2000); 		
+            }
         });
 
-        request.fail(function (response){			    
+        request.fail(function (response){                           
                 console.log(
                     "The following error occurred: " + response
                 );
         });
-	return false;
+        return false;
     });
-    
-
 });
 </script>
     <body>
@@ -221,14 +223,17 @@ $(document).ready(function() {
   <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
   <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
   <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
+  <div align="right" style="vertical-align=bottom;">
+       <h2>Video</h2>
+  </div>
 </div>
 
 <div id="inserimento" class="tabcontent">
-<h2 align=center>Upload Video</h2>
+<h2 align=center>Upload</h2>
 <div align=center id=result1 style="color:green"></div>
 <div align=center id=error1 style="color:red"></div>
 
-<form class="new_ebook" name="new_video" id="new_video" action method="POST">
+<form class="new_video" name="new_video" id="new_video" action method="POST">
 <br>
 <div align="center">
 <table style="width:80%">
@@ -263,7 +268,7 @@ $(document).ready(function() {
 
 
 <div id="aggiornamento" class="tabcontent">
-<h2 align="center">Aggiornamento Video</h2>
+<h2 align="center">Aggiornamento</h2>
 <div align=center id=result2 style="color:green"></div>
 <div align=center id=error2 style="color:red"></div>
 <br>
@@ -276,14 +281,17 @@ $(document).ready(function() {
       </select>
 </form>
 <br>
-<form class="new_ebook" name="upd_video" id="upd_video" action method="POST">
+
+<form class="upd_video" name="upd_video" id="upd_video" action method="POST">
+<input type="hidden" id="codice_archivio" name="codice_archivio">
+<input type="hidden" id="tipologia" name="tipologia">
 <table style="width:80%">
     <tr>
     	 <td>
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
     	 </td>
     </tr>
     <tr>
@@ -307,7 +315,7 @@ $(document).ready(function() {
 </div>
 
 <div id="cancellazione" class="tabcontent">
-<h2 align="center">Rimuovi Video</h2>
+<h2 align="center">Rimuovi</h2>
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
 
