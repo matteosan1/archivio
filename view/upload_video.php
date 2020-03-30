@@ -155,6 +155,44 @@ $(document).ready(function() {
         });
 	return false;
     });
+
+    $('.btn-update-video').click(function() {
+        var formData = new FormData(document.getElementById("upd_video"));
+        
+        if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/validate_new_item.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+       	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    		    $('#error2').html(response['error']);
+		    return false;
+                } else {
+		    $('#result2').html(response['result']);
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 1000); 
+
+                }
+        });
+
+        request.fail(function (response){                           
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+        return false;
+    });
 });
 </script>
     <body>
@@ -170,7 +208,7 @@ $(document).ready(function() {
 <div align=center id=result1 style="color:green"></div>
 <div align=center id=error1 style="color:red"></div>
 
-<form class="new_ebook" name="new_video" id="new_video" action method="POST">
+<form class="new_video" name="new_video" id="new_video" action method="POST">
 <br>
 <div align="center">
 <table style="width:80%">
@@ -218,7 +256,8 @@ $(document).ready(function() {
       </select>
 </form>
 <br>
-<form class="new_ebook" name="new_video" id="new_video" action method="POST">
+<form class="upd_video" name="upd_video" id="upd_video" action method="POST">
+<input type="hidden" id="tipologia" value="">
 <table style="width:80%">
     <tr>
     	 <td>
@@ -238,7 +277,7 @@ $(document).ready(function() {
     </tr>
     <tr>
 	<td align="center" colspan=2>
-	    <button id="import" class="btn-info btn-insert-video">Inserisci</button>
+	    <button id="import" class="btn-info btn-update-video">Inserisci</button>
 	</td>
     </tr>
 </table>
