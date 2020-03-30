@@ -155,6 +155,64 @@ $(document).ready(function() {
         });
 	return false;
     });
+
+    $(".sel_video").change(function() {
+	var sel = document.getElementById("video").value;
+	request = $.ajax({
+                url: "../class/solr_curl.php",
+                type: "POST",
+                data: {'sel':sel, 'func':'find'},
+        });
+
+	request.done(function (response){
+			      console.log(response);
+	    var dict = JSON.parse(response);
+	    for (var key in dict) {
+	        if (key == '_version_' || key == 'timestamp') {
+		   continue;
+		}
+          	document.getElementById(key).value = dict[key];
+	    }
+        });
+	return true;
+
+    });
+    
+    $('.btn-update-video').click(function() {
+	var formData = new FormData(document.getElementById("upd_video"));
+        
+        if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/validate_new_book.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+		    alert (response['error']);
+                } else {
+                    window.location.href = "../view/dashboard.php";
+		    return true;
+                }
+        });
+
+        request.fail(function (response){			    
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+	return false;
+    });
+    
+
 });
 </script>
     <body>
@@ -210,15 +268,15 @@ $(document).ready(function() {
 <div align=center id=error2 style="color:red"></div>
 <br>
 <div align="center">
-<form class="upd_video" name="upd_video" id="upd_video" action method="post">
+<form class="sel_video" name="sel_video" id="sel_video" action method="post">
       <label for="cars">Scegli volume:</label>
-      <select id="volume" name="volume">
+      <select id="video" name="video">
        	     <option>----</option>
 	     <?php echo $selects; ?>
       </select>
 </form>
 <br>
-<form class="new_ebook" name="new_video" id="new_video" action method="POST">
+<form class="new_ebook" name="upd_video" id="upd_video" action method="POST">
 <table style="width:80%">
     <tr>
     	 <td>
@@ -233,12 +291,12 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Note:</label>
 	 </td>
 	 <td>
-	    <textarea name="note" rows="12" cols="60" placeholder="note"></textarea>
+	    <textarea id="note" name="note" rows="12" cols="60" placeholder="note"></textarea>
 	 </td>
     </tr>
     <tr>
 	<td align="center" colspan=2>
-	    <button id="import" class="btn-info btn-insert-video">Inserisci</button>
+	    <button id="import" class="btn-info btn-update-video"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
 	</td>
     </tr>
 </table>
