@@ -26,7 +26,7 @@ class Member
     	$paramArray = array($id);
 	$result = $this->ds->select($query, $paramType, $paramArray);
 
-	return $result[0];
+	return $result[0]['name'];
     }
 
     function getL2Tags($tagl1) {
@@ -61,8 +61,8 @@ class Member
 
     	if ($category == "video") {
 	   $cats = array(array("VIDEO"));
-	} else if ($category == "foto") {
-	   $cats = array(array("FOTO"));
+	} else if ($category == "image") {
+	   $cats = array(array("FOTOGRAFIA"));
 	} else {
            $cats = $this->getAllCategories($category);
 	}

@@ -45,7 +45,7 @@ function basicCheckOnFile($i) {
     $resourceName = basename($_FILES['userfile']['name'][$i]);
     if (lookForEDocDuplicates($resourceName)) {
        echo "Il file ".$_FILE['userfile']['name'][$i]." esiste gi&agrave;.";
-       return FALSE
+       return FALSE;
     }
     
     return TRUE;
@@ -109,7 +109,7 @@ function processImage($tmp_name, $name, $ext, $move=true) {
       	$ret = rename($tmp_name, $name);
     }
      
-    {
+    if (TRUE) {
        addEXIF($name);
 
        $command = "/usr/bin/java -jar ".$GLOBALS['TIKA_APP']." -j -t -J ".$name;

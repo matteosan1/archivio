@@ -27,17 +27,15 @@ if ($size > 14) {
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <meta charset="UTF-8" />
         <title>Video</title>
-	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
-</script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 <script>
 $(function(){
   $("#footer1").load("/view/footer.html");
   $("#footer2").load("/view/footer.html");
   $("#footer3").load("/view/footer.html"); 
 });
-    </script>
-
-                <style>
+</script>
+<style>
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -110,8 +108,9 @@ $(document).ready(function() {
 		   $('#error1').html(response['error']);
 		   return false;
                 } else {
-		   $('#result1').html(response['result']);
-                   return true;
+		$('#result1').html(response['result']);
+		setTimeout(function(){
+	           location.reload();}, 1000);
                 }
            });
         }
@@ -144,7 +143,6 @@ $(document).ready(function() {
 		    		   setTimeout(function(){
            	   			    location.reload();
       					    }, 1000); 
-
                 }
         });
 
@@ -229,7 +227,6 @@ $(document).ready(function() {
 </div>
 
 <div id="inserimento" class="tabcontent">
-<h2 align=center>Upload</h2>
 <div align=center id=result1 style="color:green"></div>
 <div align=center id=error1 style="color:red"></div>
 
@@ -268,13 +265,12 @@ $(document).ready(function() {
 
 
 <div id="aggiornamento" class="tabcontent">
-<h2 align="center">Aggiornamento</h2>
 <div align=center id=result2 style="color:green"></div>
 <div align=center id=error2 style="color:red"></div>
 <br>
 <div align="center">
 <form class="sel_video" name="sel_video" id="sel_video" action method="post">
-      <label for="cars">Scegli volume:</label>
+      <label for="cars">Scegli Video:</label>
       <select id="video" name="video">
        	     <option>----</option>
 	     <?php echo $selects; ?>
@@ -315,7 +311,6 @@ $(document).ready(function() {
 </div>
 
 <div id="cancellazione" class="tabcontent">
-<h2 align="center">Rimuovi</h2>
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
 
@@ -325,7 +320,7 @@ $(document).ready(function() {
   	   <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	   <?php echo $selects; ?>
   	   </select><br><br>
-  	   <button type="submit" id="submit" name="import" class="btn-danger delete_videos">Rimuovi Video Selezionati</button>  
+  	   <button type="submit" id="submit" name="import" class="btn-danger delete_videos"><img src="/view/icons/trash.png">&nbsp;Rimuovi Video Selezionati</button>  
      </form>
 </div>
 <br>

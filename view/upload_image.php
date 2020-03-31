@@ -4,7 +4,20 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/session.php";
+require_once "../class/solr_curl.php";
 require_once "../class/Member.php";
+
+$selects = "";
+$json = listCodiceArchivio("image");
+
+foreach ($json['response']['docs'] as $select) {
+    $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
+}
+
+$size = count($json['response']['docs']);
+if ($size > 14) {
+   $size = 15;
+}
 
 $m = new Member();
 $l1tags = $m->getL1Tags();
@@ -18,7 +31,7 @@ $l1tags = $m->getL1Tags();
         <meta charset="UTF-8" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <title>Immagini</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
 <script>
         $(function(){
 	  $("#footer1").load("/view/footer.html");
@@ -26,7 +39,7 @@ $l1tags = $m->getL1Tags();
 	  $("#footer3").load("/view/footer.html"); 
         });
 </script>
-                <style>
+<style>
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -69,8 +82,9 @@ body {font-family: Arial;}
     </head>
 
 <script type="text/javascript">
+var request;
 $(document).ready(function() {
-	$("#uploadBtn").click(function() {
+	$(".btn-insert-image").click(function() {
 	   var filename = document.getElementById('userfile').value;
            if (filename == "") {
                alert ("Devi specificare una o più foto da caricare...");
@@ -80,25 +94,38 @@ $(document).ready(function() {
            var tagl1 = document.getElementById('tagl1').value;
 	   var tagl2 = document.getElementById('tagl2').value;
 	   if (tagl1 == "----" || tagl2 == "----") {
-	      echo "Devi specificare i due tag !!!";
+	      alert ("Devi specificare i due tag !!!");
 	      return false;
            }
-	   
-           var formData = new FormData(document.getElementById("upload"));
-            $.ajax({
+
+           var formData = new FormData(document.getElementById("new_image"));
+           request = $.ajax({
 		url: "../class/process_image.php",
 		type: 'POST',
 		data: formData, 
 		contentType: false,
 		cache: false,
-		processData:false,
-		success: function(response) {
-			$('#uploaded').html(response);
-		}
+		processData:false
 	    });
-	    var oForm = document.getElementById('upload');
-	    oForm.elements["tagl2"].value = 0;
-	    document.getElementById('upload').reset();
+
+	    request.done(function (response) {
+	        console.log(response);
+	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    		    $('#error1').html(response['error']);
+		    return false;
+                } else {
+		    $('#result1').html(response['result']);
+		    //		   setTimeout(function(){
+           	    // 			    location.reload();
+      		    //			    }, 1000);
+		    return false;
+                }
+            });
+
+            //var oForm = document.getElementById('new_image');
+	    //oForm.elements["tagl2"].value = 0;
+	    //document.getElementById('new_image').reset();
 	    return false;
 	});
 
@@ -115,8 +142,119 @@ $(document).ready(function() {
                     }
                 });
          });
-});
 
+    $('.delete_images').click(function() {
+    	var formData = new FormData(document.getElementById("delete_image"));
+        
+        if (request) {
+            request.abort();
+        }
+
+	request = $.ajax({
+                url: "../class/remove.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response) {
+	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    		    $('#error3').html(response['error']);
+		    return false;
+                } else {
+		    $('#result3').html(response['result']);
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 1000); 
+
+                }
+        });
+
+        request.fail(function (response){			    
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+	return false;
+    });
+
+    $(".sel_image").change(function() {
+	var sel = document.getElementById("image").value;
+	request = $.ajax({
+                url: "../class/solr_curl.php",
+                type: "POST",
+                data: {'sel':sel, 'func':'find'},
+        });
+
+	request.done(function (response){
+			      console.log(response);
+	    var dict = JSON.parse(response);
+	    for (var key in dict) {
+	        if (key == '_version_' || key == 'timestamp') {
+		   continue;
+		}
+          	document.getElementById(key).value = dict[key];
+	    }
+	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
+        });
+	return true;
+
+    });
+    
+    $('.btn-update-image').click(function() {
+	var formData = new FormData(document.getElementById("upd_image"));
+        
+        if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/validate_new_item.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+      	    response = JSON.parse(response);
+            if(response.hasOwnProperty('error')){
+		$('#error2').html(response['error']);
+		return false;
+            } else {
+	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 2000); 		
+            }
+        });
+
+        request.fail(function (response){                           
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+        return false;
+    });
+
+    $(".tagl1").change(function() {
+        	var id = $(this).val();
+                var dataString = 'id=' + id;
+                $.ajax({
+                    type: 'post',
+                    url: "../class/tags.php",
+                    data: dataString,
+                    cache: false,
+                    success: function(html) {
+                        $(".tagl2").html(html);
+                    }
+                });
+         });
+});
 </script>
     <body>
     <?php include "header.php"; ?>
@@ -124,23 +262,24 @@ $(document).ready(function() {
   <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
   <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
   <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
+  <div align="right" style="vertical-align=bottom;">
+         <h2>Fotografie</h2>
+  </div>
 </div>
 
-<div align=center id=result style="color:green"></div>
-<div align=center id=error style="color:red"></div>
-
 <div id="inserimento" class="tabcontent">
-<h2 align=center>Upload Immagini</h2>
+<div align=center id=result1 style="color:green"></div>
+<div align=center id=error1 style="color:red"></div>
 <br>
 <div align="center">
-<form enctype="multipart/form-data" action method="POST" id="upload">
+<form enctype="multipart/form-data" action method="POST" id="new_image" name="new_image" class="new_image">
 <table>
     <tr>
 	<td valign="top">
             Foto (jpeg, tiff o zip):
 	</td>
 	<td>
-	    <input name="userfile[]" type="file" multiple accept=".jpeg,.jpg,.tiff,.tif,.zip">
+	    <input id="userfile" name="userfile[]" type="file" multiple accept=".jpeg,.jpg,.tiff,.tif,.zip">
 	    <br><br>
     	</td>
     </tr>
@@ -191,7 +330,8 @@ $(document).ready(function() {
     </tr>
     <tr>
 	<td align="center" colspan=2>
-	    <button type="button" id="uploadBtn" class="btn btn-success"> Upload </button>
+	    <br>
+	    <button id="import" class="btn btn-sm btn-info btn-insert-image"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
         </td>
     </tr>
 </table>
@@ -203,17 +343,28 @@ $(document).ready(function() {
 
 
 <div id="aggiornamento" class="tabcontent">
-<h2 align="center">Aggiornamento Immagine</h2>
+<div align=center id=result2 style="color:green"></div>
+<div align=center id=error2 style="color:red"></div>
 <br>
 <div align="center">
-    <form enctype="multipart/form-data" action method="POST" id="upload">
+<form class="sel_image" name="sel_image" id="sel_image" action method="post">
+      <label for="cars">Scegli Immagine:</label>
+      <select id="immagine" name="immagine">
+       	     <option>----</option>
+	     <?php echo $selects; ?>
+      </select>
+</form>
+<br>
+    <form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
+<input type="hidden" id="codice_archivio" name="codice_archivio">
+<input type="hidden" id="tipologia" name="tipologia">
     <table>
     <tr>
     	 <td>
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
     	 </td>
     </tr>
     <tr>
@@ -237,7 +388,7 @@ $(document).ready(function() {
     <tr>
 	<td colspan=2>
 	<div align="center">
-	    <button type="button" id="uploadBtn" class="btn btn-success">Upload</button>
+	    <button id="import" class="btn-info btn-update-image"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
 	</div>
 	</td>
     </tr>
@@ -250,14 +401,16 @@ $(document).ready(function() {
 
 
 <div id="cancellazione" class="tabcontent">
-<h2 align="center">Rimuovi Immagini</h2>
+<div align=center id=result3 style="color:green"></div>
+<div align=center id=error3 style="color:red"></div>
+
 <br>
 <div align="center">
-     <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
-  	   <select width=100px id="volumi[]" name="volumi[]" size="15" multiple>
+     <form class="delete_image" name="delete_image" id="delete_image" action method="POST">
+  	   <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	   <?php echo $selects; ?>
   	   </select><br><br>
-  	   <button type="submit" id="submit" name="import" class="btn-danger delete_volumes">Rimuovi Immagini Selezionate</button>  
+  	   <button type="submit" id="submit" name="import" class="btn-danger delete_imagess"><img src="/view/icons/trash.png">&nbsp;Rimuovi Immagini Selezionate</button>  
      </form>
 </div>
 <br>
