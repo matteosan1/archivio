@@ -16,6 +16,11 @@ $json = listCodiceArchivio("ebook_categories");
 foreach ($json['response']['docs'] as $select) {
         $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
 }
+
+$size = count($json['response']['docs']);
+if ($size > 14) {
+   $size = 15;
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,9 +39,8 @@ $(function() {
   $("#footer2").load("/view/footer.html");
   $("#footer3").load("/view/footer.html");
 });
-    </script>
-
-<!----                <style>
+</script>
+<style>
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -75,7 +79,7 @@ body {font-family: Arial;}
   border: 1px solid #ccc;
   border-top: none;
 }
-</style>---->
+</style>
 </head>
 
 <script type="text/javascript">
@@ -98,7 +102,7 @@ $(document).ready(function() {
 
 	  if (ext != 'jpg' && ext != 'jpeg' &&
 	      ext != 'tiff' && ext != 'tif' &&
-	      ext != 'doc' &&
+	      ext != 'doc' && ext != 'msg' &&
       	      ext != 'docx' && ext != 'eml' &&
       	      ext != 'pdf') {
 		 alert ("Non è possibile inserire documento in formato " + ext);
@@ -113,17 +117,20 @@ $(document).ready(function() {
                 	 processData:false                       
         	});
 
-        	request.done(function(response) {
-		console.log(response);
-                    response = JSON.parse(response);
-                    if(response.hasOwnProperty('error')) {
-			alert (response['error']);
-			return false
-                    } else {
-                      //window.location.href = "../view/dashboard.php";
-                      return true;
-                    }
-        	});
+       		request.done(function (response) {
+	        console.log(response);
+	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    		    $('#error1').html(response['error']);
+		    return false;
+                } else {
+		    $('#result1').html(response['result']);
+		    //		   setTimeout(function(){
+           	    // 			    location.reload();
+      		    //			    }, 1000);
+		    return false;
+                }
+            });
       	  }
       }
       
@@ -143,7 +150,7 @@ $(document).ready(function() {
 	} else {
 	  var parts = filename.split('.');
  	  var ext = parts[parts.length - 1].toLowerCase();
-
+	  // FIXME AGGIUNGERE pdf2image per processare pdf
 	  if (ext != 'jpg' && ext != 'jpeg' &&
 	      ext != 'tiff' && ext != 'tif') {
 		 alert ("Non è possibile fare analisi OCR con file " + ext);
@@ -166,6 +173,105 @@ $(document).ready(function() {
        }
        return false;
    });
+
+    $('.delete_images').click(function() {
+    	var formData = new FormData(document.getElementById("delete_image"));
+        
+        if (request) {
+            request.abort();
+        }
+
+	request = $.ajax({
+                url: "../class/remove.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response) {
+	        response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    		    $('#error3').html(response['error']);
+		    return false;
+                } else {
+		    $('#result3').html(response['result']);
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 1000); 
+
+                }
+        });
+
+        request.fail(function (response){			    
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+	return false;
+    });
+
+    $(".sel_ebook").change(function() {
+	var sel = document.getElementById("volume").value;
+	request = $.ajax({
+                url: "../class/solr_curl.php",
+                type: "POST",
+                data: {'sel':sel, 'func':'find'},
+        });
+
+	request.done(function (response){
+			      console.log(response);
+	    var dict = JSON.parse(response);
+	    for (var key in dict) {
+	        if (key == '_version_' || key == 'timestamp') {
+		   continue;
+		}
+          	document.getElementById(key).value = dict[key];
+	    }
+	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
+	    document.getElementById("tipologia2").value = dict["tipologia"];
+        });
+	return true;
+
+    });
+    
+    $('.btn-update-ebook').click(function() {
+	var formData = new FormData(document.getElementById("upd_ebook"));
+        
+        if (request) {
+            request.abort();
+        }
+
+        request = $.ajax({
+                url: "../class/validate_new_item.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+        });
+
+        request.done(function (response){
+      	    response = JSON.parse(response);
+            if(response.hasOwnProperty('error')){
+		$('#error2').html(response['error']);
+		return false;
+            } else {
+	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
+		    		   setTimeout(function(){
+           	   			    location.reload();
+      					    }, 2000); 		
+            }
+        });
+
+        request.fail(function (response){                           
+                console.log(
+                    "The following error occurred: " + response
+                );
+        });
+        return false;
+    });
 });
 </script>
     <body>
@@ -174,13 +280,14 @@ $(document).ready(function() {
     <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
     <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
     <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
+  <div align="right" style="vertical-align=bottom;">
+         <h2>eDocs</h2>
+  </div>
     </div>
     
 <div id="inserimento" class="tabcontent">
-<h2 align="center">Inserimento eDoc</h2>
-<!-----<br>
-<div align=center id=result style="color:green"></div>
-<div align=center id=error style="color:red"></div>
+<div align=center id=result1 style="color:green"></div>
+<div align=center id=error1 style="color:red"></div>
 <br>
 <div align="center">
      <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
@@ -202,7 +309,7 @@ $(document).ready(function() {
     	   </tr>
     	   <tr>
     	   	<td>
-		    <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, TIFF, DOC, DOCX, EML):</label>
+		    <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, TIFF, DOC, DOCX, EML, MSG):</label>
 	 	</td>
 		<td>
 		    <input name="edoc[]" id="edoc" type="file" value="" multiple><br><br>
@@ -248,7 +355,7 @@ $(document).ready(function() {
     	   </tr>
 	   <tr>
 	        <td>
-		    <button id="import" class="btn-info btn-insert-ebook">Inserisci</button>
+		    <button id="import" class="btn-info btn-insert-ebook"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
 		</td>
 	   </tr>
        	   </table>
@@ -259,9 +366,11 @@ $(document).ready(function() {
 </div>
 
 <div id="aggiornamento" class="tabcontent">
-<h2 align="center">Aggiornamento eDoc</h2>
-<!-----<div align="center">
-     <form class="upd_edoc" name="upd_edoc" id="upd_edoc" action method="post">
+<div align=center id=result2 style="color:green"></div>
+<div align=center id=error2 style="color:red"></div>
+<br>
+<div align="center">
+     <form class="sel_edoc" name="sel_edoc" id="sel_edoc" action method="post">
      	   <label for="cars">Scegli eDoc:</label>
            <select id="volume" name="volume">
            	  <option>----</option>
@@ -270,14 +379,16 @@ $(document).ready(function() {
     </form>
     <br>
 
-    <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
+    <form enctype="multipart/form-data" class="upd_ebook" name="upd_ebook" id="upd_ebook" action method="POST">
+<input type="hidden" id="codice_archivio" name="codice_archivio">
+<input type="hidden" id="tipologia" name="tipologia">
     <table style="width:80%">
     <tr>
     	 <td>
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
     	 </td>
     </tr>
     <tr>
@@ -285,14 +396,15 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Tipologia:</label>
 	 </td>
 	 <td>
-	    <select name="tipologia" class="tipologia" id="tipologia">
+	 <input type="text" id="tipologia2" name="tipologia2" disabled>
+<!----	    <select name="tipologia" class="tipologia" id="tipologia">
             	    <option selected="selected">----</option>
 		    <?php
 	  	    foreach ($categories as $category) {
 	    	    echo '<option>'.$category['category'].'</option>';
 	  	    }
 		    ?>
-            </select>
+            </select>  ---->
 	 </td>
     </tr>
     <tr>
@@ -313,7 +425,7 @@ $(document).ready(function() {
     </tr>
     <tr>
 	<td>
-	    <button id="import" class="btn-info btn-insert-ebook">Aggiorna</button> 
+	    <button id="import" class="btn-info btn-update-ebook"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button> 
 	</td>
     </tr>	
     </table>
@@ -324,15 +436,15 @@ $(document).ready(function() {
 </div>
 
 <div id="rimozione" class="tabcontent">
-<h2 align="center">Rimuovi eDoc</h2>
-    <br>
-    <div align="center">
+<div align=center id=result3 style="color:green"></div>
+<div align=center id=error3 style="color:red"></div>
+<br>
+<div align="center">
     <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
-    	  <label for="cars">Scegli i documenti da rimuovere:</label>
-  	  <select width=100px id="volumi[]" name="volumi[]" size="15" multiple>
+  	  <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	  <?php echo $selects; ?>
   	  </select><br><br>
-  	  <button type="submit" id="submit" name="import" class="btn-danger delete_volumes">Rimuovi eDoc Selezionati</button>  
+  	  <button type="submit" id="submit" name="import" class="btn-danger delete_volumes"><img src="/view/icons/trash.png">&nbsp;Rimuovi eDoc Selezionati</button>  
     </form>
     </div>
 <br>

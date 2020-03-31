@@ -129,20 +129,6 @@ $(document).ready(function() {
 	    return false;
 	});
 
-	$(".tagl1").change(function() {
-        	var id = $(this).val();
-                var dataString = 'id=' + id;
-                $.ajax({
-                    type: 'post',
-                    url: "../class/tags.php",
-                    data: dataString,
-                    cache: false,
-                    success: function(html) {
-                        $(".tagl2").html(html);
-                    }
-                });
-         });
-
     $('.delete_images').click(function() {
     	var formData = new FormData(document.getElementById("delete_image"));
         
@@ -355,7 +341,7 @@ $(document).ready(function() {
       </select>
 </form>
 <br>
-    <form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
+<form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
 <input type="hidden" id="codice_archivio" name="codice_archivio">
 <input type="hidden" id="tipologia" name="tipologia">
     <table>
@@ -403,14 +389,13 @@ $(document).ready(function() {
 <div id="cancellazione" class="tabcontent">
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
-
 <br>
 <div align="center">
      <form class="delete_image" name="delete_image" id="delete_image" action method="POST">
   	   <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	   <?php echo $selects; ?>
   	   </select><br><br>
-  	   <button type="submit" id="submit" name="import" class="btn-danger delete_imagess"><img src="/view/icons/trash.png">&nbsp;Rimuovi Immagini Selezionate</button>  
+  	   <button type="submit" id="submit" name="import" class="btn-danger btn-delete-images"><img src="/view/icons/trash.png">&nbsp;Rimuovi Immagini Selezionate</button>  
      </form>
 </div>
 <br>
