@@ -110,7 +110,7 @@ $(document).ready(function() {
                 } else {
 		$('#result1').html(response['result']);
 		setTimeout(function(){
-	           location.reload();}, 1000);
+	           location.reload();}, 2000);
                 }
            });
         }
@@ -142,7 +142,7 @@ $(document).ready(function() {
 		    $('#result3').html(response['result']);
 		    		   setTimeout(function(){
            	   			    location.reload();
-      					    }, 1000); 
+      					    }, 2000); 
                 }
         });
 

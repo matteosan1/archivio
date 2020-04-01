@@ -109,17 +109,16 @@ $(document).ready(function() {
 	    });
 
 	    request.done(function (response) {
-	        console.log(response);
 	        response = JSON.parse(response);
                 if(response.hasOwnProperty('error')){
     		    $('#error1').html(response['error']);
 		    return false;
                 } else {
 		    $('#result1').html(response['result']);
-		    //		   setTimeout(function(){
-           	    // 			    location.reload();
-      		    //			    }, 1000);
-		    return false;
+		    setTimeout(function(){
+           	    	    location.reload();
+      		    	    }, 2000);
+		    return true;
                 }
             });
 
@@ -129,7 +128,21 @@ $(document).ready(function() {
 	    return false;
 	});
 
-    $('.delete_images').click(function() {
+	$(".tagl1").change(function() {
+        	var id = $(this).val();
+                var dataString = 'id=' + id;
+                $.ajax({
+                    type: 'post',
+                    url: "../class/tags.php",
+                    data: dataString,
+                    cache: false,
+                    success: function(html) {
+                        $(".tagl2").html(html);
+                    }
+                });
+         });
+
+    $('.btn-delete-images').click(function() {
     	var formData = new FormData(document.getElementById("delete_image"));
         
         if (request) {
@@ -154,7 +167,7 @@ $(document).ready(function() {
 		    $('#result3').html(response['result']);
 		    		   setTimeout(function(){
            	   			    location.reload();
-      					    }, 1000); 
+      					    }, 2000); 
 
                 }
         });
@@ -168,7 +181,7 @@ $(document).ready(function() {
     });
 
     $(".sel_image").change(function() {
-	var sel = document.getElementById("image").value;
+	var sel = document.getElementById("immagine").value;
 	request = $.ajax({
                 url: "../class/solr_curl.php",
                 type: "POST",
@@ -176,14 +189,16 @@ $(document).ready(function() {
         });
 
 	request.done(function (response){
-			      console.log(response);
 	    var dict = JSON.parse(response);
 	    for (var key in dict) {
-	        if (key == '_version_' || key == 'timestamp') {
-		   continue;
+	        if (key == 'By-line') {
+		   document.getElementById(key).value = dict[key];
+		} else if (key == "Keywords") {
+		    keywords = dict[key].trim().split(" "); 
+   		    document.getElementById(key).value = keywords.join(",");	
 		}
-          	document.getElementById(key).value = dict[key];
 	    }
+    	    document.getElementById("codice_archivio").value = dict["codice_archivio"];    
 	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
         });
 	return true;
@@ -191,6 +206,9 @@ $(document).ready(function() {
     });
     
     $('.btn-update-image').click(function() {
+        var tags = document.getElementById("Keywords").value;
+	tags = tags.trim().split(",");
+        document.getElementById("Keywords").value = tags.join(" ");	
 	var formData = new FormData(document.getElementById("upd_image"));
         
         if (request) {
@@ -207,15 +225,15 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-      	    response = JSON.parse(response);
-            if(response.hasOwnProperty('error')){
-		$('#error2').html(response['error']);
+  	    var dict = JSON.parse(response);
+            if(dict.hasOwnProperty('error')){
+		$('#error2').html(dict['error']['msg']);
 		return false;
             } else {
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 2000); 		
+	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + dict['responseHeader']['QTime'] + " ms");
+		setTimeout(function(){
+           	    location.reload();
+      		    }, 2000); 		
             }
         });
 
@@ -341,9 +359,8 @@ $(document).ready(function() {
       </select>
 </form>
 <br>
-<form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
-<input type="hidden" id="codice_archivio" name="codice_archivio">
-<input type="hidden" id="tipologia" name="tipologia">
+    <form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
+    <input type="hidden" id="codice_archivio" name="codice_archivio">
     <table>
     <tr>
     	 <td>
@@ -363,12 +380,12 @@ $(document).ready(function() {
    	    <label>Fotografo: </label>
 	</td>
 	<td>
-	    <input id="author" value="" name="author">
+	    <input type="text" id="By-line" name="By-line">
    	</td>
     </tr>
     <tr>
 	<td valign="top">        
-   	    Tag addizionali (comma separated):</td><td><textarea name="list_of_tags" rows="5" cols="30"></textarea>
+   	    Tag addizionali (comma separated):</td><td><textarea id="Keywords" name="Keywords" rows="5" cols="30"></textarea>
     	</td>
     </tr>
     <tr>
@@ -389,6 +406,7 @@ $(document).ready(function() {
 <div id="cancellazione" class="tabcontent">
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
+
 <br>
 <div align="center">
      <form class="delete_image" name="delete_image" id="delete_image" action method="POST">

@@ -27,8 +27,8 @@ require_once "session.php";
 	   printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/insert_book2.png">Libri</button></td>', "'/view/insert_book.php'");
 	   printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/edoc.png">eDoc</button></td>', "'/view/insert_ebook.php'");
 	}
-	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/insert_pic.png">Libri</button></td>', "'/view/upload_image.php'");
-	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/upload_video.png">eDoc</button></td>', "'/view/upload_video.php'");
+	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/insert_pic.png">Fotografie</button></td>', "'/view/upload_image.php'");
+	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/upload_video.png">Video</button></td>', "'/view/upload_video.php'");
 	echo '</tr>';
 	echo '<tr>';
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");

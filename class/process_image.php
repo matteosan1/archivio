@@ -7,6 +7,7 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 require_once "../view/config.php";
 require_once "../class/exif.php";
 require_once "../class/solr_curl.php";
+require_once "../class/resize_image.php";
 
 $tagl1 = $m->getTagNameById($_POST['tagl1']);
 $tagl2 = $m->getTagNameById($_POST['tagl2']);
@@ -26,26 +27,29 @@ for ($i=0; $i<$countfiles; $i++) {
 	}
     } elseif (in_array(end($ext), $img_ext)) {
 	if (basicCheckOnFile($i)) {
-     	    processImage($i, $ext); //$_FILES['userfile']['tmp_name'][$i], $_FILES['userfile']['name'][$i]);
+     	    processImage($_FILES['userfile']['tmp_name'][$i], $_FILES['userfile']['name'][$i], end($ext));
 	}
     } else {		
-	echo "File di tipo ".end($ext)." non possono essere caricati !";
+	echo json_encode(array("error"=>"File di tipo ".end($ext)." non possono essere caricati !"));
 	exit;
     }	
 }	
+
+echo json_encode(array('result' => "Le immagini sono state caricate."));
+exit;
 
 function basicCheckOnFile($i) {
     global $target_directory;
 
     if ($_FILES['userfile']['size'][$i] > $GLOBALS['MAX_UPLOAD_BYTE']) {
-        echo "Il file ".$_FILE['userfile']['name'][$i]." &egrave; troppo grande (>".$GLOBALS['MAX_UPLOAD_BYTE']." Bytes) !";
-      	return FALSE;
+	echo json_encode(array("error"=>"Il file ".$_FILE['userfile']['name'][$i]." &egrave; troppo grande (>".$GLOBALS['MAX_UPLOAD_BYTE']." Bytes) !"));
+      	exit;
     }
 	
     $resourceName = basename($_FILES['userfile']['name'][$i]);
-    if (lookForEDocDuplicates($resourceName)) {
-       echo "Il file ".$_FILE['userfile']['name'][$i]." esiste gi&agrave;.";
-       return FALSE;
+    if (lookForDuplicates($resourceName)) {
+       echo json_encode(array("error"=>"Il file ".$_FILES['userfile']['name'][$i]." esiste gi&agrave;."));
+       exit;
     }
     
     return TRUE;
@@ -70,9 +74,8 @@ function processZip($zipfilename) {
 	
     if ($res === TRUE) {
        	$zip->extractTo(dirname($zipfilename));
-        echo 'Unzipped !';
     } else {
-        echo "L'unzip di ".$filename." (".$zipfilename.") &egrave; fallito !";
+	echo json_encode(array("error"=>"L'unzip di ".$filename." (".$zipfilename.") &egrave; fallito !"));
         exit;
     }
 
@@ -86,7 +89,7 @@ function processZip($zipfilename) {
     $zip->close();
 }
 
-function processImage($tmp_name, $name, $ext, $move=true) {
+function processImage($tmp_name, $real_name, $ext, $move=true) {
     global $target_directory;
 
     if (! file_exists($target_directory)) {
@@ -118,24 +121,16 @@ function processImage($tmp_name, $name, $ext, $move=true) {
 
        $data["codice_archivio"] = $ca;
        $data["tipologia"] = "FOTOGRAFIA";
-       $data["resourceName"] = basename($name); //_FILES["userfile"]["name"][$i];
-       //if (isset($data['X-TIKA:content'])) {
-       //   $data['text'] = $data['X-TIKA:content'];
-       //   unset($data['X-TIKA:content']);
-       //}
-       //
-       //if (isset($data['X-Parsed-By'])) {
-       //   unset($data['X-Parsed-By']);
-       //}
+       $data["resourceName"] = basename($real_name); 
 
        $ret = upload_csv2(array2csv($data));
-       if ($ret['responseHeader']['status'] != 0) {
-           echo json_encode(array('error' => $ret['error']['msg']));  
-       } else {
-           echo json_encode(array('result' => "fotografia ".$data['codice_archivio']." inserita correttamente."));
+       if (isset($ret['error'])) {
+	   echo json_encode($ret);
+	   exit;
        }
     } else {
-    	echo 'Il caricamento di '.$userfile_name.' &egrave; fallito !';
+    	echo json_encode(array("error"=>'Il caricamento di '.$userfile_name.' &egrave; fallito !'));
+	exit;
     }
 }
 ?>

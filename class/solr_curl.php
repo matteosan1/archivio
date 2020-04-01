@@ -19,6 +19,12 @@ function array2csv($data, $delimiter = ',', $enclosure = '"', $escape_char = "\\
 {
     $f = fopen('php://memory', 'r+');
     
+    foreach ($data as $key=>$value) {
+       if (gettype($value) == "array") {
+       	  unset($data[$key]);
+       }
+    }
+
     fputcsv($f, array_keys($data), $delimiter, $enclosure, $escape_char);
     fputcsv($f, $data, $delimiter, $enclosure, $escape_char);
     rewind($f);
