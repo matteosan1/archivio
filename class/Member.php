@@ -102,6 +102,24 @@ class Member
     	return $result;
     }
 
+    function getMemberByName($name, $isUser=FALSE)
+    {
+	if ($isUser) {
+            $query = "SELECT * FROM registered_users WHERE user_name = ?";
+	} else {
+	    $query = "SELECT * FROM registered_users WHERE display_name = ?";
+	}    
+        $paramType = array(SQLITE3_TEXT);
+        $paramArray = array($name);
+        $memberResult = $this->ds->select($query, $paramType, $paramArray);
+
+	if (isset($memberResult) and count($memberResult) > 0)  {
+           return TRUE;
+    	} else {
+	   return FALSE;
+	}
+    }
+
     function getMemberById($memberId)
     {
         $query = "SELECT * FROM registered_users WHERE id = ?";

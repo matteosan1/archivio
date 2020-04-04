@@ -157,7 +157,7 @@ function relocate_home3(type, name, id)
   <button id=pippo class="tablinks" onclick="openCity(event, 'gestione_utenti')">Utenti</button>
   <button class="tablinks" onclick="openCity(event, 'book_cat')">Tipologia Libri</button>
   <button class="tablinks" onclick="openCity(event, 'ebook_cat')">Tipologia eDoc</button>
-  <button class="tablinks" onclick="openCity(event, 'tags')">Tag Foto</button>
+  <button class="tablinks" onclick="openCity(event, 'tags')">Tag Fotografie</button>
 </div>
 
 <div id="registered" style="color:red"></div>
