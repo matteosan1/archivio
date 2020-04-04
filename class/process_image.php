@@ -60,7 +60,7 @@ function addEXIF($filename) {
 
     $objIPTC = new IPTC($filename);
     $additional_tags = implode(" ", $list_of_tags);
-    $objIPTC->setValue(IPTC_KEYWORDS, $additional_tags." ".$tagl1." ".$tagl2);
+    $objIPTC->setValue(IPTC_KEYWORDS, $tagl1." ".$tagl2." ".$additional_tags);
     if (isset($_POST['author'])) {
        $objIPTC->setValue(IPTC_BYLINE, $_POST['author']);
     }

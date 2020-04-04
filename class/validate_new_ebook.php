@@ -12,13 +12,13 @@ if (isset($_POST)) {
    for ($i=0; $i<$countfiles; $i++) {
       $resourceName = basename($_FILES['edoc']['name'][$i]);
       // FIXME CONTROLLARE DUPLICATI NEL CASO DI multivalued...
-      //$pippo = lookForEDocDuplicates($resourceName);
+      //$pippo = lookForEDoDuplicates($resourceName);
       //print_r ($pippo);
       //exit;
-      if (lookForEDocDuplicates($resourceName)) {
-      	 echo "Il documento e` gia` stato indicizzato";
-      	 exit();
-      }
+      //if (lookForDuplicates($resourceName)) {
+      //	 echo "Il documento e` gia` stato indicizzato";
+      //	 exit();
+      //}
    
       if (isset($_POST['do_ocr'])) {
       	 $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
@@ -71,7 +71,9 @@ if (isset($_POST)) {
        $data["note"] = $_POST['note'];
        $data["resourceName"] = $resourceName;
        if (isset($data['X-TIKA:content'])) {
-       	  $data['text'] = $data['X-TIKA:content'];
+          $text = trim(preg_replace('/(\t){1,}/', '', $data['X-TIKA:content']));
+          $text = trim(preg_replace('/(\n){2,}/', "\n", $text));
+       	  $data['text'] = $text; 
       	  unset($data['X-TIKA:content']);
        }
 
@@ -81,11 +83,20 @@ if (isset($_POST)) {
 
        $orig_ext = strtolower(end($orig_ext));
        if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
-       	  $resize = new ResizeImage($_FILES['edoc']['tmp_name']);
+       	  $resize = new ResizeImage($_FILES['edoc']['tmp_name'][$i]);
       	  $resize->resizeTo(200, 200, 'maxHeight');
       	  $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
+       } else if ($orig_ext == "pdf") {
+          $command = $GLOBALS['PDF2IMAGE_BIN']." -f 1 -l 1 -dev jpeg ".$_FILES['edoc']['tmp_name'][$i];
+          $output = shell_exec($command);
+	  $resize = new ResizeImage($_FILES['edoc']['tmp_name'][$i]."_1.jpg");
+      	  $resize->resizeTo(200, 200, 'maxHeight');
+      	  $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
+       } else if ($orig_ext == "tif" or $orig_ext == "tiff") {
+       	  $command = $GLOBALS['CONVERT_BIN']." ".$_FILES['edoc']['tmp_name'][$i]." x200 ".$GLOBALS['THUMBNAILS_DIR'].$ca.".JPG";
+          $output = shell_exec($command);
        }
-
+ 
        $target_directory = $GLOBALS['EDOC_DIR'].$ca.".".$ext;
        $moved = rename($tmp_filename, $target_directory);
        if ($moved != 1) {

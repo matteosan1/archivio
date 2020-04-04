@@ -14,5 +14,8 @@ $GLOBALS['THUMBNAILS_DIR'] = '/Users/sani/myupload/thumbnails/';
 
 $GLOBALS['OCR_BIN'] = '/usr/local/bin/tesseract';
 $GLOBALS['TIKA_APP'] = '/usr/local/var/www/tika-app-1.23.jar';
-$GLOBALS['MERGE_PDF_BIN'] = 'ghostscript -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
+$GLOBALS['MERGE_PDF_BIN'] = 'ghostscript -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite 
+-sOutputFile=';
+$GLOBALS['PDF2IMAGE_BIN'] = '/usr/local/bin/pdf2image';
+$GLOBALS['CONVERT_BIN'] = '/usr/local/bin/convert';
 ?>

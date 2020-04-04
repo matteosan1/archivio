@@ -125,10 +125,9 @@ $(document).ready(function() {
 		    return false;
                 } else {
 		    $('#result1').html(response['result']);
-		    //		   setTimeout(function(){
-           	    // 			    location.reload();
-      		    //			    }, 1000);
-		    return false;
+		    setTimeout(function(){
+           	       location.reload();
+      		       }, 1000);
                 }
             });
       	  }
@@ -167,15 +166,15 @@ $(document).ready(function() {
 		    
               request.done(function (response) {				
 	          $('#testo_ocr').html(response);
-	          return false;
+		  return false;
               });
       	  }
        }
        return false;
    });
 
-    $('.delete_images').click(function() {
-    	var formData = new FormData(document.getElementById("delete_image"));
+    $('.btn-delete-ebook').click(function() {
+    	var formData = new FormData(document.getElementById("delete_ebook"));
         
         if (request) {
             request.abort();
@@ -191,16 +190,15 @@ $(document).ready(function() {
         });
 
         request.done(function (response) {
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error3').html(response['error']);
+	    response = JSON.parse(response);
+            if(response.hasOwnProperty('error')){
+    	        $('#error3').html(response['error']);
 		    return false;
                 } else {
 		    $('#result3').html(response['result']);
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 1000); 
-
+		    setTimeout(function(){
+           	       location.reload();
+      		       }, 1000); 
                 }
         });
 
@@ -221,19 +219,23 @@ $(document).ready(function() {
         });
 
 	request.done(function (response){
-			      console.log(response);
 	    var dict = JSON.parse(response);
-	    for (var key in dict) {
-	        if (key == '_version_' || key == 'timestamp') {
-		   continue;
-		}
-          	document.getElementById(key).value = dict[key];
+	    document.getElementById("codice_archivio_upd").value = dict["codice_archivio"];
+	    document.getElementById("tipologia_upd").value = dict["tipologia"];
+	    if (dict.hasOwnProperty("text")) {
+	        document.getElementById("text_upd").value = dict['text'];
 	    }
-	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
-	    document.getElementById("tipologia2").value = dict["tipologia"];
+
+	    if (dict.hasOwnProperty('note')) {
+	        document.getElementById("note_upd").value = dict["note"];
+	    }
+
+	    var ext = dict['resourceName'].split('.').pop().toLowerCase();
+	    if (ext == "jpeg" || ext == "jpg" || ext == "tiff" || ext == "tif" || ext == "pdf") {
+	       document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR'] ?>" + dict['codice_archivio'] + ".JPG";
+	    }
         });
 	return true;
-
     });
     
     $('.btn-update-ebook').click(function() {
@@ -242,7 +244,7 @@ $(document).ready(function() {
         if (request) {
             request.abort();
         }
-
+	console.log("PIPPO");
         request = $.ajax({
                 url: "../class/validate_new_item.php",
                 type: "post",
@@ -253,15 +255,15 @@ $(document).ready(function() {
         });
 
         request.done(function (response){
-      	    response = JSON.parse(response);
-            if(response.hasOwnProperty('error')){
-		$('#error2').html(response['error']);
+      	    var dict = JSON.parse(response);
+            if(dict.hasOwnProperty('error')){
+		$('#error2').html(dict['error']);
 		return false;
             } else {
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 2000); 		
+	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + dict['responseHeader']['QTime'] + " ms");
+		setTimeout(function(){
+           	    location.reload();
+      		    }, 2000); 		
             }
         });
 
@@ -279,7 +281,7 @@ $(document).ready(function() {
     <div class="tab">
     <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
     <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
-    <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
+    <button class="tablinks" onclick="openCity(event, 'rimozione')">Cancellazione</button>
   <div align="right" style="vertical-align=bottom;">
          <h2>eDocs</h2>
   </div>
@@ -290,8 +292,9 @@ $(document).ready(function() {
 <div align=center id=error1 style="color:red"></div>
 <br>
 <div align="center">
-     <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
-     	   <table style="width:80%">
+        <table style="width:80%">
+           <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
+
    	   <tr>
    	   	<td>
 		    <label for="fname" class="fname">Tipologia:</label>
@@ -329,7 +332,7 @@ $(document).ready(function() {
 		    <label for="fname" class="fname">Note:</label>
 		</td>
 		<td>
-		    <textarea name="note" rows="10" cols="80" placeholder="note"></textarea>
+		    <textarea name="note" rows="10" cols="60" placeholder="note"></textarea>
 		</td>
     	   </tr>
     	   <tr>
@@ -350,19 +353,21 @@ $(document).ready(function() {
 		    <label for="fname" class="fname">Testo OCR:</label>
 		</td>
 		<td>
-		    <textarea readonly id="testo_ocr" name="testo_ocr" rows="10" cols="80" placeholder="OCR"></textarea>
+		    <textarea readonly id="testo_ocr" name="testo_ocr" rows="10" cols="60" placeholder="OCR"></textarea>
 		</td>
     	   </tr>
 	   <tr>
-	        <td>
-		    <button id="import" class="btn-info btn-insert-ebook"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
+	        <td colspan=2>
+		    <div align="center">
+		        <button id="import" class="btn-info btn-insert-ebook"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
+		    </div>
 		</td>
-	   </tr>
-       	   </table>
-    </form>
+ 	   </tr>
+           </form>
+       </table>
 </div>
 <br>
-<div id="footer1" align="center"></div>---->
+<div id="footer1" align="center"></div>
 </div>
 
 <div id="aggiornamento" class="tabcontent">
@@ -370,7 +375,7 @@ $(document).ready(function() {
 <div align=center id=error2 style="color:red"></div>
 <br>
 <div align="center">
-     <form class="sel_edoc" name="sel_edoc" id="sel_edoc" action method="post">
+     <form class="sel_ebook" name="sel_ebook" id="sel_ebook" action method="post">
      	   <label for="cars">Scegli eDoc:</label>
            <select id="volume" name="volume">
            	  <option>----</option>
@@ -379,16 +384,17 @@ $(document).ready(function() {
     </form>
     <br>
 
+<table>
+<tr>
+    <td>
     <form enctype="multipart/form-data" class="upd_ebook" name="upd_ebook" id="upd_ebook" action method="POST">
-<input type="hidden" id="codice_archivio" name="codice_archivio">
-<input type="hidden" id="tipologia" name="tipologia">
     <table style="width:80%">
     <tr>
     	 <td>
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio_upd" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
     	 </td>
     </tr>
     <tr>
@@ -396,7 +402,7 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Tipologia:</label>
 	 </td>
 	 <td>
-	 <input type="text" id="tipologia2" name="tipologia2" disabled>
+	 <input type="text" id="tipologia_upd" name="tipologia" readonly="readonly">
 <!----	    <select name="tipologia" class="tipologia" id="tipologia">
             	    <option selected="selected">----</option>
 		    <?php
@@ -412,7 +418,7 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Note:</label>
 	 </td>
 	 <td>
-	    <textarea name="note" rows="10" cols="80" placeholder="note"></textarea>
+	    <textarea id="note_upd" name="note_upd" rows="10" cols="60" placeholder="note"></textarea>
 	 </td>
     </tr>
     <tr>
@@ -420,19 +426,27 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Testo OCR:</label>
 	 </td>
 	 <td>
-	    <textarea id="testo_ocr" name="testo_ocr" rows="10" cols="80" placeholder="OCR"></textarea>
+	    <textarea id="text_upd" name="text_upd" rows="10" cols="60" placeholder="OCR"></textarea>
 	 </td>
     </tr>
     <tr>
-	<td>
-	    <button id="import" class="btn-info btn-update-ebook"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button> 
+	<td colspan=2>
+	    <div align="center">
+	        <button id="import" class="btn-info btn-update-ebook"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
+	    </div>
 	</td>
     </tr>	
     </table>
-    </form>    
+    </form>
+    </td>
+    <td rowspan=5>
+    	<img id="thumbnail" src="">
+    </td>
+</tr>
+</table>
 </div>
 <br>
-<div id="footer2" align="center"></div>---->
+<div id="footer2" align="center"></div>
 </div>
 
 <div id="rimozione" class="tabcontent">
@@ -440,13 +454,13 @@ $(document).ready(function() {
 <div align=center id=error3 style="color:red"></div>
 <br>
 <div align="center">
-    <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
+    <form class="delete_ebook" name="delete_ebook" id="delete_ebook" action method="POST">
   	  <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	  <?php echo $selects; ?>
   	  </select><br><br>
-  	  <button type="submit" id="submit" name="import" class="btn-danger delete_volumes"><img src="/view/icons/trash.png">&nbsp;Rimuovi eDoc Selezionati</button>  
+  	  <button type="submit" id="submit" name="import" class="btn-danger btn-delete-ebook"><img src="/view/icons/trash.png">&nbsp;Rimuovi eDoc Selezionati</button>  
     </form>
-    </div>
+</div>
 <br>
 <div id="footer3" align="center"></div>
 </div>

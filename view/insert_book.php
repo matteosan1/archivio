@@ -4,6 +4,7 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/session.php";
+require_once "../view/config.php";
 require_once "../class/Member.php";
 require_once "../class/solr_curl.php";
 
@@ -223,12 +224,13 @@ $(document).ready(function() {
 			      console.log(response);
 	    var dict = JSON.parse(response);
 	    for (var key in dict) {
+	    	console.log(key);
 	        if (key == '_version_' || key == 'timestamp') {
 		   continue;
 		}
-          	document.getElementById(key).value = dict[key];
+          	document.getElementById(key + "_upd").value = dict[key];
 	    }
-	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
+	    document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR']; ?>" + dict['codice_archivio']; 
         });
 	return true;
 
@@ -242,7 +244,7 @@ $(document).ready(function() {
         }
 
         request = $.ajax({
-                url: "../class/validate_new_book.php",
+                url: "../class/validate_new_item.php",
                 type: "post",
                 data: formData,
                 contentType: false,
@@ -257,9 +259,9 @@ $(document).ready(function() {
 		return false;
             } else {
 	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 2000); 		
+		setTimeout(function(){
+         	    location.reload();
+      		    }, 2000); 		
             }
         });
 
@@ -476,19 +478,16 @@ $(document).ready(function() {
 <br>
 
 <form enctype="multipart/form-data" id="upd_book" class="upd_book" name="upd_book" action method="post">
-<input type="hidden" id="codice_archivio" name="codice_archivio">
-<input type="hidden" id="tipologia" name="tipologia">
-
 <table style="width:90%">
-
-<!----    <input type=hidden name="update_or_insert" id="update_or_insert" value="0"> ---->
+<tr>
+    <td>
     <table>
     <tr>
      	<td>
             <label for="fname" class="fname">Codice archivio:</label>
 	</td>
 	<td>
-	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio_upd" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
 	</td>
     </tr>
     <tr>
@@ -496,15 +495,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Tipologia:</label>
 	</td>
 	<td>
-	    <input type="text" id="tipologia2" name="tipologia2" disabled>
-<!---	    <select name="tipologia" class="tipologia" id="tipologia">
-		<option selected="selected">----</option>
-			<?php
-			    foreach ($categories as $category) {
-			        echo '<option>'.$category['category'].'</option>';
-			    }
-			?>
-	                </select> ---->
+	    <input type="text" id="tipologia_upd" name="tipologia" readonly="readonly">
 	</td>
     </tr>
     <tr>
@@ -512,7 +503,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Titolo:</label>
 	</td>
 	<td>
-	    <textarea id="titolo" name="titolo" rows="3" cols="80" placeholder=Titolo del libro"></textarea>
+	    <textarea id="titolo_upd" name="titolo" rows="3" cols="60" placeholder=Titolo del libro"></textarea>
 	</td>
     </tr>
     <tr>
@@ -520,7 +511,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Sottotitolo:</label>
 	</td>
 	<td>
-	    <textarea id="sottotitolo" name="sottotitolo" rows="3" cols="80" placeholder="Eventuale sottotitolo"></textarea>
+	    <textarea id="sottotitolo_upd" name="sottotitolo" rows="3" cols="60" placeholder="Eventuale sottotitolo"></textarea>
 	</td>
     </tr>
     <tr>
@@ -528,7 +519,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Prima responsabilit&agrave;:</label>
 	</td>
 	<td>
-            <input type="text" size="50" id="prima_responsabilita" name="prima_responsabilita">
+            <input type="text" size="50" id="prima_responsabilita_upd" name="prima_responsabilita">
 	</td>
     </tr>
     <tr>
@@ -536,7 +527,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Altre responsabilit&agrave;:</label>
 	</td>
 	<td>
-            <input type="text" size="80" id="altre_responsabilita" name="altre_responsabilita">
+            <input type="text" size="60" id="altre_responsabilita_upd" name="altre_responsabilita">
 	</td>
     </tr>
     <tr>
@@ -544,7 +535,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Luogo:</label>
 	</td>
 	<td>
-            <input type="text" size="50" id="luogo" name="luogo">
+            <input type="text" size="50" id="luogo_upd" name="luogo">
 	</td>
     </tr>
     <tr>
@@ -552,7 +543,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Edizione:</label>
 	</td>
 	<td>
-            <input type="text" size="50" id="edizione" name="edizione">
+            <input type="text" size="50" id="edizione_upd" name="edizione">
 	</td>
     </tr>
     <tr>
@@ -560,7 +551,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Ente:</label>
 	</td>
 	<td>
-            <input type="text" size="50" id="ente" name="ente">
+            <input type="text" size="50" id="ente_upd" name="ente">
 	</td>
     </tr>
     <tr>
@@ -568,7 +559,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Serie:</label>
 	</td>
 	<td>
-            <input type="text" size="50" id="serie" name="serie">
+            <input type="text" size="50" id="serie_upd" name="serie">
 	</td>
     </tr>
     <tr>
@@ -576,7 +567,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Anno:</label>
 	</td>
 	<td>
-            <input type="number" size="4" id="anno" name="anno" placeholder="XXXX">
+            <input type="number" size="4" id="anno_upd" name="anno" placeholder="XXXX">
 	</td>
     </tr>
     <tr>
@@ -584,7 +575,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Descrizione:</label>
 	</td>
 	<td>
-            <input type="text" size="35" id="descrizione" name="descrizione" placeholder="XX p. : ill. ; YY cm">
+            <input type="text" size="35" id="descrizione_upd" name="descrizione" placeholder="XX p. : ill. ; YY cm">
 	</td>
     </tr>
     <tr>
@@ -592,7 +583,7 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">CDD:</label>
 	</td>
 	<td>
-            <input type="text" size="20" id="cdd" name="cdd" placeholder="123.456789">
+            <input type="text" size="20" id="cdd_upd" name="cdd" placeholder="123.456789">
 	</td>
     </tr>
     <tr>
@@ -600,7 +591,7 @@ $(document).ready(function() {
             <label for="fname" class="fname">Soggetto:</label>
 	</td>
 	<td>
-            <input type="text" size="80" id="soggetto" name="soggetto">
+            <input type="text" size="60" id="soggetto_upd" name="soggetto">
 	</td>
     </tr>
     <tr>
@@ -608,7 +599,7 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">Note:</label>
 	</td>
 	<td>
-	    <textarea name="note" rows="10" cols="80" placeholder="note"></textarea>
+	    <textarea name="note_upd" rows="10" cols="60" placeholder="note"></textarea>
 	</td>
     </tr>
     <tr>
@@ -616,7 +607,7 @@ $(document).ready(function() {
 	    <label for="fname" class="fname">File copertina (JPG):</label>
 	</td>
 	<td>
-	    <input name="copertina" id="copertina" type="file" value=""><br><br>
+	    <input name="copertina" id="copertina_upd" type="file" value=""><br><br>
 	</td>
     </tr>
     <tr>
@@ -626,6 +617,12 @@ $(document).ready(function() {
 	</div>
 	</td>
     </tr>
+    </table>
+    </td>
+    <td rowspan=17>
+    	<img id="thumbnail" src="">
+    </td>
+</tr>
 </table>
 </form>
 </div>
@@ -639,7 +636,6 @@ $(document).ready(function() {
 <br>
 <div align="center">
 <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
-    <label for="cars">Scegli i documenti da rimuovere:</label>
     <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
 	  <?php echo $selects; ?>
   	  </select><br><br>

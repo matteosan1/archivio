@@ -194,12 +194,18 @@ $(document).ready(function() {
 	        if (key == 'By-line') {
 		   document.getElementById(key).value = dict[key];
 		} else if (key == "Keywords") {
-		    keywords = dict[key].trim().split(" "); 
-   		    document.getElementById(key).value = keywords.join(",");	
+		    keywords = dict[key].trim().split(" ");
+		    var tagl1 = keywords[0];
+		    var tagl2 = keywords[1];
+   		    document.getElementById(key).value = keywords.slice(2).join(",");	
 		}
 	    }
+	    // FIXME
+	    //document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR']?>" + dict['codice_archivio']+ ".JPG";
+	    document.getElementById("thumbnail").src = "/upload/thumbnails/" + dict['codice_archivio']+ ".JPG";
     	    document.getElementById("codice_archivio").value = dict["codice_archivio"];    
-	    document.getElementById("codice_archivio2").value = dict["codice_archivio"];
+	    document.getElementById("upd_tagl1").value = tagl1;
+	    document.getElementById("upd_tagl2").value = tagl2;
         });
 	return true;
 
@@ -207,8 +213,10 @@ $(document).ready(function() {
     
     $('.btn-update-image').click(function() {
         var tags = document.getElementById("Keywords").value;
+	var tagl1 = document.getElementById("upd_tagl1").value;
+	var tagl2 = document.getElementById("upd_tagl2").value;
 	tags = tags.trim().split(",");
-        document.getElementById("Keywords").value = tags.join(" ");	
+        document.getElementById("Keywords").value = tagl1 + " " + tagl2 + " " + tags.join(" ");	
 	var formData = new FormData(document.getElementById("upd_image"));
         
         if (request) {
@@ -359,21 +367,21 @@ $(document).ready(function() {
       </select>
 </form>
 <br>
+<table width=60%>
+<col width=40%>
+<col width=60%>
+<tr>
+    <td>
     <form enctype="multipart/form-data" action method="POST" id="upd_image" name="upd_image" class="upd_image">
-    <input type="hidden" id="codice_archivio" name="codice_archivio">
+    <!----<input type="hidden" id="codice_archivio" name="codice_archivio">---->
     <table>
     <tr>
     	 <td>
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio2" name="codice_archivio2" disabled placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
     	 </td>
-    </tr>
-    <tr>
-	<td>
-	    <img src="">
-	</td>
     </tr>
     <tr>
 	<td valign="top"><br>
@@ -382,6 +390,22 @@ $(document).ready(function() {
 	<td>
 	    <input type="text" id="By-line" name="By-line">
    	</td>
+    </tr>
+    <tr>
+	<td>
+	    <label>Tag L1:</label>
+	</td>
+	<td>
+	    <input type="text" id="upd_tagl1" readonly="readonly" name="upd_tagl1">
+	</td>
+    </tr>
+        <tr>
+	<td>
+	    <label>Tag L2:</label>
+	</td>
+	<td>
+	    <input type="text" id="upd_tagl2" readonly="readonly" name="upd_tagl2">
+	</td>
     </tr>
     <tr>
 	<td valign="top">        
@@ -397,6 +421,14 @@ $(document).ready(function() {
     </tr>
     </table>
     </form>
+    </td>
+    <td rowspan=6>
+    	<div align=center>
+    	     <img id="thumbnail" src="">
+	</div>     
+    </td>
+</tr>
+</table>
 </div>
 <br>
 <div id="footer2" align="center"></div>
