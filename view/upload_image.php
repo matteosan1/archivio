@@ -7,20 +7,30 @@ require_once "../view/session.php";
 require_once "../class/solr_curl.php";
 require_once "../class/Member.php";
 
-$selects = "";
-$json = listCodiceArchivio("image");
-
-foreach ($json['response']['docs'] as $select) {
-    $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
-}
-
-$size = count($json['response']['docs']);
-if ($size > 14) {
-   $size = 15;
-}
-
 $m = new Member();
 $l1tags = $m->getL1Tags();
+
+$selects = "";
+$size = 0;
+
+function fillSelection() {
+    global $selects, $size;
+
+    $selects = "";
+    $json_dec = json_decode(listCodiceArchivio("image"), true);
+    if (isset($json_dec['solr_error'])) {
+       echo "<div style='color:red'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>";
+    } else {
+        foreach ($json_dec['response']['docs'] as $select) {
+            $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
+        }
+
+        $size = count($json_dec['response']['docs']);
+        if ($size > 14) {
+           $size = 15;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,236 +50,13 @@ $l1tags = $m->getL1Tags();
         });
 </script>
 <style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
+@import url("/view/css/band_style.css");
 </style>
     </head>
 
-<script type="text/javascript">
-var request;
-$(document).ready(function() {
-	$(".btn-insert-image").click(function() {
-	   var filename = document.getElementById('userfile').value;
-           if (filename == "") {
-               alert ("Devi specificare una o più foto da caricare...");
-               return false;
-           }
-	   
-           var tagl1 = document.getElementById('tagl1').value;
-	   var tagl2 = document.getElementById('tagl2').value;
-	   if (tagl1 == "----" || tagl2 == "----") {
-	      alert ("Devi specificare i due tag !!!");
-	      return false;
-           }
-
-           var formData = new FormData(document.getElementById("new_image"));
-           request = $.ajax({
-		url: "../class/process_image.php",
-		type: 'POST',
-		data: formData, 
-		contentType: false,
-		cache: false,
-		processData:false
-	    });
-
-	    request.done(function (response) {
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error1').html(response['error']);
-		    return false;
-                } else {
-		    $('#result1').html(response['result']);
-		    setTimeout(function(){
-           	    	    location.reload();
-      		    	    }, 2000);
-		    return true;
-                }
-            });
-
-            //var oForm = document.getElementById('new_image');
-	    //oForm.elements["tagl2"].value = 0;
-	    //document.getElementById('new_image').reset();
-	    return false;
-	});
-
-	$(".tagl1").change(function() {
-        	var id = $(this).val();
-                var dataString = 'id=' + id;
-                $.ajax({
-                    type: 'post',
-                    url: "../class/tags.php",
-                    data: dataString,
-                    cache: false,
-                    success: function(html) {
-                        $(".tagl2").html(html);
-                    }
-                });
-         });
-
-    $('.btn-delete-images').click(function() {
-    	var formData = new FormData(document.getElementById("delete_image"));
-        
-        if (request) {
-            request.abort();
-        }
-
-	request = $.ajax({
-                url: "../class/remove.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response) {
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error3').html(response['error']);
-		    return false;
-                } else {
-		    $('#result3').html(response['result']);
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 2000); 
-
-                }
-        });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
-    });
-
-    $(".sel_image").change(function() {
-	var sel = document.getElementById("immagine").value;
-	request = $.ajax({
-                url: "../class/solr_curl.php",
-                type: "POST",
-                data: {'sel':sel, 'func':'find'},
-        });
-
-	request.done(function (response){
-	    var dict = JSON.parse(response);
-	    for (var key in dict) {
-	        if (key == 'By-line') {
-		   document.getElementById(key).value = dict[key];
-		} else if (key == "Keywords") {
-		    keywords = dict[key].trim().split(" ");
-		    var tagl1 = keywords[0];
-		    var tagl2 = keywords[1];
-   		    document.getElementById(key).value = keywords.slice(2).join(",");	
-		}
-	    }
-	    // FIXME
-	    //document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR']?>" + dict['codice_archivio']+ ".JPG";
-	    document.getElementById("thumbnail").src = "/upload/thumbnails/" + dict['codice_archivio']+ ".JPG";
-    	    document.getElementById("codice_archivio").value = dict["codice_archivio"];    
-	    document.getElementById("upd_tagl1").value = tagl1;
-	    document.getElementById("upd_tagl2").value = tagl2;
-        });
-	return true;
-
-    });
-    
-    $('.btn-update-image').click(function() {
-        var tags = document.getElementById("Keywords").value;
-	var tagl1 = document.getElementById("upd_tagl1").value;
-	var tagl2 = document.getElementById("upd_tagl2").value;
-	tags = tags.trim().split(",");
-        document.getElementById("Keywords").value = tagl1 + " " + tagl2 + " " + tags.join(" ");	
-	var formData = new FormData(document.getElementById("upd_image"));
-        
-        if (request) {
-            request.abort();
-        }
-
-        request = $.ajax({
-                url: "../class/validate_new_item.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-  	    var dict = JSON.parse(response);
-            if(dict.hasOwnProperty('error')){
-		$('#error2').html(dict['error']['msg']);
-		return false;
-            } else {
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + dict['responseHeader']['QTime'] + " ms");
-		setTimeout(function(){
-           	    location.reload();
-      		    }, 2000); 		
-            }
-        });
-
-        request.fail(function (response){                           
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-        return false;
-    });
-
-    $(".tagl1").change(function() {
-        	var id = $(this).val();
-                var dataString = 'id=' + id;
-                $.ajax({
-                    type: 'post',
-                    url: "../class/tags.php",
-                    data: dataString,
-                    cache: false,
-                    success: function(html) {
-                        $(".tagl2").html(html);
-                    }
-                });
-         });
-});
-</script>
-    <body>
-    <?php include "header.php"; ?>
+<script type="text/javascript" src="js/upload_image.js"></script>
+<body>
+<?php include "header.php"; ?>
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
   <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
@@ -283,6 +70,7 @@ $(document).ready(function() {
 <div align=center id=result1 style="color:green"></div>
 <div align=center id=error1 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
 <form enctype="multipart/form-data" action method="POST" id="new_image" name="new_image" class="new_image">
 <table>
@@ -358,6 +146,7 @@ $(document).ready(function() {
 <div align=center id=result2 style="color:green"></div>
 <div align=center id=error2 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
 <form class="sel_image" name="sel_image" id="sel_image" action method="post">
       <label for="cars">Scegli Immagine:</label>
@@ -408,7 +197,7 @@ $(document).ready(function() {
 	</td>
     </tr>
     <tr>
-	<td valign="top">        
+	<td valign="top">
    	    Tag addizionali (comma separated):</td><td><textarea id="Keywords" name="Keywords" rows="5" cols="30"></textarea>
     	</td>
     </tr>
@@ -438,35 +227,21 @@ $(document).ready(function() {
 <div id="cancellazione" class="tabcontent">
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
-
 <br>
+<?php fillSelection(); ?>
 <div align="center">
      <form class="delete_image" name="delete_image" id="delete_image" action method="POST">
-  	   <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
-	   <?php echo $selects; ?>
-  	   </select><br><br>
-  	   <button type="submit" id="submit" name="import" class="btn-danger btn-delete-images"><img src="/view/icons/trash.png">&nbsp;Rimuovi Immagini Selezionate</button>  
+       <input type="hidden" id="type" name="type" value="image">
+       <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
+       <?php echo $selects; ?>
+       </select><br><br>
+       <button type="submit" id="submit" name="import" class="btn-danger btn-delete-images"><img src="/view/icons/trash.png">&nbsp;Rimuovi Immagini Selezionate</button>  
      </form>
 </div>
 <br>
 <div id="footer3" align="center"></div>
 </div>
 
-<script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-
+<script type="text/javascript" src="js/tab_selection.js"></script>
 </body>
 </html>

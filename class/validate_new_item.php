@@ -37,8 +37,8 @@ if (isset($_POST)) {
 
    $ret = upload_json_string(json_encode(array($data)));
    
-   if (isset($_FILES)) {
-     if ($_FILES['copertina']['name'] != "")) {
+   if (isset($_FILES['copertina'])) {
+     if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
      	$cover_name = $_POST['codice_archivio'].".JPG";
      	$ext = explode(".", $_FILES['copertina']['name']);
@@ -56,6 +56,7 @@ if (isset($_POST)) {
 	   echo json_encode(array('error' => "Errore nella fase di copia della copertina."));
 	   exit;
 	}
+      }
     }
 
     print_r ($ret);

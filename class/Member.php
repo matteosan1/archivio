@@ -66,13 +66,13 @@ class Member
 	} else {
            $cats = $this->getAllCategories($category);
 	}
-	// FIXME check if backup is still working
+
 	$res = array();
 	for ($i=0; $i<count($cats); $i++) {
 	    $res[$i] = "tipologia:".$cats[$i][0];
 	}
 
-	return implode("+OR+", $res);
+       return implode("+OR+", $res);
     }
     
     function findTypeGroup($tipologia) {

@@ -1,5 +1,12 @@
 <?php
 require_once "session.php";
+require_once "config.php";
+
+exec("curl -s -o /dev/null -I -w '%{http_code}' ".$GLOBALS['SOLR_TEST'], $output, $result);
+
+if ($result != 0 or $output[0] != 200) { 
+   echo "<div style='color:red' align='center'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>";
+}
 ?>
 
 <html>
@@ -32,7 +39,7 @@ require_once "session.php";
 	echo '</tr>';
 	echo '<tr>';
 	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");
-	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Catalogo</button></td>', "'/view/restore.php'");
+	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Ripristino&nbsp;&nbsp;&nbsp;&nbsp;Catalogo</button></td>', "'/view/restore.php'");
 	echo '</tr>';
 ?>
 	</table>

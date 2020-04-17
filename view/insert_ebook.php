@@ -11,15 +11,25 @@ $m = new Member();
 $categories = $m->getAllCategories("ebook_categories");
 
 $selects = "";
-$json = listCodiceArchivio("ebook_categories");
+$size = 0;
 
-foreach ($json['response']['docs'] as $select) {
-        $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
-}
+function fillSelection() {
+    global $selects, $size;
 
-$size = count($json['response']['docs']);
-if ($size > 14) {
-   $size = 15;
+    $selects = "";
+    $json_dec = json_decode(listCodiceArchivio("ebook_categories"), true);
+    if (isset($json_dec['solr_error'])) {
+       echo "<div style='color:red'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>";
+    } else {
+        foreach ($json_dec['response']['docs'] as $select) {
+            $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
+        }
+
+        $size = count($json_dec['response']['docs']);
+        if ($size > 14) {
+           $size = 15;
+        }
+    }
 }
 ?>
 
@@ -41,242 +51,13 @@ $(function() {
 });
 </script>
 <style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
+@import url("/view/css/band_style.css");
 </style>
 </head>
 
-<script type="text/javascript">
-var request;
-$(document).ready(function() {
-   $('.btn-insert-ebook').click(function() {
-	var formData = new FormData(document.getElementById("new_ebook"));
+<script type="text/javascript" src="js/insert_ebook.js"></script>
 
-	if (request) {
-            request.abort();
-        }
-
-	var filename = document.getElementById('edoc').value;
-        if (filename == "") {
-	   alert ("Il documento da analizzare deve essere specificato.");
-	   return false;
-	} else {
-	  var parts = filename.split('.');
- 	  var ext = parts[parts.length - 1].toLowerCase();
-
-	  if (ext != 'jpg' && ext != 'jpeg' &&
-	      ext != 'tiff' && ext != 'tif' &&
-	      ext != 'doc' && ext != 'msg' &&
-      	      ext != 'docx' && ext != 'eml' &&
-      	      ext != 'pdf') {
-		 alert ("Non è possibile inserire documento in formato " + ext);
-  	  	 return false;
-	  } else {
-		 request = $.ajax({
-                 	 url: "../class/validate_new_ebook.php",
-                	 type: "post",
-                	 data: formData,
-                	 contentType: false,
-               		 cache: false,
-                	 processData:false                       
-        	});
-
-       		request.done(function (response) {
-	        console.log(response);
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error1').html(response['error']);
-		    return false;
-                } else {
-		    $('#result1').html(response['result']);
-		    setTimeout(function(){
-           	       location.reload();
-      		       }, 1000);
-                }
-            });
-      	  }
-      }
-      
-      return false;
-   });
-
-   $('.btn_ocr').click(function() {
-	var formData = new FormData(document.getElementById("new_ebook"));
-        if (request) {
-            request.abort();
-        }
-
-	var filename = document.getElementById('edoc').value;
-        if (filename == "") {
-	   alert ("Il documento da analizzare deve essere specificato.");
-	   return false;
-	} else {
-	  var parts = filename.split('.');
- 	  var ext = parts[parts.length - 1].toLowerCase();
-	  // FIXME AGGIUNGERE pdf2image per processare pdf
-	  if (ext != 'jpg' && ext != 'jpeg' &&
-	      ext != 'tiff' && ext != 'tif') {
-		 alert ("Non è possibile fare analisi OCR con file " + ext);
-  	  	 return false;
-	  } else {
-	     request = $.ajax({
-               	 url: "../class/check_ocr.php",
-               	 type: "post",
-               	 data: formData,
-               	 contentType: false,
-                 cache: false,
-                 processData:false                       
-              });
-		    
-              request.done(function (response) {				
-	          $('#testo_ocr').html(response);
-		  return false;
-              });
-      	  }
-       }
-       return false;
-   });
-
-    $('.btn-delete-ebook').click(function() {
-    	var formData = new FormData(document.getElementById("delete_ebook"));
-        
-        if (request) {
-            request.abort();
-        }
-
-	request = $.ajax({
-                url: "../class/remove.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response) {
-	    response = JSON.parse(response);
-            if(response.hasOwnProperty('error')){
-    	        $('#error3').html(response['error']);
-		    return false;
-                } else {
-		    $('#result3').html(response['result']);
-		    setTimeout(function(){
-           	       location.reload();
-      		       }, 1000); 
-                }
-        });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
-    });
-
-    $(".sel_ebook").change(function() {
-	var sel = document.getElementById("volume").value;
-	request = $.ajax({
-                url: "../class/solr_curl.php",
-                type: "POST",
-                data: {'sel':sel, 'func':'find'},
-        });
-
-	request.done(function (response){
-	    var dict = JSON.parse(response);
-	    document.getElementById("codice_archivio_upd").value = dict["codice_archivio"];
-	    document.getElementById("tipologia_upd").value = dict["tipologia"];
-	    if (dict.hasOwnProperty("text")) {
-	        document.getElementById("text_upd").value = dict['text'];
-	    }
-
-	    if (dict.hasOwnProperty('note')) {
-	        document.getElementById("note_upd").value = dict["note"];
-	    }
-
-	    var ext = dict['resourceName'].split('.').pop().toLowerCase();
-	    if (ext == "jpeg" || ext == "jpg" || ext == "tiff" || ext == "tif" || ext == "pdf") {
-	       document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR'] ?>" + dict['codice_archivio'] + ".JPG";
-	    }
-        });
-	return true;
-    });
-    
-    $('.btn-update-ebook').click(function() {
-	var formData = new FormData(document.getElementById("upd_ebook"));
-        
-        if (request) {
-            request.abort();
-        }
-	console.log("PIPPO");
-        request = $.ajax({
-                url: "../class/validate_new_item.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-      	    var dict = JSON.parse(response);
-            if(dict.hasOwnProperty('error')){
-		$('#error2').html(dict['error']);
-		return false;
-            } else {
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + dict['responseHeader']['QTime'] + " ms");
-		setTimeout(function(){
-           	    location.reload();
-      		    }, 2000); 		
-            }
-        });
-
-        request.fail(function (response){                           
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-        return false;
-    });
-});
-</script>
-    <body>
+<body>
     <?php include "../view/header.php"; ?>
     <div class="tab">
     <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
@@ -291,26 +72,29 @@ $(document).ready(function() {
 <div align=center id=result1 style="color:green"></div>
 <div align=center id=error1 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
-        <table style="width:80%">
-           <form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
-
-   	   <tr>
-   	   	<td>
-		    <label for="fname" class="fname">Tipologia:</label>
-		</td>
-		<td>
-		    <select name="tipologia" class="tipologia" id="tipologia">
-        	    <option selected="selected">----</option>
-		    <?php
-	  	    foreach ($categories as $category) {
-	    	    	    echo '<option>'.$category['category'].'</option>';
-	  	    }
-		    ?>
-        	    </select>
-		</td>
-    	   </tr>
-    	   <tr>
+<form class="new_ebook" name="new_ebook" id="new_ebook" action method="POST">
+<table style="width:80%">
+<tr>
+    <td>
+        <label for="fname" class="fname">Tipologia:</label>
+    </td>
+    <td>
+        <select name="tipologia" class="tipologia" id="tipologia">
+      	    <option selected="selected">----</option>
+	    <?php
+  	    foreach ($categories as $category) {
+   	    	    echo '<option>'.$category['category'].'</option>';
+  	    }
+	    ?>
+       	</select>
+    </td>
+    <td rowspan=3>
+        <button id="import" class="btn-info btn-insert-ebook"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
+    </td>
+</tr>
+<tr>
     	   	<td>
 		    <label for="fname" class="fname">Documento elettronico<br>(PDF, JPG, TIFF, DOC, DOCX, EML, MSG):</label>
 	 	</td>
@@ -326,14 +110,6 @@ $(document).ready(function() {
 		    <input type="checkbox" id="do_merge" name="do_merge" value="merge">
     		</td>
     		</td>
-    	   </tr>
-    	   <tr>
-	   	<td>
-		    <label for="fname" class="fname">Note:</label>
-		</td>
-		<td>
-		    <textarea name="note" rows="10" cols="60" placeholder="note"></textarea>
-		</td>
     	   </tr>
     	   <tr>
 	        <td>
@@ -357,12 +133,13 @@ $(document).ready(function() {
 		</td>
     	   </tr>
 	   <tr>
-	        <td colspan=2>
-		    <div align="center">
-		        <button id="import" class="btn-info btn-insert-ebook"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
-		    </div>
+	        <td>
+		    <label for="fname" class="fname">Note:</label>
 		</td>
- 	   </tr>
+	       <td>
+	            <textarea name="note" rows="10" cols="60" placeholder="note"></textarea>
+	       </td>
+	   </tr>    
            </form>
        </table>
 </div>
@@ -374,6 +151,7 @@ $(document).ready(function() {
 <div align=center id=result2 style="color:green"></div>
 <div align=center id=error2 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
      <form class="sel_ebook" name="sel_ebook" id="sel_ebook" action method="post">
      	   <label for="cars">Scegli eDoc:</label>
@@ -384,9 +162,6 @@ $(document).ready(function() {
     </form>
     <br>
 
-<table>
-<tr>
-    <td>
     <form enctype="multipart/form-data" class="upd_ebook" name="upd_ebook" id="upd_ebook" action method="POST">
     <table style="width:80%">
     <tr>
@@ -396,6 +171,9 @@ $(document).ready(function() {
 	 <td>
 	    <input type="text" size="25" id="codice_archivio_upd" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
     	 </td>
+	 <td rowspan=2>
+	     <button id="import" class="btn-info btn-update-ebook"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
+	 </td>
     </tr>
     <tr>
    	 <td>
@@ -420,6 +198,9 @@ $(document).ready(function() {
 	 <td>
 	    <textarea id="note_upd" name="note_upd" rows="10" cols="60" placeholder="note"></textarea>
 	 </td>
+	 <td rowspan=2>
+	    <img id="thumbnail" src="">
+	 </td>
     </tr>
     <tr>
     	 <td>
@@ -429,21 +210,8 @@ $(document).ready(function() {
 	    <textarea id="text_upd" name="text_upd" rows="10" cols="60" placeholder="OCR"></textarea>
 	 </td>
     </tr>
-    <tr>
-	<td colspan=2>
-	    <div align="center">
-	        <button id="import" class="btn-info btn-update-ebook"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
-	    </div>
-	</td>
-    </tr>	
     </table>
     </form>
-    </td>
-    <td rowspan=5>
-    	<img id="thumbnail" src="">
-    </td>
-</tr>
-</table>
 </div>
 <br>
 <div id="footer2" align="center"></div>
@@ -453,6 +221,7 @@ $(document).ready(function() {
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
     <form class="delete_ebook" name="delete_ebook" id="delete_ebook" action method="POST">
   	  <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
@@ -465,21 +234,6 @@ $(document).ready(function() {
 <div id="footer3" align="center"></div>
 </div>
 
-<script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-
+<script type="text/javascript" src="js/tab_selection.js"></script>
 </body>
 </html>

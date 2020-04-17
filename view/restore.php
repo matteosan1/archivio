@@ -14,59 +14,20 @@ require_once "../view/config.php";
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
 	$(function(){
-	    $("#footer").load("/site/Usered/view/footer.html"); 
+	    $("#footer").load("/view/footer.html"); 
 	});
     </script>
 </head>
 
-<script type="text/javascript">
-var request;
-$(document).ready(function() {
-    $('.btn-restore').click(function() {
-        var formData = new FormData(document.getElementById("new_catalogue"));
-        
-        if (request) {
-            request.abort();
-        }
-
-        request = $.ajax({
-                url: "../class/solr_curl.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-                var dict = JSON.parse(response);
-                if(dict.hasOwnProperty('error')){
-                    $('#labelError').html(dict['error']);
-                    return false;
-                } else {
-		console.log(dict['responseHeader']);
-                    $('#labelResult').html("Catalogo inserito in " + dict['responseHeader']['QTime'] + " ms");
-                    return true;
-                }
-        });
-	
-        request.fail(function (response){                           
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-        return false;
-    });
-});
-</script>
+<script type="text/javascript" src="js/restore.js"></script>
 <body>
 <?php include "../view/header.php"; ?>
 <br>
 
 <h2 align="center">Ripristina Catalogo</h2>
-
-<div id="labelResult" style="color:green"></div>
-<div id="labelError" style="color:red"></div>
+<div id="result" style="color:green"></div>
+<div id="error" style="color:red"></div>
+<br>
 <div align=center>
     <br>
     <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
@@ -76,7 +37,7 @@ $(document).ready(function() {
     <br>
      <input type="hidden" name="func" value="restore">
      <br><br>
-    <button type="submit" id="submit" name="import" class="btn-info btn-restore">Inserisci Catalogo</button>
+    <button type="submit" id="submit" name="import" class="btn-info btn-restore"><img src="/view/icons/plus.png">&nbsp;Inserisci Catalogo</button>
     </form>
 </div>
 <br>

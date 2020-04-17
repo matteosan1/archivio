@@ -49,16 +49,16 @@ if (isset($_POST)) {
    //   echo json_encode(array("result" => "Catalogo inserito correttamente."));
    //   exit;
    //} else {
-     if (isset($_POST['update_or_insert'])) {
-         $version = 1;
-     } else {
-         $version = -1;
-     }
+     //if (isset($_POST['update_or_insert'])) {
+     //    $version = 1;
+     //} else {
+     $version = -1;
+     //}
 
      $header = "codice_archivio|tipologia|titolo|sottotitolo|prima_responsabilita|altre_responsabilita|luogo|edizione|ente|serie|anno|descrizione|cdd|soggetto|note|_version_\n";
      $data = $_POST['codice_archivio']."|".$_POST['tipologia']."|".$_POST['titolo']."|".$_POST['sottotitolo']."|".$_POST['prima_responsabilita']."|".$_POST['altre_responsabilita']."|".$_POST['luogo']."|".$_POST['edizione']."|".$_POST['ente']."|".$_POST['serie']."|".$_POST['anno']."|".$_POST['descrizione']."|".$_POST['cdd']."|".$_POST['soggetto']."|".$_POST['note']."|".$version."\n";
      
-     if ($version == -1 or ($version == 0 and $_FILES['copertina']['name'] != "")) {
+     if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
      	$cover_name = $_POST['codice_archivio'].".JPG";
      	$ext = explode(".", $_FILES['copertina']['name']);

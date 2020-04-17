@@ -3,7 +3,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
-//include ("db.php");
 require_once "../view/config.php";
 require_once "../class/exif.php";
 require_once "../class/solr_curl.php";
@@ -45,14 +44,22 @@ function basicCheckOnFile($i) {
 	echo json_encode(array("error"=>"Il file ".$_FILE['userfile']['name'][$i]." &egrave; troppo grande (>".$GLOBALS['MAX_UPLOAD_BYTE']." Bytes) !"));
       	exit;
     }
-	
-    $resourceName = basename($_FILES['userfile']['name'][$i]);
-    if (lookForDuplicates($resourceName)) {
-       echo json_encode(array("error"=>"Il file ".$_FILES['userfile']['name'][$i]." esiste gi&agrave;."));
-       exit;
-    }
+
+    checkForDuplicates(basename($_FILES['userfile']['name'][$i]));
     
     return TRUE;
+}
+
+function checkForDuplicates($resourceName) {
+    $duplicate = lookForDuplicates($resourceName);
+    if ($duplicate == -2) {
+         echo json_encode(array("error" => "Il server SOLR non &egrave; attivo. Contattare l'amministratore."));
+         exit;
+    }
+    if ($duplicate == -1) {
+       echo json_encode(array("error"=>"Il file ".$resourceName." esiste gi&agrave;."));
+       exit;
+    }
 }
 
 function addEXIF($filename) {
@@ -73,18 +80,17 @@ function processZip($zipfilename) {
     $res = $zip->open($zipfilename);
 	
     if ($res === TRUE) {
-       	$zip->extractTo(dirname($zipfilename));
+	for($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileinfo = pathinfo($filename);
+	    $tmp_name = $GLOBALS['UPLOAD_DIR'].$fileinfo['basename'];
+	    checkForDuplicates($fileinfo['basename']);
+            copy("zip://".$zipfilename."#".$filename, $tmp_name);
+	    processImage($tmp_name, $fileinfo['basename'], $fileinfo['extension'], false);
+	}                  
     } else {
 	echo json_encode(array("error"=>"L'unzip di ".$filename." (".$zipfilename.") &egrave; fallito !"));
         exit;
-    }
-
-    for($i = 0; $i < $zip->numFiles; $i++) {   
-	$fz = $zip->getNameIndex($i);
-	$ext = explode(".", $fz);
-	if (in_array(end($ext), $img_ext)) {
-	   processImage($GLOBALS['UPLOAD_DIR'].$fz, $fz, end($ext), false);
-	}
     }
     $zip->close();
 }
@@ -99,37 +105,38 @@ function processImage($tmp_name, $real_name, $ext, $move=true) {
     $index = getLastByIndex("FOTO") + 1;
     $ca = "FOTO.".str_pad($index, 6, "0", STR_PAD_LEFT);
     
-    //$tmp_name = $_FILES['userfile']['tmp_name'][$i];
     $name = $target_directory.$ca.".".strtoupper($ext);
 
     $resize = new ResizeImage($tmp_name);
     $resize->resizeTo(200, 200, 'maxHeight');
-    $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($ext));
+    $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".JPG");
 
     if ($move) {
         $ret = move_uploaded_file($tmp_name, $name);
     } else {
       	$ret = rename($tmp_name, $name);
     }
-     
-    if (TRUE) {
-       addEXIF($name);
 
-       $command = "/usr/bin/java -jar ".$GLOBALS['TIKA_APP']." -j -t -J ".$name;
-       $output = shell_exec($command);
-       $data = json_decode($output, true)[0];
+    // FIXME CONTROLLARE TRASFERIMENTO
+    //} else {
+    //	echo json_encode(array("error"=>'Il caricamento di '.$userfile_name.' &egrave; fallito !'));
+//	exit;
+//    }
+    
+    addEXIF($name);
 
-       $data["codice_archivio"] = $ca;
-       $data["tipologia"] = "FOTOGRAFIA";
-       $data["resourceName"] = basename($real_name); 
+    $command = "/usr/bin/java -jar ".$GLOBALS['TIKA_APP']." -j -t -J ".$name;
+    $output = shell_exec($command);
+    $data = json_decode($output, true)[0];
 
-       $ret = upload_csv2(array2csv($data));
-       if (isset($ret['error'])) {
-	   echo json_encode($ret);
-	   exit;
-       }
-    } else {
-    	echo json_encode(array("error"=>'Il caricamento di '.$userfile_name.' &egrave; fallito !'));
+    $data["codice_archivio"] = $ca;
+    $data["tipologia"] = "FOTOGRAFIA";
+    $data["resourceName"] = basename($real_name); 
+
+    $ret = json_decode(upload_csv2(array2csv($data)), true);
+
+    if (isset($ret['error'])) {
+        echo json_encode($ret);
 	exit;
     }
 }

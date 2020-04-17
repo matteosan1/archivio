@@ -11,15 +11,26 @@ require_once "../class/solr_curl.php";
 $m = new Member();
 $categories = $m->getAllCategories('book_categories');
 
+$size = 0;
 $selects = "";
-$json = listCodiceArchivio();
-foreach ($json['response']['docs'] as $select) {
-        $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
-}
 
-$size = count($json['response']['docs']);
-if ($size > 14) {
-   $size = 15;
+function fillSelection() {
+    global $size, $selects;
+
+    $json = json_decode(listCodiceArchivio(), true);
+    if (isset($json['solr_error'])) {
+        echo "<div style='color:red'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>
+";
+    } else {
+        foreach ($json['response']['docs'] as $select) {
+            $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
+	}
+    }
+
+    $size = count($json['response']['docs']);
+    if ($size > 14) {
+        $size = 15;
+    }
 }
 ?>
 
@@ -41,242 +52,13 @@ $(function(){
 });
 </script>
 <style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
+@import url("/view/css/band_style.css");
 </style>
 </head>
-<script type="text/javascript">
-var request;
-$(document).ready(function() {
-//    $('.insert_catalogue').click(function() {
-//   	var formData = new FormData(document.getElementById("new_catalogue"));
-//       
-//       if (request) {
-//           request.abort();
-//       }
-//
-//	request = $.ajax({
-//               url: "../class/validate_new_book.php",
-//               type: "post",
-//               data: formData,
-//               contentType: false,
-//               cache: false,
-//               processData:false                       
-//       });
-//
-//       request.done(function (response){
-//	        response = JSON.parse(response);
-//               if(response.hasOwnProperty('error')){
-//		    alert (response['error']);
-//               } else {
-//		       
-//                   //window.location.href = "../view/dashboard.php";
-//		    return true;
-//               }
-//       });
-//
-//       request.fail(function (response){			    
-//               console.log(
-//                   "The following error occurred: " + response
-//               );
-//       });
-//	return false;
-//
-//   });
+<script type="text/javascript" src="js/insert_book.js"></script>
 
-    $('.btn-insert-book').click(function() {
-	var formData = new FormData(document.getElementById("new_book"));
-        
-        if (request) {
-            request.abort();
-        }
-
-        if (document.getElementById('codice_archivio').value == "") {
-	   alert ("Il codice_archivio deve essere specificato.");
-	   return false;
-	}
-
-        if (document.getElementById('tipologia').value == "----") {
-	   alert ("La tipologia deve essere specificata.");
-	   return false;
-	}
-
-        if (document.getElementById('titolo').value == "") {
-	   alert ("Volume senza titolo ? uhm...");
-	   return false;
-	}
-	
-        request = $.ajax({
-                url: "../class/validate_new_book.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-	request.done(function (response) {
-	        console.log(response);
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error1').html(response['error']);
-		    return false;
-                } else {
-		    $('#result1').html(response['result']);
-		    //		   setTimeout(function(){
-           	    // 			    location.reload();
-      		    //			    }, 1000);
-		    return false;
-                }
-            });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
-   });
-
-    $('.btn-delete-book').click(function() {
-    	var formData = new FormData(document.getElementById("delete_book"));
-        
-        if (request) {
-            request.abort();
-        }
-
-	request = $.ajax({
-                url: "../class/remove.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response) {
-	        response = JSON.parse(response);
-                if(response.hasOwnProperty('error')){
-    		    $('#error3').html(response['error']);
-		    return false;
-                } else {
-		    $('#result3').html(response['result']);
-		    		   setTimeout(function(){
-           	   			    location.reload();
-      					    }, 1000); 
-
-                }
-        });
-
-        request.fail(function (response){			    
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-	return false;
-    });
-
-    $(".sel_volume").change(function() {
-	var sel = document.getElementById("volume").value;
-	request = $.ajax({
-                url: "../class/solr_curl.php",
-                type: "POST",
-                data: {'sel':sel, 'func':'find'},
-        });
-
-	request.done(function (response){
-			      console.log(response);
-	    var dict = JSON.parse(response);
-	    for (var key in dict) {
-	    	console.log(key);
-	        if (key == '_version_' || key == 'timestamp') {
-		   continue;
-		}
-          	document.getElementById(key + "_upd").value = dict[key];
-	    }
-	    document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR']; ?>" + dict['codice_archivio']; 
-        });
-	return true;
-
-    });
-    
-    $('.btn-update-book').click(function() {
-	var formData = new FormData(document.getElementById("upd_book"));
-        
-        if (request) {
-            request.abort();
-        }
-
-        request = $.ajax({
-                url: "../class/validate_new_item.php",
-                type: "post",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-      	    response = JSON.parse(response);
-            if(response.hasOwnProperty('error')){
-		$('#error2').html(response['error']);
-		return false;
-            } else {
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
-		setTimeout(function(){
-         	    location.reload();
-      		    }, 2000); 		
-            }
-        });
-
-        request.fail(function (response){                           
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-        return false;
-    });   
-
-});
-</script>
-    <body>
-    <?php include "../view/header.php"; ?>
+<body>
+<?php include "../view/header.php"; ?>
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
   <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
@@ -287,25 +69,22 @@ $(document).ready(function() {
 </div>
 
 <div id="inserimento" class="tabcontent">
-<div align=center id=result style="color:green"></div>
-<div align=center id=error style="color:red"></div>
+<div align=center id=result1 style="color:green"></div>
+<div align=center id=error1 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
-<table style="width:90%">
-  <!----<tr>
-    <th>Inserimento singolo</th>
-    <th>Carica Catalogo</th>
-  </tr> -->
-<tr>
-    <td>
-    <form enctype="multipart/form-data" class="new_book" name="new_book" id="new_book" action method="POST">
-        <table>
-	    <tr>
-                <td>
-                    <label for="fname" class="fname">Codice archivio:</label>
+<form enctype="multipart/form-data" class="new_book" name="new_book" id="new_book" action method="POST">
+    <table>
+    <tr>
+            <td>
+                <label for="fname" class="fname">Codice archivio:</label>
 		</td>
 		<td>
 		    <input type="text" size="25" id="codice_archivio" name="codice_archivio" placeholder="XXXX.YY">
+		</td>
+		<td rowspan=2>
+		    <button class="btn btn-sm btn-info btn-insert-book" id="inserisci"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>		 
 		</td>
 	    </tr>
 	    <tr>
@@ -435,29 +214,8 @@ $(document).ready(function() {
 		    <input name="copertina" id="copertina" type="file" value="" accept=".jpg,.jpeg"><br><br>
 		</td>
 	    </tr>
-            <tr>
-		<td colspan=2 align="center">
-		    <button class="btn btn-sm btn-info btn-insert-book" id="inserisci"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>		 
-		</td>
-	    </tr>
 	</table>
-    </form>
-    </td>
-<!----    <td>
-    <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
-    <label class="col-md-4 control-label">Catalogo (.CSV)</label> <input type="file" name="filecsv" id="filecsv" accept=".csv">
-    <br>
-    <label class="col-md-4 control-label">Copertine (.ZIP)</label> <input type="file" name="filezip" id="filezip" accept=".zip">
-    <br><br>
-     <input type="hidden" name="catalogo">
-     <div align="center">
-    <button type="submit" id="submit" name="import" class="btn-info insert_catalogue">Inserisci Catalogo</button>
-    </div>
-    <div id="labelError"></div>
-    </form>
-    </td> --->
-</tr>
-</table> 
+</form>
 </div>
 <br>
 <div id="footer1" align="center"></div>
@@ -467,6 +225,7 @@ $(document).ready(function() {
 <div align=center id=result2 style="color:green"></div>
 <div align=center id=error2 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
 <form class="sel_volume" name="sel_volume" id="sel_volume" action method="post">
     <label for="cars">Scegli volume:</label>
@@ -478,9 +237,6 @@ $(document).ready(function() {
 <br>
 
 <form enctype="multipart/form-data" id="upd_book" class="upd_book" name="upd_book" action method="post">
-<table style="width:90%">
-<tr>
-    <td>
     <table>
     <tr>
      	<td>
@@ -489,6 +245,9 @@ $(document).ready(function() {
 	<td>
 	    <input type="text" size="25" id="codice_archivio_upd" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
 	</td>
+	<td rowspan=2>
+	    <button class="btn btn-sm btn-info btn-update-book" id="inserisci"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
+	</td>
     </tr>
     <tr>
    	<td>
@@ -496,6 +255,9 @@ $(document).ready(function() {
 	</td>
 	<td>
 	    <input type="text" id="tipologia_upd" name="tipologia" readonly="readonly">
+	</td>
+	<td rowspan=4>
+    	    <img id="thumbnail" src="">
 	</td>
     </tr>
     <tr>
@@ -610,20 +372,7 @@ $(document).ready(function() {
 	    <input name="copertina" id="copertina_upd" type="file" value=""><br><br>
 	</td>
     </tr>
-    <tr>
-	<td colspan=2>
-	<div align="center">
-	    <button class="btn btn-sm btn-info btn-update-book" id="inserisci"><img src="/view/icons/update_small.png">&nbsp;Aggiorna</button>
-	</div>
-	</td>
-    </tr>
     </table>
-    </td>
-    <td rowspan=17>
-    	<img id="thumbnail" src="">
-    </td>
-</tr>
-</table>
 </form>
 </div>
 <br>
@@ -634,6 +383,7 @@ $(document).ready(function() {
 <div align=center id=result3 style="color:green"></div>
 <div align=center id=error3 style="color:red"></div>
 <br>
+<?php fillSelection(); ?>
 <div align="center">
 <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
     <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
@@ -646,21 +396,6 @@ $(document).ready(function() {
 <div id="footer3" align="center"></div>
 </div>
 
-<script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-
+<script type="text/javascript" src="js/tab_selection.js"></script>
 </body>
 </html>
