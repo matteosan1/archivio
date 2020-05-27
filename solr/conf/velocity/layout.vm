@@ -1,0 +1,19 @@
+<html>
+<head>
+  #parse("head.vm")
+</head>
+  <body>
+    <div id="head" align="center">
+      <a href="http://www.istrice.org">
+	<img src="#url_root/img/titolo.png"/>
+      </a>
+    </div>
+    <div id="content">
+      $content
+    </div>
+    
+    <div id="footer">
+      #parse("footer.vm")
+    </div>
+  </body>
+</html>

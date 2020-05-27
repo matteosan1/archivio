@@ -1,0 +1,110 @@
+#*
+  - Make search box bigger
+  - Add in pivot and other facets?
+  - Work on template default selection logic
+*#
+
+## Show Error Message, if any
+<div class="error">
+  #parse("error.vm")
+</div>
+
+<div class="query-box">
+  <form id="query-form" action="#{url_for_home}" method="GET">
+    Ricerca:
+    <input type="text" id="q" name="q" value="$!esc.html($request.params.get('q'))"/>
+    <input type="submit" value="Invia"/>
+    <input type="reset" value="Reset"/>
+    
+    ###if($debug) ## TODO: this would automatically happen when arbitrary parameters are kept on URLs
+    ##  <input type="hidden" name="debug" value="true"/>
+    ###end
+    ###foreach($fq in $request.params.getParams('fq'))
+    ##  <input type="hidden" name="fq" id="allFQs" value="$esc.html($fq)"/>
+    ###end
+
+    ##<div class="constraints">
+    ##  #foreach($fq in $request.params.getParams('fq'))
+    ##    #set($previous_fq_count=$velocityCount - 1)
+    ##    #if($fq != '')
+    ##      &gt;
+    ##      <a href="#url_for_filters($request.params.getParams('fq').subList(0,$previous_fq_count))">$fq</a>
+    ##    #end
+    ##  #end
+    ##</div>
+
+    ##<div class="parsed_query_header">
+    ##  #if($debug)
+    ##    <a href="#" onclick='jQuery(this).siblings("div").toggle(); return false;'>toggle parsed query</a>
+    ##    <div class="parsed_query" style="display:none">$response.response.debug.parsedquery</div>
+    ##  #end
+    ##</div>     #{url_for_solr}/admin/file?file=/velocity/istruzioni.js
+
+  </form>
+</div>
+##<div>
+##<script type="application/javascript" src="#{url_for_solr}/admin/file?file=/velocity/istruzioni.js"></script>
+##<button id="amazing">Am I amazing ?</button>
+##
+##<br>
+##Per ricercare una parola che si pu&ograve; trovare all'interno di un qualsiasi 
+##campo &egrave; sufficiente digitarla e premere il tasto "Invia" (es. aceto). <br>
+##Per la ricerca di una parte di parola &egrave; aggiungere un * (asterisco)
+##alla fine (o all'inizio) (es. acet*).
+##Se si vuole ricercare una parola in un campo specifico usare la seguente notazione
+##campo:parola (es. soggetto:costumi). <br>
+##I campi disponibili per la ricerca sono: 
+##<ul>
+##<li>codice_archivio</li>
+##<li>tipologia</li>
+##<li>titolo</li>
+##<li>sottotitolo</li>
+##<li>prima_responsabilita</li>
+##<li>altre_responsabilita</li>
+##<li>luogo</li>
+##<li>edizione</li>
+##<li>ente</li>
+##<li>serie</li>
+##w<li>anno</li>
+##<li>descrizione</li>
+##<li>soggetto</li>
+##<li>note</li>
+##</ul><br>
+##La ricerca nei documenti elettronici viene automaticamente effettuata sul testo.<br>
+##Per le immagini la ricerca avviene invece nei tag EXIF.<br>
+##</div>
+
+</div>
+</p>
+<br><br>
+<div class="facets">
+  #parse("facets.vm")
+</div>
+
+<div class="pagination">
+  #link_to_previous_page("Prec.")
+  <span>
+    <span class="results-found">$page.results_found</span>
+    results found in
+    ${response.responseHeader.QTime}ms -
+  </span>
+
+  $resource.page_of.insert($page.current_page_number,$page.page_count)
+  #link_to_next_page("Succ.")	
+</div>
+
+## Render Results, actual matching docs
+<div class="results">
+  #parse("results_list.vm")
+</div>
+
+<div class="pagination">
+  #link_to_previous_page("Prec.")
+
+  <span class="results-found">$page.results_found</span>
+  results found.
+
+  $resource.page_of.insert($page.current_page_number,$page.page_count)
+
+  #link_to_next_page("Succ.")
+</div>

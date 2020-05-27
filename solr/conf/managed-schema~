@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="default-config" version="1.6">
+  <uniqueKey>codice_archivio</uniqueKey>
+  <fieldType name="_nest_path_" class="solr.NestPathField" maxCharsForDocValues="-1" omitNorms="true" omitTermFreqAndPositions="true" stored="false"/>
+  <fieldType name="ancestor_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="binary" class="solr.BinaryField"/>
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+  <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+  <fieldType name="delimited_payloads_float" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_int" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="integer"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_string" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="identity"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="descendent_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="ignored" class="solr.StrField" indexed="false" stored="false" multiValued="true"/>
+  <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+  <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+  <fieldType name="phonetic_en" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.DoubleMetaphoneFilterFactory" inject="false"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+  <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
+  <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
+  <fieldType name="text_ar" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_ar.txt" ignoreCase="true"/>
+      <filter class="solr.ArabicNormalizationFilterFactory"/>
+      <filter class="solr.ArabicStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_bg" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_bg.txt" ignoreCase="true"/>
+      <filter class="solr.BulgarianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ca" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" articles="lang/contractions_ca.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_ca.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Catalan"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_cjk" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.CJKBigramFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_cz" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_cz.txt" ignoreCase="true"/>
+      <filter class="solr.CzechStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_da" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_da.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Danish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_de" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_de.txt" ignoreCase="true"/>
+      <filter class="solr.GermanNormalizationFilterFactory"/>
+      <filter class="solr.GermanLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_el" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.GreekLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_el.txt" ignoreCase="false"/>
+      <filter class="solr.GreekStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting_tight" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="0" generateWordParts="0" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="0" generateWordParts="0" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_es" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_es.txt" ignoreCase="true"/>
+      <filter class="solr.SpanishLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_et" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_et.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Estonian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_eu" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_eu.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Basque"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fa" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <charFilter class="solr.PersianCharFilterFactory"/>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ArabicNormalizationFilterFactory"/>
+      <filter class="solr.PersianNormalizationFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_fa.txt" ignoreCase="true"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fi" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_fi.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Finnish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fr" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" articles="lang/contractions_fr.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_fr.txt" ignoreCase="true"/>
+      <filter class="solr.FrenchLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ga" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" articles="lang/contractions_ga.txt" ignoreCase="true"/>
+      <filter class="solr.StopFilterFactory" words="lang/hyphenations_ga.txt" ignoreCase="true"/>
+      <filter class="solr.IrishLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_ga.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Irish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="false">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_general_rev" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ReversedWildcardFilterFactory" maxPosQuestion="2" maxFractionAsterisk="0.33" maxPosAsterisk="3" withOriginal="true"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_gl" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_gl.txt" ignoreCase="true"/>
+      <filter class="solr.GalicianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hi" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.IndicNormalizationFilterFactory"/>
+      <filter class="solr.HindiNormalizationFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_hi.txt" ignoreCase="true"/>
+      <filter class="solr.HindiStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hu" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_hu.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Hungarian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hy" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_hy.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Armenian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_id" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_id.txt" ignoreCase="true"/>
+      <filter class="solr.IndonesianStemFilterFactory" stemDerivational="true"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_it" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" articles="lang/contractions_it.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_it.txt" ignoreCase="true"/>
+      <filter class="solr.ItalianLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ja" class="solr.TextField" autoGeneratePhraseQueries="false" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.JapaneseTokenizerFactory" mode="search"/>
+      <filter class="solr.JapaneseBaseFormFilterFactory"/>
+      <filter class="solr.JapanesePartOfSpeechStopFilterFactory" tags="lang/stoptags_ja.txt"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_ja.txt" ignoreCase="true"/>
+      <filter class="solr.JapaneseKatakanaStemFilterFactory" minimumLength="4"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ko" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KoreanTokenizerFactory" outputUnknownUnigrams="false" decompoundMode="discard"/>
+      <filter class="solr.KoreanPartOfSpeechStopFilterFactory"/>
+      <filter class="solr.KoreanReadingFormFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_lv" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_lv.txt" ignoreCase="true"/>
+      <filter class="solr.LatvianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_nl" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_nl.txt" ignoreCase="true"/>
+      <filter class="solr.StemmerOverrideFilterFactory" dictionary="lang/stemdict_nl.txt" ignoreCase="false"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Dutch"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_no" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_no.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Norwegian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_pt" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_pt.txt" ignoreCase="true"/>
+      <filter class="solr.PortugueseLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ro" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_ro.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Romanian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ru" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_ru.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Russian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_sv" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" words="lang/stopwords_sv.txt" ignoreCase="true"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Swedish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_th" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.ThaiTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_th.txt" ignoreCase="true"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_tr" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.TurkishLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_tr.txt" ignoreCase="false"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Turkish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <field name="Application_Record_Version" type="plongs"/>
+  <field name="Author" type="text_general"/>
+  <field name="Blue_Colorant" type="text_general"/>
+  <field name="Blue_TRC" type="pdoubles"/>
+  <field name="By-line" type="text_general"/>
+  <field name="CMM_Type" type="text_general"/>
+  <field name="Class" type="text_general"/>
+  <field name="Color_space" type="text_general"/>
+  <field name="Component_1" type="text_general"/>
+  <field name="Component_2" type="text_general"/>
+  <field name="Component_3" type="text_general"/>
+  <field name="Compression_Type" type="text_general"/>
+  <field name="Content-Length" type="plongs"/>
+  <field name="Content-Type" type="text_general"/>
+  <field name="Copyright" type="text_general"/>
+  <field name="Creation-Date" type="pdates"/>
+  <field name="Data_Precision" type="text_general"/>
+  <field name="Date_Created" type="text_general"/>
+  <field name="Device_manufacturer" type="text_general"/>
+  <field name="Exif_IFD0_Bits_Per_Sample" type="text_general"/>
+  <field name="Exif_IFD0_Date_Time" type="text_general"/>
+  <field name="Exif_IFD0_Image_Height" type="text_general"/>
+  <field name="Exif_IFD0_Image_Width" type="text_general"/>
+  <field name="Exif_IFD0_Make" type="text_general"/>
+  <field name="Exif_IFD0_Model" type="text_general"/>
+  <field name="Exif_IFD0_Orientation" type="text_general"/>
+  <field name="Exif_IFD0_Photometric_Interpretation" type="text_general"/>
+  <field name="Exif_IFD0_Primary_Chromaticities" type="text_general"/>
+  <field name="Exif_IFD0_Resolution_Unit" type="text_general"/>
+  <field name="Exif_IFD0_Samples_Per_Pixel" type="text_general"/>
+  <field name="Exif_IFD0_Software" type="text_general"/>
+  <field name="Exif_IFD0_White_Point" type="text_general"/>
+  <field name="Exif_IFD0_X_Resolution" type="text_general"/>
+  <field name="Exif_IFD0_YCbCr_Coefficients" type="text_general"/>
+  <field name="Exif_IFD0_YCbCr_Positioning" type="text_general"/>
+  <field name="Exif_IFD0_Y_Resolution" type="text_general"/>
+  <field name="Exif_SubIFD_Aperture_Value" type="text_general"/>
+  <field name="Exif_SubIFD_Color_Space" type="text_general"/>
+  <field name="Exif_SubIFD_Components_Configuration" type="text_general"/>
+  <field name="Exif_SubIFD_Custom_Rendered" type="text_general"/>
+  <field name="Exif_SubIFD_Date_Time_Digitized" type="text_general"/>
+  <field name="Exif_SubIFD_Date_Time_Original" type="text_general"/>
+  <field name="Exif_SubIFD_Exif_Image_Height" type="text_general"/>
+  <field name="Exif_SubIFD_Exif_Image_Width" type="text_general"/>
+  <field name="Exif_SubIFD_Exif_Version" type="pdoubles"/>
+  <field name="Exif_SubIFD_Exposure_Bias_Value" type="text_general"/>
+  <field name="Exif_SubIFD_Exposure_Mode" type="text_general"/>
+  <field name="Exif_SubIFD_Exposure_Program" type="text_general"/>
+  <field name="Exif_SubIFD_Exposure_Time" type="text_general"/>
+  <field name="Exif_SubIFD_F-Number" type="text_general"/>
+  <field name="Exif_SubIFD_Flash" type="text_general"/>
+  <field name="Exif_SubIFD_FlashPix_Version" type="pdoubles"/>
+  <field name="Exif_SubIFD_Focal_Length" type="text_general"/>
+  <field name="Exif_SubIFD_Focal_Plane_Resolution_Unit" type="text_general"/>
+  <field name="Exif_SubIFD_Focal_Plane_X_Resolution" type="text_general"/>
+  <field name="Exif_SubIFD_Focal_Plane_Y_Resolution" type="text_general"/>
+  <field name="Exif_SubIFD_Gamma" type="pdoubles"/>
+  <field name="Exif_SubIFD_ISO_Speed_Ratings" type="plongs"/>
+  <field name="Exif_SubIFD_Max_Aperture_Value" type="text_general"/>
+  <field name="Exif_SubIFD_Metering_Mode" type="text_general"/>
+  <field name="Exif_SubIFD_Scene_Capture_Type" type="text_general"/>
+  <field name="Exif_SubIFD_Shutter_Speed_Value" type="text_general"/>
+  <field name="Exif_SubIFD_Sub-Sec_Time" type="plongs"/>
+  <field name="Exif_SubIFD_Sub-Sec_Time_Digitized" type="plongs"/>
+  <field name="Exif_SubIFD_Sub-Sec_Time_Original" type="plongs"/>
+  <field name="Exif_SubIFD_White_Balance_Mode" type="text_general"/>
+  <field name="Exif_Thumbnail_Compression" type="text_general"/>
+  <field name="Exif_Thumbnail_Resolution_Unit" type="text_general"/>
+  <field name="Exif_Thumbnail_Thumbnail_Length" type="text_general"/>
+  <field name="Exif_Thumbnail_Thumbnail_Offset" type="text_general"/>
+  <field name="Exif_Thumbnail_X_Resolution" type="text_general"/>
+  <field name="Exif_Thumbnail_Y_Resolution" type="text_general"/>
+  <field name="File_Modified_Date" type="pdates"/>
+  <field name="File_Name" type="text_general"/>
+  <field name="File_Size" type="text_general"/>
+  <field name="GPS_GPS_Version_ID" type="pdoubles"/>
+  <field name="Green_Colorant" type="text_general"/>
+  <field name="Green_TRC" type="pdoubles"/>
+  <field name="Image_Height" type="text_general"/>
+  <field name="Image_Width" type="text_general"/>
+  <field name="Interoperability_Interoperability_Index" type="text_general"/>
+  <field name="Interoperability_Interoperability_Version" type="pdoubles"/>
+  <field name="Keywords" type="text_general"/>
+  <field name="Last-Modified" type="pdates"/>
+  <field name="Last-Save-Date" type="pdates"/>
+  <field name="Media_Black_Point" type="text_general"/>
+  <field name="Media_White_Point" type="text_general"/>
+  <field name="Number_of_Components" type="plongs"/>
+  <field name="Number_of_Tables" type="text_general"/>
+  <field name="Primary_Platform" type="text_general"/>
+  <field name="Profile_Connection_Space" type="text_general"/>
+  <field name="Profile_Date_Time" type="text_general"/>
+  <field name="Profile_Description" type="text_general"/>
+  <field name="Profile_Size" type="plongs"/>
+  <field name="Red_Colorant" type="text_general"/>
+  <field name="Red_TRC" type="pdoubles"/>
+  <field name="Signature" type="text_general"/>
+  <field name="Tag_Count" type="plongs"/>
+  <field name="Time_Created" type="text_general"/>
+  <field name="Unknown_tag__0x0201_" type="text_general"/>
+  <field name="X-TIKA_content_handler" type="text_general"/>
+  <field name="X-TIKA_embedded_depth" type="plongs"/>
+  <field name="X-TIKA_parse_time_millis" type="plongs"/>
+  <field name="XMP_Value_Count" type="plongs"/>
+  <field name="XYZ_values" type="text_general"/>
+  <field name="_id" type="plongs"/>
+  <field name="_nest_path_" type="_nest_path_"/>
+  <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
+  <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="access_permission_assemble_document" type="booleans"/>
+  <field name="access_permission_can_modify" type="booleans"/>
+  <field name="access_permission_can_print" type="booleans"/>
+  <field name="access_permission_can_print_degraded" type="booleans"/>
+  <field name="access_permission_extract_content" type="booleans"/>
+  <field name="access_permission_extract_for_accessibility" type="booleans"/>
+  <field name="access_permission_fill_in_form" type="booleans"/>
+  <field name="access_permission_modify_annotations" type="booleans"/>
+  <field name="altre_responsabilita" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="anno" type="pint" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="cdd" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="codice_archivio" type="string" docValues="false" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="created" type="pdates"/>
+  <field name="creator" type="text_general"/>
+  <field name="date" type="pdates"/>
+  <field name="dc_creator" type="text_general"/>
+  <field name="dc_format" type="text_general"/>
+  <field name="dc_subject" type="text_general"/>
+  <field name="dcterms_created" type="pdates"/>
+  <field name="dcterms_modified" type="pdates"/>
+  <field name="descrizione" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="edizione" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="ente" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="exif_DateTimeOriginal" type="pdates"/>
+  <field name="exif_ExposureTime" type="pdoubles"/>
+  <field name="exif_FNumber" type="pdoubles"/>
+  <field name="exif_Flash" type="booleans"/>
+  <field name="exif_FocalLength" type="pdoubles"/>
+  <field name="exif_IsoSpeedRatings" type="plongs"/>
+  <field name="luogo" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="meta_author" type="text_general"/>
+  <field name="meta_creation-date" type="pdates"/>
+  <field name="meta_keyword" type="text_general"/>
+  <field name="meta_save-date" type="pdates"/>
+  <field name="modified" type="pdates"/>
+  <field name="note" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="pdf_PDFVersion" type="pdoubles"/>
+  <field name="pdf_charsPerPage" type="plongs"/>
+  <field name="pdf_docinfo_created" type="pdates"/>
+  <field name="pdf_docinfo_producer" type="text_general"/>
+  <field name="pdf_encrypted" type="booleans"/>
+  <field name="pdf_hasMarkedContent" type="booleans"/>
+  <field name="pdf_hasXFA" type="booleans"/>
+  <field name="pdf_hasXMP" type="booleans"/>
+  <field name="pdf_unmappedUnicodeCharsPerPage" type="plongs"/>
+  <field name="prima_responsabilita" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="producer" type="text_general"/>
+  <field name="resourceName" type="text_general"/>
+  <field name="serie" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="soggetto" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="sottotitolo" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="subject" type="text_general"/>
+  <field name="text" type="text_general"/>
+  <field name="tiff_BitsPerSample" type="plongs"/>
+  <field name="tiff_ImageLength" type="plongs"/>
+  <field name="tiff_ImageWidth" type="plongs"/>
+  <field name="tiff_Make" type="text_general"/>
+  <field name="tiff_Model" type="text_general"/>
+  <field name="tiff_Orientation" type="plongs"/>
+  <field name="tiff_ResolutionUnit" type="text_general"/>
+  <field name="tiff_SamplesPerPixel" type="plongs"/>
+  <field name="tiff_Software" type="text_general"/>
+  <field name="tiff_XResolution" type="pdoubles"/>
+  <field name="tiff_YResolution" type="pdoubles"/>
+  <field name="timestamp" type="pdates" default="NOW" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="tipologia" type="string" docValues="false" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="titolo" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="upd_tagl1" type="text_general"/>
+  <field name="upd_tagl2" type="text_general"/>
+  <field name="xmpMM_DocumentID" type="text_general"/>
+  <field name="xmpTPg_NPages" type="plongs"/>
+  <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
+  <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
+  <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en_split" type="text_en_splitting" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
+  <dynamicField name="ignored_*" type="ignored"/>
+  <dynamicField name="*_txt_rev" type="text_general_rev" indexed="true" stored="true"/>
+  <dynamicField name="*_phon_en" type="phonetic_en" indexed="true" stored="true"/>
+  <dynamicField name="*_s_lower" type="lowercase" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_cjk" type="text_cjk" indexed="true" stored="true"/>
+  <dynamicField name="random_*" type="random"/>
+  <dynamicField name="*_t_sort" type="text_gen_sort" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en" type="text_en" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ar" type="text_ar" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_bg" type="text_bg" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ca" type="text_ca" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_cz" type="text_cz" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_da" type="text_da" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_de" type="text_de" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_el" type="text_el" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_es" type="text_es" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_et" type="text_et" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_eu" type="text_eu" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fa" type="text_fa" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fi" type="text_fi" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fr" type="text_fr" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ga" type="text_ga" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_gl" type="text_gl" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hi" type="text_hi" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hu" type="text_hu" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hy" type="text_hy" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_id" type="text_id" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_it" type="text_it" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ja" type="text_ja" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ko" type="text_ko" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_lv" type="text_lv" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_nl" type="text_nl" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_no" type="text_no" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_pt" type="text_pt" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ro" type="text_ro" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ru" type="text_ru" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_sv" type="text_sv" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_th" type="text_th" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_tr" type="text_tr" indexed="true" stored="true"/>
+  <dynamicField name="*_point" type="point" indexed="true" stored="true"/>
+  <dynamicField name="*_srpt" type="location_rpt" indexed="true" stored="true"/>
+  <dynamicField name="attr_*" type="text_general" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_txt" type="text_general" indexed="true" stored="true"/>
+  <dynamicField name="*_str" type="strings" docValues="true" indexed="false" stored="false" useDocValuesAsStored="false"/>
+  <dynamicField name="*_dts" type="pdate" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true" stored="true"/>
+  <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true" stored="true"/>
+  <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true" stored="true"/>
+  <dynamicField name="*_is" type="pints" indexed="true" stored="true"/>
+  <dynamicField name="*_ss" type="strings" indexed="true" stored="true"/>
+  <dynamicField name="*_ls" type="plongs" indexed="true" stored="true"/>
+  <dynamicField name="*_bs" type="booleans" indexed="true" stored="true"/>
+  <dynamicField name="*_fs" type="pfloats" indexed="true" stored="true"/>
+  <dynamicField name="*_ds" type="pdoubles" indexed="true" stored="true"/>
+  <dynamicField name="*_dt" type="pdate" indexed="true" stored="true"/>
+  <dynamicField name="*_ws" type="text_ws" indexed="true" stored="true"/>
+  <dynamicField name="*_i" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_s" type="string" indexed="true" stored="true"/>
+  <dynamicField name="*_l" type="plong" indexed="true" stored="true"/>
+  <dynamicField name="*_t" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_b" type="boolean" indexed="true" stored="true"/>
+  <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
+  <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
+  <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
+  <copyField source="resourceName" dest="resourceName_str" maxChars="256"/>
+  <copyField source="CMM_Type" dest="CMM_Type_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_YCbCr_Positioning" dest="Exif_IFD0_YCbCr_Positioning_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_Y_Resolution" dest="Exif_Thumbnail_Y_Resolution_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Make" dest="Exif_IFD0_Make_str" maxChars="256"/>
+  <copyField source="Image_Height" dest="Image_Height_str" maxChars="256"/>
+  <copyField source="Time_Created" dest="Time_Created_str" maxChars="256"/>
+  <copyField source="File_Name" dest="File_Name_str" maxChars="256"/>
+  <copyField source="subject" dest="subject_str" maxChars="256"/>
+  <copyField source="By-line" dest="By-line_str" maxChars="256"/>
+  <copyField source="File_Size" dest="File_Size_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Image_Height" dest="Exif_IFD0_Image_Height_str" maxChars="256"/>
+  <copyField source="dc_subject" dest="dc_subject_str" maxChars="256"/>
+  <copyField source="Copyright" dest="Copyright_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Color_Space" dest="Exif_SubIFD_Color_Space_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Primary_Chromaticities" dest="Exif_IFD0_Primary_Chromaticities_str" maxChars="256"/>
+  <copyField source="xmpMM_DocumentID" dest="xmpMM_DocumentID_str" maxChars="256"/>
+  <copyField source="Blue_Colorant" dest="Blue_Colorant_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Scene_Capture_Type" dest="Exif_SubIFD_Scene_Capture_Type_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Photometric_Interpretation" dest="Exif_IFD0_Photometric_Interpretation_str" maxChars="256"/>
+  <copyField source="tiff_Make" dest="tiff_Make_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exposure_Program" dest="Exif_SubIFD_Exposure_Program_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Flash" dest="Exif_SubIFD_Flash_str" maxChars="256"/>
+  <copyField source="XYZ_values" dest="XYZ_values_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Focal_Plane_X_Resolution" dest="Exif_SubIFD_Focal_Plane_X_Resolution_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_X_Resolution" dest="Exif_IFD0_X_Resolution_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_White_Point" dest="Exif_IFD0_White_Point_str" maxChars="256"/>
+  <copyField source="Media_White_Point" dest="Media_White_Point_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_Thumbnail_Length" dest="Exif_Thumbnail_Thumbnail_Length_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Model" dest="Exif_IFD0_Model_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_White_Balance_Mode" dest="Exif_SubIFD_White_Balance_Mode_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_Thumbnail_Offset" dest="Exif_Thumbnail_Thumbnail_Offset_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Aperture_Value" dest="Exif_SubIFD_Aperture_Value_str" maxChars="256"/>
+  <copyField source="tiff_ResolutionUnit" dest="tiff_ResolutionUnit_str" maxChars="256"/>
+  <copyField source="Primary_Platform" dest="Primary_Platform_str" maxChars="256"/>
+  <copyField source="meta_keyword" dest="meta_keyword_str" maxChars="256"/>
+  <copyField source="Number_of_Tables" dest="Number_of_Tables_str" maxChars="256"/>
+  <copyField source="Author" dest="Author_str" maxChars="256"/>
+  <copyField source="Class" dest="Class_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Bits_Per_Sample" dest="Exif_IFD0_Bits_Per_Sample_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Metering_Mode" dest="Exif_SubIFD_Metering_Mode_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exposure_Time" dest="Exif_SubIFD_Exposure_Time_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_YCbCr_Coefficients" dest="Exif_IFD0_YCbCr_Coefficients_str" maxChars="256"/>
+  <copyField source="Keywords" dest="Keywords_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Focal_Length" dest="Exif_SubIFD_Focal_Length_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Shutter_Speed_Value" dest="Exif_SubIFD_Shutter_Speed_Value_str" maxChars="256"/>
+  <copyField source="Red_Colorant" dest="Red_Colorant_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exif_Image_Height" dest="Exif_SubIFD_Exif_Image_Height_str" maxChars="256"/>
+  <copyField source="Data_Precision" dest="Data_Precision_str" maxChars="256"/>
+  <copyField source="Unknown_tag__0x0201_" dest="Unknown_tag__0x0201__str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Image_Width" dest="Exif_IFD0_Image_Width_str" maxChars="256"/>
+  <copyField source="Profile_Date_Time" dest="Profile_Date_Time_str" maxChars="256"/>
+  <copyField source="Profile_Connection_Space" dest="Profile_Connection_Space_str" maxChars="256"/>
+  <copyField source="meta_author" dest="meta_author_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Custom_Rendered" dest="Exif_SubIFD_Custom_Rendered_str" maxChars="256"/>
+  <copyField source="Interoperability_Interoperability_Index" dest="Interoperability_Interoperability_Index_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Date_Time" dest="Exif_IFD0_Date_Time_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Y_Resolution" dest="Exif_IFD0_Y_Resolution_str" maxChars="256"/>
+  <copyField source="tiff_Software" dest="tiff_Software_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Focal_Plane_Y_Resolution" dest="Exif_SubIFD_Focal_Plane_Y_Resolution_str" maxChars="256"/>
+  <copyField source="Image_Width" dest="Image_Width_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Date_Time_Digitized" dest="Exif_SubIFD_Date_Time_Digitized_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Orientation" dest="Exif_IFD0_Orientation_str" maxChars="256"/>
+  <copyField source="Color_space" dest="Color_space_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_X_Resolution" dest="Exif_Thumbnail_X_Resolution_str" maxChars="256"/>
+  <copyField source="Compression_Type" dest="Compression_Type_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Max_Aperture_Value" dest="Exif_SubIFD_Max_Aperture_Value_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exif_Image_Width" dest="Exif_SubIFD_Exif_Image_Width_str" maxChars="256"/>
+  <copyField source="Content-Type" dest="Content-Type_str" maxChars="256"/>
+  <copyField source="Green_Colorant" dest="Green_Colorant_str" maxChars="256"/>
+  <copyField source="Media_Black_Point" dest="Media_Black_Point_str" maxChars="256"/>
+  <copyField source="Profile_Description" dest="Profile_Description_str" maxChars="256"/>
+  <copyField source="creator" dest="creator_str" maxChars="256"/>
+  <copyField source="Date_Created" dest="Date_Created_str" maxChars="256"/>
+  <copyField source="tiff_Model" dest="tiff_Model_str" maxChars="256"/>
+  <copyField source="dc_creator" dest="dc_creator_str" maxChars="256"/>
+  <copyField source="Component_1" dest="Component_1_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Resolution_Unit" dest="Exif_IFD0_Resolution_Unit_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exposure_Mode" dest="Exif_SubIFD_Exposure_Mode_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exposure_Bias_Value" dest="Exif_SubIFD_Exposure_Bias_Value_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Focal_Plane_Resolution_Unit" dest="Exif_SubIFD_Focal_Plane_Resolution_Unit_str" maxChars="256"/>
+  <copyField source="Device_manufacturer" dest="Device_manufacturer_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_F-Number" dest="Exif_SubIFD_F-Number_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Date_Time_Original" dest="Exif_SubIFD_Date_Time_Original_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_Compression" dest="Exif_Thumbnail_Compression_str" maxChars="256"/>
+  <copyField source="Component_3" dest="Component_3_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Samples_Per_Pixel" dest="Exif_IFD0_Samples_Per_Pixel_str" maxChars="256"/>
+  <copyField source="Component_2" dest="Component_2_str" maxChars="256"/>
+  <copyField source="Signature" dest="Signature_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Software" dest="Exif_IFD0_Software_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Components_Configuration" dest="Exif_SubIFD_Components_Configuration_str" maxChars="256"/>
+  <copyField source="Exif_Thumbnail_Resolution_Unit" dest="Exif_Thumbnail_Resolution_Unit_str" maxChars="256"/>
+  <copyField source="upd_tagl2" dest="upd_tagl2_str" maxChars="256"/>
+  <copyField source="upd_tagl1" dest="upd_tagl1_str" maxChars="256"/>
+  <copyField source="X-TIKA_content_handler" dest="X-TIKA_content_handler_str" maxChars="256"/>
+  <copyField source="dc_format" dest="dc_format_str" maxChars="256"/>
+  <copyField source="producer" dest="producer_str" maxChars="256"/>
+  <copyField source="text" dest="text_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_producer" dest="pdf_docinfo_producer_str" maxChars="256"/>
+</schema>

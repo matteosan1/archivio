@@ -1,0 +1,57 @@
+##set($docId = $doc.getFirstValue($request.schema.uniqueKeyField.name))
+
+#set ($title = $doc.getFieldValue('id').split(".+?/(?=[^/]+$)")[1])
+
+<div class="result-document">
+  <table width="100%">
+    <col width="20%">
+    <col width="50%">
+    <col width="30%">
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Nome:
+    </th>	
+    <td align="left" valign="top">     
+     <a href="#url_root/documents/$title" target="_blank">
+       <b>$title</b></a>
+    </td>
+       <td rowspan="5" align="center">
+      <img height=200 src="#url_root/thumbnails/${title}.jpeg" />
+     </td>
+     </tr>
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Creato:
+    </th>	
+    <td align="left" valign="top">     
+      #field("creation_date")
+    </td>
+     </tr>
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Modificato:
+    </th>	
+    <td align="left" valign="top">     
+      #field("last_modified")
+    </td>
+     </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Dimensioni:
+    </th>	
+    <td align="left" valign="top">
+      #set ($filesize = $doc.getFieldValues("stream_size")[0]/1024)
+      $filesize kB
+    </td>
+     </tr>
+  </table>
+
+  #if($debug)
+    <a href="#" onclick='jQuery(this).siblings("pre").toggle(); return false;'>toggle explain</a>
+
+    <pre style="display:none">
+      $response.getExplainMap().get($docId)
+    </pre>
+  #end
+</div>

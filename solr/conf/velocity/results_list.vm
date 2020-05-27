@@ -1,0 +1,16 @@
+
+#foreach($doc in $response.results)
+  #set($video = $doc.getFieldValue('video'))
+  #set($ct = $doc.getFieldValue('content_type'))
+  #if ($ct == "[image/jpeg]")
+      #parse("hit_image.vm")
+  #elseif ($ct == "[image/tiff]")
+      #parse("hit_tiff.vm")
+  #elseif ($ct == "[application/pdf]")
+      #parse("hit_pdf.vm")
+  #elseif ($video)
+      #parse("hit_video.vm")
+  #else
+      #parse("hit.vm")
+  #end  
+#end

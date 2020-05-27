@@ -1,0 +1,77 @@
+##set($docId = $doc.getFirstValue($request.schema.uniqueKeyField.name))
+
+##id":"/Users/sani/Documents/CONTRADA/SONETTO 2006.tif",
+##        "compression":["Uncompressed"],
+##        "modified":["2006-06-28T19:31:17Z"],
+##        "creation_date":["2006-06-28T19:31:17Z"],
+##        "resourcename":["/Users/sani/Documents/CONTRADA/SONETTO 2006.tif"],
+##        "tiff_yresolution":[300.0],
+##        "file_size":["55597924 bytes"],
+
+#set ($title = $doc.getFieldValue('id').split(".+?/(?=[^/]+$)")[1])
+
+<div class="result-document">
+  <table width="100%">
+    <col width="20%">
+    <col width="50%">
+    <col width="30%">
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Picture Name:
+    </th>	
+    <td align="left" valign="top">     
+     <a href="#url_root/pictures/$title" target="_blank">
+       <b>$title</b></a>
+    </td>
+    <td rowspan="6" align="center">
+      #set( $image = '#url_root/pictures/$title')
+      <img height=150 src="#url_root/pictures/$title" onerror="this.onerror=null;this.src='#url_root/img/no_image.png';" />
+     </td>
+     </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Resolution:
+    </th>	
+    <td align="left" valign="top">     
+      #field("x_resolution") X #field("y_resolution")
+    </td>
+    </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Colori:
+    </th>	
+    <td align="left" valign="top">     
+      #field("color_space")
+    </td>
+     </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Data:
+    </th>	
+    <td align="left" valign="top">     
+      #field("date_created")
+      ###time_created
+    </td>
+     </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Dimensioni:
+    </th>	
+    <td align="left" valign="top">     
+      #field("file_size")
+    </td>
+     </tr>
+  </table>
+
+  #if($debug)
+    <a href="#" onclick='jQuery(this).siblings("pre").toggle(); return false;'>toggle explain</a>
+
+    <pre style="display:none">
+      $response.getExplainMap().get($docId)
+    </pre>
+  #end
+</div>
