@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
@@ -131,7 +131,7 @@ function fillSelection() {
     <tr>
 	<td align="center" colspan=2>
 	    <br>
-	    <button id="import" class="btn btn-sm btn-info btn-insert-image"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
+	    <button id="import" class="btn btn-sm btn-info btn-insert-imge"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>
         </td>
     </tr>
 </table>
@@ -169,7 +169,7 @@ function fillSelection() {
 	    <label for="fname" class="fname">Codice archivio:</label>
     	 </td>
 	 <td>
-	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" readonly="readonly" placeholder="XXXX.YY">
+	    <input type="text" size="25" id="codice_archivio" name="codice_archivio" readonly="readonly" placeholder="FOTO.XXXXXX">
     	 </td>
     </tr>
     <tr>

@@ -68,7 +68,7 @@ $(document).ready(function() {
 	    // FIXME AGGIUNGERE pdf2image per processare pdf
 	    if (ext != 'jpg' && ext != 'jpeg' &&
 		ext != 'tiff' && ext != 'tif') {
-		alert ("Non è possibile fare analisi OCR con file " + ext);
+		alert ("Non &egrave; possibile fare analisi OCR con file " + ext);
   	  	return false;
 	    } else {
 		request = $.ajax({
@@ -149,7 +149,8 @@ $(document).ready(function() {
 	    
 	    var ext = dict['resourceName'].split('.').pop().toLowerCase();
 	    if (ext == "jpeg" || ext == "jpg" || ext == "tiff" || ext == "tif" || ext == "pdf") {
-		document.getElementById("thumbnail").src = "/upload/" + dict['codice_archivio'] + ".JPG";
+		document.getElementById("thumbnail").src = "/thumbnails/" + dict['codice_archivio'] + "." + ext.toUpperCase();
+		console.debug("/thumbnails/" + dict['codice_archivio'] + ext.toUpperCase());
 	    }
         });
 	return true;

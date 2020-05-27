@@ -7,16 +7,17 @@ $GLOBALS['MAX_UPLOAD_BYTE'] = 200000000;
 
 $GLOBALS['DATABASENAME'] = "db_archivio.db";
 
-$GLOBALS['UPLOAD_DIR'] = '/usr/local/var/www/myupload/';
-$GLOBALS['PHOTO_DIR'] = '/Users/sani/myupload/photo/';
-$GLOBALS['VIDEO_DIR'] = '/Users/sani/myupload/video/';
-$GLOBALS['COVER_DIR'] = '/Users/sani/myupload/';
-$GLOBALS['EDOC_DIR'] = '/Users/sani/myupload/';
-$GLOBALS['THUMBNAILS_DIR'] = '/Users/sani/myupload/thumbnails/';
+$GLOBALS['UPLOAD_DIR'] = '/var/www/myupload/';
+$GLOBALS['BACKUP_DIR'] = '/home/biblioteca/backup/';
+$GLOBALS['PHOTO_DIR'] = '/home/biblioteca/photo/';
+$GLOBALS['VIDEO_DIR'] = '/home/biblioteca/video/';
+$GLOBALS['COVER_DIR'] = '/home/biblioteca/copertine/';
+$GLOBALS['EDOC_DIR'] = '/home/biblioteca/edoc/';
+$GLOBALS['THUMBNAILS_DIR'] = '/home/biblioteca/thumbnails/';
 
-$GLOBALS['SOLR_BIN'] = '/Users/sani/Downloads/solr-8.4.1/bin/solr status -p 8983';
-$GLOBALS['OCR_BIN'] = '/usr/local/bin/tesseract';
-$GLOBALS['TIKA_APP'] = '/usr/local/var/www/tika-app-1.23.jar';
+$GLOBALS['SOLR_BIN'] = '/home/biblioteca/Downloads/solr-8.4.1/bin/solr status -p 8983';
+$GLOBALS['OCR_BIN'] = '/usr/bin/tesseract';
+$GLOBALS['TIKA_APP'] = '/usr/local/bin/tika-app-1.24.1.jar';
 $GLOBALS['MERGE_PDF_BIN'] = '/usr/local/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
 $GLOBALS['PDF2IMAGE_BIN'] = '/usr/local/bin/pdf2image';
 $GLOBALS['CONVERT_BIN'] = '/usr/local/bin/convert';

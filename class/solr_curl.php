@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
@@ -216,8 +216,8 @@ function backup($upload_time, $all) {
            return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
        }
 
-       $csv_filename = $GLOBALS['UPLOAD_DIR'].'backup_'.$date_for_file.'.csv';
-       $csv_url = "http://localhost/upload/".'backup_'.$date_for_file.'.csv';
+       $csv_filename = $GLOBALS['BACKUP_DIR'].'backup_'.$date_for_file.'.csv';
+       $csv_url = "http://localhost/backup/".'backup_'.$date_for_file.'.csv';
        file_put_contents($csv_filename, $data);
 
        return array("result" => '<a href="'.$csv_url.'">Catalogo  CSV</a>');
@@ -231,7 +231,7 @@ function backup($upload_time, $all) {
        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
        $date_for_file = date('Y-m-d', strtotime($upload_time));
 
-       echo $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS'];
+       //echo $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS'];
        curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -243,11 +243,11 @@ function backup($upload_time, $all) {
            return array("error" => 'Solr server non e` attivo. Contatta l\'amministratore.');
        }
 
-       print_r ($data);
-       exit;
-       $csv_filename = $GLOBALS['UPLOAD_DIR'].'backup_'.$date_for_file.'.csv';
-       $csv_url = "http://localhost/upload/".'backup_'.$date_for_file.'.csv';
-       file_put_contents($csv_filename, $data);
+       $csv_filename = $GLOBALS['BACKUP_DIR'].'backup_'.$date_for_file.'.csv';
+       $csv_url = "http://localhost/backup/".'backup_'.$date_for_file.'.csv';
+       //print_r(mb_detect_encoding($data, mb_detect_order(), true));
+       file_put_contents($csv_filename, iconv(mb_detect_encoding($data, mb_detect_order(), true), "UTF-8", $data)); 
+       //utf8_encode($data));
     
        $ch = curl_init();
        curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q=*:*&wt=json&rows='.$GLOBALS['MAX_ROWS']);
@@ -258,8 +258,8 @@ function backup($upload_time, $all) {
        curl_close($ch);
     
        $zip = new ZipArchive();
-       $zip_filename =  $GLOBALS['UPLOAD_DIR'].'cover_'.$date_for_file.'.zip';
-       $zip_url = "http://localhost/upload/".'cover_'.$date_for_file.'.zip';
+       $zip_filename =  $GLOBALS['BACKUP_DIR'].'cover_'.$date_for_file.'.zip';
+       $zip_url = "http://localhost/backup/".'cover_'.$date_for_file.'.zip';
        if ($zip->open($zip_filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
           foreach($data['response']['docs'] as $entry) {
           	$zip->addFile($GLOBALS['COVER_DIR'].$entry['codice_archivio'].".JPG", $entry['codice_archivio'].".JPG");

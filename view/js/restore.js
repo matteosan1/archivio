@@ -29,6 +29,7 @@ $(document).ready(function() {
                 $('#error').html(dict['error']['msg']);
                 return false;
             } else {
+		$('#error').html("");
                 $('#result').html("Catalogo inserito in " + dict['responseHeader']['QTime'] + " ms");
                 setTimeout(function(){
                     location.reload();

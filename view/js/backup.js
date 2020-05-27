@@ -22,7 +22,7 @@ $(document).ready(function() {
         });
 	
         request.done(function (response){
-            console.log(response);
+            //console.log(response);
             response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
                 alert (response['error']);

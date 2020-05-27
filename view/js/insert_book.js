@@ -36,6 +36,7 @@ $(document).ready(function() {
     		$('#error1').html(dict['error']);
 		return false;
             } else {
+		$('#error1').html("");
 		$('#result1').html(dict['result']);
 		setTimeout(function(){
            	    location.reload();
@@ -75,6 +76,7 @@ $(document).ready(function() {
     		    $('#error3').html(response['error']);
 		    return false;
                 } else {
+		    $('#error3').html("");
 		    $('#result3').html(response['result']);
 		    setTimeout(function(){
            	   	location.reload();
@@ -101,17 +103,14 @@ $(document).ready(function() {
         });
 	
 	request.done(function (response){
-	    console.log(response);
 	    var dict = JSON.parse(response);
 	    for (var key in dict) {
-	    	console.log(key);
-	        if (key == '_version_' || key == 'timestamp') {
+	        if (key == '_version_' || key == 'timestamp' || key == '_id') {
 		    continue;
 		}
           	document.getElementById(key + "_upd").value = dict[key];
 	    }
-	    document.getElementById("thumbnail").src = "/upload/" + dict['codice_archivio'] + ".JPG";
-	    console.debug(document.getElementById("thumbnail").src);
+	    document.getElementById("thumbnail").src = "/copertine/" + dict['codice_archivio'] + ".JPG";
         });
 	return true;
 	
@@ -139,7 +138,7 @@ $(document).ready(function() {
 		$('#error2').html(response['error']);
 		return false;
             } else {
-	        $('#result2').html("Il volumen &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
+	        $('#result2').html("Il volume &egrave; stato aggiornato in " + response['responseHeader']['QTime'] + " ms");
 		setTimeout(function(){
          	    location.reload();
       		}, 2000); 		

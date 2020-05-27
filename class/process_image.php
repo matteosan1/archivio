@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
@@ -34,7 +34,7 @@ for ($i=0; $i<$countfiles; $i++) {
     }	
 }	
 
-echo json_encode(array('result' => "Le immagini sono state caricate."));
+echo json_encode(array("result"=>"Le immagini sono state caricate."));
 exit;
 
 function basicCheckOnFile($i) {
@@ -64,7 +64,6 @@ function checkForDuplicates($resourceName) {
 
 function addEXIF($filename) {
     global $list_of_tags, $tagl1, $tagl2;
-
     $objIPTC = new IPTC($filename);
     $additional_tags = implode(" ", $list_of_tags);
     $objIPTC->setValue(IPTC_KEYWORDS, $tagl1." ".$tagl2." ".$additional_tags);

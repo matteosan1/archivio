@@ -1,4 +1,7 @@
 <?php
+
+//error_reporting (E_ALL & ~E_NOTICE);
+
 define("IPTC_OBJECT_NAME", "005");
 define("IPTC_EDIT_STATUS", "007");
 define("IPTC_PRIORITY", "010");
@@ -55,7 +58,6 @@ class IPTC
     function setValue($tag, $data)
     {
         $this->meta["2#$tag"] = [$data];
-
         $this->write();
     }
 
@@ -126,7 +128,7 @@ class IPTC
     }
 }
 
-//$file = "/var/www/myupload/photo.jpg";
+//$file = "/home/biblioteca/photo/4-16.jpg";
 //$objIPTC = new IPTC($file);
 
 ////set title

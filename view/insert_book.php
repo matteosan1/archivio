@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
@@ -17,7 +17,9 @@ $selects = "";
 function fillSelection() {
     global $size, $selects;
 
+    $selects = "";
     $json = json_decode(listCodiceArchivio(), true);
+
     if (isset($json['solr_error'])) {
         echo "<div style='color:red'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>
 ";
@@ -337,7 +339,7 @@ $(function(){
             <label for="fname" class="fname">Descrizione:</label>
 	</td>
 	<td>
-            <input type="text" size="35" id="descrizione_upd" name="descrizione" placeholder="XX p. : ill. ; YY cm">
+            <input type="text" size="35" id="descrizione_upd" placeholder="XX p. : ill. ; YY cm">
 	</td>
     </tr>
     <tr>

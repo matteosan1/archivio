@@ -1,12 +1,12 @@
 var request;
 $(document).ready(function() {
-    $(".btn-insert-image").click(function() {
+    $(".btn-insert-imge").click(function() {
 	var filename = document.getElementById('userfile').value;
         if (filename == "") {
-            alert ("Devi specificare una o più foto da caricare...");
+            alert ("Devi specificare una o piu` foto da caricare...");
             return false;
         }
-	
+
         var tagl1 = document.getElementById('tagl1').value;
 	var tagl2 = document.getElementById('tagl2').value;
 	if (tagl1 == "----" || tagl2 == "----") {
@@ -25,6 +25,7 @@ $(document).ready(function() {
 	});
 	
 	request.done(function (response) {
+	    console.debug(response);
 	    response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
     		$('#error1').html(response['error']);
@@ -106,6 +107,7 @@ $(document).ready(function() {
         });
 	
 	request.done(function (response){
+	    //console.debug(response);
 	    var dict = JSON.parse(response);
 	    for (var key in dict) {
 	        if (key == 'By-line') {
@@ -119,7 +121,8 @@ $(document).ready(function() {
 	    }
 	    // FIXME
 	    //document.getElementById("thumbnail").src = "<?php echo $GLOBALS['THUMBNAILS_DIR']?>" + dict['codice_archivio']+ ".JPG";
-	    document.getElementById("thumbnail").src = "/upload/thumbnails/" + dict['codice_archivio']+ ".JPG";
+	    document.getElementById("thumbnail").src = "/thumbnails/" + dict['codice_archivio']+ ".JPG";
+	    console.debug(dict["codice_archivio"]);
     	    document.getElementById("codice_archivio").value = dict["codice_archivio"];    
 	    document.getElementById("upd_tagl1").value = tagl1;
 	    document.getElementById("upd_tagl2").value = tagl2;
