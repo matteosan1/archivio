@@ -34,9 +34,9 @@ if (isset($_POST)) {
           $data[$real_key] = array("set"=>$value);
        }
    }
-
-   $ret = upload_json_string(json_encode(array($data)));
    
+   $ret = upload_json_string(json_encode(array($data)));
+
    if (isset($_FILES['copertina'])) {
      if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];

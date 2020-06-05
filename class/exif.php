@@ -131,10 +131,10 @@ class IPTC
 //$file = "/home/biblioteca/photo/4-16.jpg";
 //$objIPTC = new IPTC($file);
 
-////set title
+//set title
 //$objIPTC->setValue(IPTC_HEADLINE, "A title for this picture");
 
-////set description
+//set description
 //$objIPTC->setValue(IPTC_CAPTION, "Some words describing what can be seen in this picture.");
 //$objIPTC->setValue(IPTC_KEYWORDS, "prova palio aceto");
 //echo $objIPTC->getValue(IPTC_HEADLINE);
