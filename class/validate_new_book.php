@@ -55,12 +55,14 @@ if (isset($_POST)) {
      $version = -1;
      //}
 
+     $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
+     $codice_archivio = $_POST['prefissi'].".".$_POST['anno'].str_pad($id, 2, "0", STR_PAD_LEFT);
      $header = "codice_archivio|tipologia|titolo|sottotitolo|prima_responsabilita|altre_responsabilita|luogo|edizione|ente|serie|anno|descrizione|cdd|soggetto|note|_version_\n";
-     $data = $_POST['codice_archivio']."|".$_POST['tipologia']."|".$_POST['titolo']."|".$_POST['sottotitolo']."|".$_POST['prima_responsabilita']."|".$_POST['altre_responsabilita']."|".$_POST['luogo']."|".$_POST['edizione']."|".$_POST['ente']."|".$_POST['serie']."|".$_POST['anno']."|".$_POST['descrizione']."|".$_POST['cdd']."|".$_POST['soggetto']."|".$_POST['note']."|".$version."\n";
+     $data = $codice_archivio."|".$_POST['tipologia']."|".$_POST['titolo']."|".$_POST['sottotitolo']."|".$_POST['prima_responsabilita']."|".$_POST['altre_responsabilita']."|".$_POST['luogo']."|".$_POST['edizione']."|".$_POST['ente']."|".$_POST['serie']."|".$_POST['anno']."|".$_POST['descrizione']."|".$_POST['cdd']."|".$_POST['soggetto']."|".$_POST['note']."|".$version."\n";
      
      if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
-     	$cover_name = $_POST['codice_archivio'].".JPG";
+     	$cover_name = $codice_archivio.".JPG";
      	$ext = explode(".", $_FILES['copertina']['name']);
      	if (strtolower(end($ext)) != "jpg" and strtolower(end($ext)) != "jpeg") {
      	   echo json_encode(array('error' => "La copertina deve essere salvata in jpg.".strtolower(end($ext))));
@@ -89,7 +91,7 @@ if (isset($_POST)) {
      if ($result['responseHeader']['status'] != 0) {
         echo json_encode(array('error' => $result['error']['msg']));  
      } else {
-        echo json_encode(array('result' => "Volume ".$_POST['codice_archivio']." inserito correttamente."));
+        echo json_encode(array('result' => "Volume ".$codice_archivio." inserito correttamente."));
      }
   //}
 }

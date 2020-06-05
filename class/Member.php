@@ -57,6 +57,16 @@ class Member
     	return $result;
     }
 
+    function getAllPrefissi()
+    {
+	$query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
+	$paramType = array();
+    	$paramArray = array();
+	$result = $this->ds->select($query, $paramType, $paramArray);
+    
+    	return $result;
+    }
+
     function curlFlBiblio($category="book_categories") {
 
     	if ($category == "video") {

@@ -135,10 +135,10 @@ function getLastByIndex($search) {
     return $result['response']['numFound'];
 }
 
-function listCodiceArchivio($isBiblio="book_categories") {
+function listCodiceArchivio($isBiblio="book_categories", $selection="*") {
     global $m;
 
-    $query = "q=".$m->curlFlBiblio($isBiblio);
+    $query = "q=(".$m->curlFlBiblio($isBiblio).")+AND+codice_archivio:".$selection;
     $result = curlOperationGET($GLOBALS['SOLR_URL'].'query?fl=codice_archivio&'.$query.'&sort=codice_archivio+asc&wt=json&rows='.$GLOBALS['MAX_ROWS']);
 
     return $result;
