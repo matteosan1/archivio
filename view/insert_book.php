@@ -10,30 +10,7 @@ require_once "../class/solr_curl.php";
 
 $m = new Member();
 $categories = $m->getAllCategories('book_categories');
-
-$size = 0;
-$selects = "";
-
-function fillSelection() {
-    global $size, $selects;
-
-    $selects = "";
-    $json = json_decode(listCodiceArchivio(), true);
-
-    if (isset($json['solr_error'])) {
-        echo "<div style='color:red'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>
-";
-    } else {
-        foreach ($json['response']['docs'] as $select) {
-            $selects = $selects.'<option value="'.$select['codice_archivio'].'">'.$select['codice_archivio'].'</option>';
-	}
-    }
-
-    $size = count($json['response']['docs']);
-    if ($size > 14) {
-        $size = 15;
-    }
-}
+$prefissi = $m->getAllPrefissi();
 ?>
 
 <!DOCTYPE html>
@@ -45,45 +22,51 @@ function fillSelection() {
         <meta charset="UTF-8" />
         <title>Libri</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
-</script>	
-<script>
-$(function(){
-  $("#footer1").load("/view/footer.html");
-  $("#footer2").load("/view/footer.html");
-  $("#footer3").load("/view/footer.html"); 
-});
-</script>
+	</script>	
+	<script>
+	    $(function(){
+		$("#footer1").load("/view/footer.html");
+		$("#footer2").load("/view/footer.html");
+  		$("#footer3").load("/view/footer.html"); 
+	    });
+	</script>
 <style>
 @import url("/view/css/band_style.css");
 </style>
-</head>
-<script type="text/javascript" src="js/insert_book.js"></script>
+    </head>
+    <script type="text/javascript" src="js/insert_book.js"></script>
 
 <body>
-<?php include "../view/header.php"; ?>
-<div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
-  <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
-  <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
-  <div align="right" style="vertical-align=bottom;">
-         <h2>Biblioteca</h2>
-  </div>  
-</div>
+    <?php include "../view/header.php"; ?>
+    <div class="tab">
+    	 <button class="tablinks" onclick="openCity(event, 'inserimento')">Inserimento</button>
+  	 <button class="tablinks" onclick="openCity(event, 'aggiornamento')">Aggiornamento</button>
+  	 <button class="tablinks" onclick="openCity(event, 'cancellazione')">Cancellazione</button>
+  	 <div align="right" style="vertical-align=bottom;">
+              <h2>Biblioteca</h2>
+  	 </div>
+    </div>
 
 <div id="inserimento" class="tabcontent">
-<div align=center id=result1 style="color:green"></div>
-<div align=center id=error1 style="color:red"></div>
-<br>
-<?php fillSelection(); ?>
-<div align="center">
+     <div align=center id=result1 style="color:green"></div>
+     <div align=center id=error1 style="color:red"></div>
+     <br>
+     <div align="center">
 <form enctype="multipart/form-data" class="new_book" name="new_book" id="new_book" action method="POST">
     <table>
     <tr>
-            <td>
-                <label for="fname" class="fname">Codice archivio:</label>
+                <td>
+                    <label for="fname" class="fname">Prefisso codice archivio:</label>
 		</td>
 		<td>
-		    <input type="text" size="25" id="codice_archivio" name="codice_archivio" placeholder="XXXX.YY">
+	            <select name="prefissi" class="prefissi" id="prefissi">
+	                <option selected="selected"></option>
+			<?php
+			    foreach ($prefissi as $category) {
+			        echo '<option>'.$category['prefix'].'</option>';
+			    }
+			?>
+	            </select>
 		</td>
 		<td rowspan=2>
 		    <button class="btn btn-sm btn-info btn-insert-book" id="inserisci"><img src="/view/icons/plus.png">&nbsp;Inserisci</button>		 
@@ -109,7 +92,7 @@ $(function(){
                     <label for="fname" class="fname">Titolo:</label>
 		</td>
 		<td>
-		    <textarea name="titolo" id="titolo" rows="4" cols="60" placeholder=Titolo del libro"></textarea>
+		    <textarea name="titolo" id="titolo" rows="4" cols="60" placeholder="Titolo del libro"></textarea>
 		</td>
 	    </tr>
 	    <tr>
@@ -190,6 +173,7 @@ $(function(){
 		</td>
 		<td>
                     <input type="text" size="20" id="cdd" name="cdd" placeholder="123.456789">
+		    <div id="search_cdd_error" style="color:red">Mancano autore e/o titolo per cercare il CDD</div>
 		</td>
 	    </tr>
 	    <tr>
@@ -218,25 +202,31 @@ $(function(){
 	    </tr>
 	</table>
 </form>
-</div>
-<br>
-<div id="footer1" align="center"></div>
+    </div>
+    <br>
+    <div id="footer1" align="center"></div>
 </div>
 
 <div id="aggiornamento" class="tabcontent">
-<div align=center id=result2 style="color:green"></div>
-<div align=center id=error2 style="color:red"></div>
-<br>
-<?php fillSelection(); ?>
-<div align="center">
-<form class="sel_volume" name="sel_volume" id="sel_volume" action method="post">
-    <label for="cars">Scegli volume:</label>
-    <select id="volume" name="volume">
-        <option>----</option>
-	<?php echo $selects;  ?>
-    </select>
-</form>
-<br>
+     <div align=center id=result2 style="color:green"></div>
+     <div align=center id=error2 style="color:red"></div>
+     <br>
+
+     <form id="lets_search_for_update" action="" style="width:400px;margin:0 auto;text-align:left;">
+        Filtro codice_archivio:<input type="text" name="str" id="str">
+        <input type="submit" value="Filtra" name="send" id="send">
+     </form>
+     <br>
+     <div align="center">
+     	  <form class="sel_volume" name="sel_volume" id="sel_volume" action method="post">
+  	  	<label for="cars">Scegli volume:</label>
+		<select id="volume" name="volume"> 
+      		       <div id="search_results_for_update"></div>
+    		</select>	     
+	  </form> 
+     </div>
+     <br>
+
 
 <form enctype="multipart/form-data" id="upd_book" class="upd_book" name="upd_book" action method="post">
     <table>
@@ -256,7 +246,7 @@ $(function(){
             <label for="fname" class="fname">Tipologia:</label>
 	</td>
 	<td>
-	    <input type="text" id="tipologia_upd" name="tipologia" readonly="readonly">
+	    <input type="text" id="tipologia_upd" name="tipologia" cols="60" readonly="readonly">
 	</td>
 	<td rowspan=4>
     	    <img id="thumbnail" src="">
@@ -285,6 +275,9 @@ $(function(){
 	<td>
             <input type="text" size="50" id="prima_responsabilita_upd" name="prima_responsabilita">
 	</td>
+	<td rowspan=5>
+	    <img id="thumbnail" src="">
+	 </td>
     </tr>
     <tr>
    	<td>
@@ -363,7 +356,7 @@ $(function(){
 	    <label for="fname" class="fname">Note:</label>
 	</td>
 	<td>
-	    <textarea name="note_upd" rows="10" cols="60" placeholder="note"></textarea>
+	    <textarea id="note_upd" name="note_upd" rows="10" cols="60" placeholder="note"></textarea>
 	</td>
     </tr>
     <tr>
@@ -371,31 +364,33 @@ $(function(){
 	    <label for="fname" class="fname">File copertina (JPG):</label>
 	</td>
 	<td>
-	    <input name="copertina" id="copertina_upd" type="file" value=""><br><br>
+	    <input name="copertina" id="copertina_upd" type="file" value="" accept=".jpg,.jpeg"><br><br>
 	</td>
     </tr>
     </table>
 </form>
-</div>
 <br>
 <div id="footer2" align="center"></div>
 </div>
 
 <div id="cancellazione" class="tabcontent">
-<div align=center id=result3 style="color:green"></div>
-<div align=center id=error3 style="color:red"></div>
-<br>
-<?php fillSelection(); ?>
-<div align="center">
-<form class="delete_book" name="delete_book" id="delete_book" action method="POST">
-    <select width=100px id="codici[]" name="codici[]" size="<?php echo $size; ?>" multiple>
-	  <?php echo $selects; ?>
-  	  </select><br><br>
-  	  <button type="submit" id="submit" name="import" class="btn-danger btn-delete-book"><img src="/view/icons/trash.png">&nbsp;Rimuovi Volumi Selezionati</button>  
-    </form>
-</div>
-<br>
-<div id="footer3" align="center"></div>
+     <div align=center id=result3 style="color:green"></div>
+     <div align=center id=error3 style="color:red"></div>
+     <br>
+
+     <form id="lets_search_for_delete" action="" style="width:400px;margin:0 auto;text-align:left;">
+           Filtro codice_archivio:<input type="text" name="str_for_delete" id="str_for_delete">
+           <input type="submit" value="Filtra" name="send" id="send">
+     </form>
+     <br><br>
+     <div align="center">
+     	  <form class="delete_book" name="delete_book" id="delete_book" action method="POST">
+      	  	<div id="search_results_for_delete"></div>		     
+      	   	<button type="submit" id="submit" name="import" class="btn-danger btn-delete-book"><img src="/view/icons/trash.png">&nbsp;Rimuovi Volumi Selezionati</button>
+     	  </form>
+     </div>
+     <br>
+     <div id="footer3" align="center"></div>
 </div>
 
 <script type="text/javascript" src="js/tab_selection.js"></script>

@@ -34,9 +34,9 @@ if (isset($_POST)) {
           $data[$real_key] = array("set"=>$value);
        }
    }
-
-   $ret = upload_json_string(json_encode(array($data)));
    
+   $ret = upload_json_string(json_encode(array($data)));
+
    if (isset($_FILES['copertina'])) {
      if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
@@ -45,16 +45,15 @@ if (isset($_POST)) {
      	if (strtolower(end($ext)) != "jpg" and strtolower(end($ext)) != "jpeg") {
      	   echo json_encode(array('error' => "La copertina deve essere salvata in jpg.".strtolower(end($ext))));
            exit;
-     	}
+     	} else {
+	  $resize = new ResizeImage($cover_tmp);
+      	  $resize->resizeTo(200, 200, 'maxHeight');
+      	  $resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
 
-	$resize = new ResizeImage($cover_tmp);
-      	$resize->resizeTo(200, 200, 'maxHeight');
-      	$resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
-
-	$res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
-	if ($res != 1) {
-	   echo json_encode(array('error' => "Errore nella fase di copia della copertina."));
-	   exit;
+	  $res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
+	  if ($res != 1) {
+	     $ret = json_encode(array("error" => "Errore nella fase di copia della copertina."));
+	  }
 	}
       }
     }
