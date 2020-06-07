@@ -220,7 +220,6 @@ $prefissi = $m->getAllPrefissi();
      	  <form class="sel_volume" name="sel_volume" id="sel_volume" action method="post">
   	  	<label for="cars">Scegli volume:</label>
 		<select id="volume" name="volume"> 
-      		       <option>----</option> 
       		       <div id="search_results_for_update"></div>
     		</select>	     
 	  </form> 
@@ -246,7 +245,7 @@ $prefissi = $m->getAllPrefissi();
             <label for="fname" class="fname">Tipologia:</label>
 	</td>
 	<td>
-	    <input type="text" id="tipologia_upd" name="tipologia" readonly="readonly">
+	    <input type="text" id="tipologia_upd" name="tipologia" cols="60" readonly="readonly">
 	</td>
 	<td rowspan=4>
     	    <img id="thumbnail" src="">
@@ -364,7 +363,7 @@ $prefissi = $m->getAllPrefissi();
 	    <label for="fname" class="fname">File copertina (JPG):</label>
 	</td>
 	<td>
-	    <input name="copertina" id="copertina_upd" type="file" value=""><br><br>
+	    <input name="copertina" id="copertina_upd" type="file" value="" accept=".jpg,.jpeg"><br><br>
 	</td>
     </tr>
     </table>

@@ -129,7 +129,6 @@ $(document).ready(function() {
         });
 	
         request.done(function (response){
-	    console.debug(response);
       	    response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
 		$('#error2').html(response['error']);

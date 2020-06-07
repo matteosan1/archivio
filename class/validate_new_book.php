@@ -56,7 +56,7 @@ if (isset($_POST)) {
      //}
 
      $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
-     $codice_archivio = $_POST['prefissi'].".".$_POST['anno'].str_pad($id, 2, "0", STR_PAD_LEFT);
+     $codice_archivio = $_POST['prefissi'].".".$_POST['anno'].".".str_pad($id, 2, "0", STR_PAD_LEFT);
      $header = "codice_archivio|tipologia|titolo|sottotitolo|prima_responsabilita|altre_responsabilita|luogo|edizione|ente|serie|anno|descrizione|cdd|soggetto|note|_version_\n";
      $data = $codice_archivio."|".$_POST['tipologia']."|".$_POST['titolo']."|".$_POST['sottotitolo']."|".$_POST['prima_responsabilita']."|".$_POST['altre_responsabilita']."|".$_POST['luogo']."|".$_POST['edizione']."|".$_POST['ente']."|".$_POST['serie']."|".$_POST['anno']."|".$_POST['descrizione']."|".$_POST['cdd']."|".$_POST['soggetto']."|".$_POST['note']."|".$version."\n";
      

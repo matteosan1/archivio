@@ -20,6 +20,7 @@ if (isset($json['solr_error'])) {
 } else {
   if ($_POST['type'] == "update") {
      $tmp = array();
+     $tmp[] = "----";
      foreach($json['response']['docs'] as $select) {
           $tmp[] = $select['codice_archivio'];
      }
