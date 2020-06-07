@@ -171,4 +171,39 @@ $(document).ready(function() {
         });
         return false;
     });
+
+    function search_cdd() {
+	var title = document.getElementById("titolo").value;
+	var author = document.getElementById("prima_responsabilita").value;
+
+	if (title == "" || author == "") {
+	    $('#search_cdd_error').html("Mancano autore e/o titolo per cercare il CDD")
+	    return false;
+	}
+	        
+        if (request) {
+            request.abort();
+        }
+
+	$.post('/class/search_cdd.php', {author:author, title:title}, function(data) {
+	    data = JSON.parse(data);
+	    if (data.hasOwnProperty('error')) {
+		document.getElementById("cdd").value = "";
+		$("#search_cdd_error").html(data['error']);
+	        return false;
+	    } else {
+		$("#search_cdd_error").html("");
+		document.getElementById("cdd").value = data['cdd'][0];
+		return false;
+	    }
+        });
+    }
+
+    $("#titolo").change( function() {
+	search_cdd();
+    });
+
+    $("#prima_responsabilita").change( function() {
+	search_cdd();
+    });
 });

@@ -92,7 +92,7 @@ $prefissi = $m->getAllPrefissi();
                     <label for="fname" class="fname">Titolo:</label>
 		</td>
 		<td>
-		    <textarea name="titolo" id="titolo" rows="4" cols="60" placeholder=Titolo del libro"></textarea>
+		    <textarea name="titolo" id="titolo" rows="4" cols="60" placeholder="Titolo del libro"></textarea>
 		</td>
 	    </tr>
 	    <tr>
@@ -173,6 +173,7 @@ $prefissi = $m->getAllPrefissi();
 		</td>
 		<td>
                     <input type="text" size="20" id="cdd" name="cdd" placeholder="123.456789">
+		    <div id="search_cdd_error" style="color:red">Mancano autore e/o titolo per cercare il CDD</div>
 		</td>
 	    </tr>
 	    <tr>
