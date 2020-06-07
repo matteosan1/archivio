@@ -110,7 +110,6 @@ $(document).ready(function() {
 	return true;
 	
     });
-
     
     $('.btn-update-book').click(function() {
 	var formData = new FormData(document.getElementById("upd_book"));
@@ -176,15 +175,20 @@ $(document).ready(function() {
 	var title = document.getElementById("titolo").value;
 	var author = document.getElementById("prima_responsabilita").value;
 
-	if (title == "" || author == "") {
-	    $('#search_cdd_error').html("Mancano autore e/o titolo per cercare il CDD")
+	if (title == "") {
+	    $('#search_cdd_error').html("Manca il titolo per cercare il CDD")
 	    return false;
 	}
-	        
+
+	if (author == "") {
+	    $('#search_cdd_error').html("Manca l'autore per cercare il CDD")
+	    return false;
+	}
+
         if (request) {
             request.abort();
         }
-
+		
 	$.post('/class/search_cdd.php', {author:author, title:title}, function(data) {
 	    data = JSON.parse(data);
 	    if (data.hasOwnProperty('error')) {

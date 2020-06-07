@@ -8,11 +8,11 @@ $GLOBALS['OCLC_URL'] = "http://classify.oclc.org/classify2/Classify";
 
 $GLOBALS['DATABASENAME'] = "db_archivio.db";
 
-$GLOBALS['UPLOAD_DIR'] = '/usr/local/var/www/myupload/';
+$GLOBALS['UPLOAD_DIR'] = '/var/www/myupload/';
 $GLOBALS['BACKUP_DIR'] = '/home/biblioteca/backup/';
 $GLOBALS['PHOTO_DIR'] = '/home/biblioteca/photo/';
 $GLOBALS['VIDEO_DIR'] = '/home/biblioteca/video/';
-$GLOBALS['COVER_DIR'] = '/Users/sani/Pictures/copertine/';
+$GLOBALS['COVER_DIR'] = '/home/biblioteca/copertine/';
 $GLOBALS['EDOC_DIR'] = '/home/biblioteca/edoc/';
 $GLOBALS['THUMBNAILS_DIR'] = '/home/biblioteca/thumbnails/';
 
