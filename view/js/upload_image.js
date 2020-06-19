@@ -1,5 +1,7 @@
 var request;
 $(document).ready(function() {
+    setInterval(checkForWarning, 1000 * 60)
+    
     $(".btn-insert-imge").click(function() {
 	var filename = document.getElementById('userfile').value;
         if (filename == "") {

@@ -34,6 +34,7 @@ $prefissi = $m->getAllPrefissi();
 @import url("/view/css/band_style.css");
 </style>
     </head>
+    <script type="text/javascript" src="js/autologout.js"></script>
     <script type="text/javascript" src="js/insert_book.js"></script>
 
 <body>
@@ -324,7 +325,7 @@ $prefissi = $m->getAllPrefissi();
             <label for="fname" class="fname">Anno:</label>
 	</td>
 	<td>
-            <input type="number" size="4" id="anno_upd" name="anno" placeholder="XXXX">
+            <input type="number" size="4" id="anno_upd" name="anno" readonly="readonly" placeholder="XXXX">
 	</td>
     </tr>
     <tr>
