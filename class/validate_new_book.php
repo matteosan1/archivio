@@ -55,10 +55,13 @@ if (isset($_POST)) {
      $version = -1;
      //}
 
-     $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
+     //$id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
+     //print_r($id);
      if ($_POST['prefissi'] == "") {
+       $id = getLastByIndex($_POST['anno']) + 1;
        $codice_archivio = $_POST['anno'].".".str_pad($id, 2, "0", STR_PAD_LEFT);
      } else {
+       $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
        $codice_archivio = $_POST['prefissi'].".".$_POST['anno'].".".str_pad($id, 2, "0", STR_PAD_LEFT);
      }
      $header = "codice_archivio|tipologia|titolo|sottotitolo|prima_responsabilita|altre_responsabilita|luogo|edizione|ente|serie|anno|descrizione|cdd|soggetto|note|_version_\n";

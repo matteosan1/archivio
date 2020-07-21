@@ -121,9 +121,9 @@ function lookForDuplicates($resourceName) {
     }
 }
 
-function getLastByIndex($search) {
+function getLastByIndex_old($search) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&fl=codice_archivio&rows=1");
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&rows=1");
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
@@ -133,6 +133,23 @@ function getLastByIndex($search) {
     curl_close($ch);
     
     return $result['response']['numFound'];
+}
+
+function getLastByIndex($search) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&rows=10000000&wt=json&sort=codice_archivio+asc");
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+    		     			       'Accept: application/json'));
+					       
+    $result = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    
+    $codice_archivio_esploso = explode(".", end($result['response']['docs'])['codice_archivio']);
+    $indice_codice_archivio = end($codice_archivio_esploso);
+    
+    return $indice_codice_archivio;
 }
 
 function listCodiceArchivio($isBiblio="book_categories", $selection="*") {
