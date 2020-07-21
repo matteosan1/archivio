@@ -6,9 +6,10 @@ require_once "../class/solr_curl.php";
 
 //define("DB_MSG_ERROR", 'Could not connect!<br />Please contact the site\'s administrator.');
 
-$selection = $_POST['value']."*";
+$selection = "*".$_POST['value']."*";
 
 $json = json_decode(listCodiceArchivio("book_categories", $selection), true);
+#print_r ($json);
 
 $size = count($json['response']['docs']);
 if ($size > 14) {

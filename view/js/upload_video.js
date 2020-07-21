@@ -1,6 +1,7 @@
 var request;
 $(document).ready(function() {
-   $('.btn-insert-video').click(function() {
+    setInterval(checkForWarning, 1000 * 60)
+    $('.btn-insert-video').click(function() {
 	var formData = new FormData(document.getElementById("new_video"));
 
 	if (request) {

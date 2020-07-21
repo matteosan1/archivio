@@ -1,5 +1,8 @@
 var request;
+
 $(document).ready(function() {
+    setInterval(checkForWarning, 1000 * 60)
+    
     $('.btn-insert-book').click(function() {
 	var formData = new FormData(document.getElementById("new_book"));
         if (request) {

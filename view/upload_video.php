@@ -49,6 +49,7 @@ $(function(){
 @import url("/view/css/band_style.css");
 </style>
 </head>
+<script type="text/javascript" src="js/autologout.js"></script>
 <script type="text/javascript" src="js/upload_video.js"></script>
 <body>
 <?php include "../view/header.php"; ?>
