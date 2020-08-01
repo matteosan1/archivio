@@ -205,10 +205,10 @@ function backup($upload_time, $all) {
        // FIXME SEPARATORE |
        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
        $date_for_file = date('Y-m-d', strtotime($upload_time));
-       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fq=timestamp:['.$last_upload.'%20TO%20NOW]&q=*:*&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
+       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?separator=%7C&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q=*:*&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv; charset=utf-8'));
        $data = curl_exec($ch);
        curl_close($ch);
     
@@ -231,11 +231,10 @@ function backup($upload_time, $all) {
        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
        $date_for_file = date('Y-m-d', strtotime($upload_time));
 
-       //echo $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS'];
-       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
+       curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'select?separator=%7C&fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio%20asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.$q_string.'&wt=csv&rows='.$GLOBALS['MAX_ROWS']);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv; charset=utf-8'));
        $data = curl_exec($ch);
        curl_close($ch);
     
@@ -280,14 +279,14 @@ function restore($file, $isCsv) {
             $fileName = $file["tmp_name"];
             $csv_file = file_get_contents($fileName);
     	    
-	    //return curlOperationPOST($GLOBALS['SOLR_URL'].'update?commit=true', $csv_file);
+	    //return curlOperationPOST($GLOBALS['SOLR_URL'].'update?commit=true&separator=%7C', $csv_file);
 
             $ch = curl_init();
-    	    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true');
+    	    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true&separator=%7C');
     	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     	    curl_setopt($ch, CURLOPT_POST,           true);
     	    curl_setopt($ch, CURLOPT_POSTFIELDS,     $csv_file); 
-    	    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/csv'));
+    	    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:text/csv; charset=utf-8'));
     
     	    $data = curl_exec ($ch);
     	    curl_close($ch);

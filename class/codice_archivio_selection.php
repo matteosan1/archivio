@@ -4,7 +4,7 @@ require_once "../view/config.php";
 require_once "../class/Member.php";
 require_once "../class/solr_curl.php";
 
-//define("DB_MSG_ERROR", 'Could not connect!<br />Please contact the site\'s administrator.');
+//define("DB_MSG_ERROR", 'Could not connect!<br>Please contact the site\'s administrator.');
 
 $selection = "*".$_POST['value']."*";
 
