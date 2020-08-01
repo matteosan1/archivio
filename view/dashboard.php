@@ -38,8 +38,11 @@ if ($result != 0 or $output[0] != 200) {
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/upload_video.png">Video</button></td>', "'/view/upload_video.php'");
 	echo '</tr>';
 	echo '<tr>';
-	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");
-	printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Ripristino&nbsp;&nbsp;&nbsp;&nbsp;Catalogo</button></td>', "'/view/restore.php'");
+	if ($role != "photo") {
+	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");
+	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Ripristino&nbsp;&nbsp;&nbsp;&nbsp;Catalogo</button></td>', "'/view/restore.php'");
+	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/copertina.png">Controlla&nbsp;&nbsp;&nbsp;&nbsp;Copertine</button></td>', "'/view/check_cover.php'");
+	}
 	echo '</tr>';
 ?>
 	</table>
