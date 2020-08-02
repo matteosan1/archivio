@@ -66,8 +66,8 @@ function addEXIF($filename) {
     global $list_of_tags, $tagl1, $tagl2;
     $objIPTC = new IPTC($filename);
     $additional_tags = implode(" ", $list_of_tags);
-    print_$($additional_tags);
-    print_r($tagl1." ".$tagl2." ".$additional_tags);
+    //print_($$additional_tags);
+    //print_r($tagl1." ".$tagl2." ".$additional_tags);
     $objIPTC->setValue(IPTC_KEYWORDS, $tagl1." ".$tagl2." ".$additional_tags);
     if (isset($_POST['author'])) {
        $objIPTC->setValue(IPTC_BYLINE, $_POST['author']);
@@ -98,7 +98,7 @@ function processZip($zipfilename) {
 
 function processImage($tmp_name, $real_name, $ext, $move=true) {
     global $target_directory;
-
+    //print ($target_directory);
     if (! file_exists($target_directory)) {
 	mkdir($target_directory, 0777, TRUE);
     }
