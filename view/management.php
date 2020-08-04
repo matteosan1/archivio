@@ -69,6 +69,7 @@ body {font-family: Arial;}
 </style>
 </head>
 
+<script type="text/javascript" src="js/autologout.js"></script>
 <script type="text/javascript" src="js/management.js"></script>
 <script type="text/javascript" src="js/change_id.js"></script>
 

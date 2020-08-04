@@ -22,4 +22,5 @@ $GLOBALS['TIKA_APP'] = '/usr/local/bin/tika-app-1.24.1.jar';
 $GLOBALS['MERGE_PDF_BIN'] = '/usr/local/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
 $GLOBALS['PDF2IMAGE_BIN'] = '/usr/local/bin/pdf2image';
 $GLOBALS['CONVERT_BIN'] = '/usr/local/bin/convert';
+$GLOBALS['PYTHON_BIN'] = '/usr/bin/python3';
 ?>

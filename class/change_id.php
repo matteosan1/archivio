@@ -7,15 +7,17 @@ require_once "../view/config.php";
 
 if (isset($_POST)) {
    $old_ca = $_POST['old_codice_archivio'];
-   $new_ca = $_POST['new_codice_archivio']:
+   $new_ca = $_POST['new_codice_archivio'];
    
-   exec("/usr/bin/python change_id.py ".$old_ca." ".$new_ca, $output, $status);
+   exec($GLOBALS['PYTHON_BIN']." ../class/change_id.py ".$old_ca." ".$new_ca, $output, $status);
+
    if ($status != 0) {
-      print_r (array("error"=>$output));
+      echo json_encode(array('error' => $output[0]));
       exit;
    } else {
-      rename($GLOBALS['COVER_DIR'].old_ca.".JPG", $GLOBALS['COVER_DIR'].new_ca.".JPG" 
-      print_r(array("result"=>$output));
+      rename($GLOBALS['COVER_DIR'].$old_ca.".JPG", $GLOBALS['COVER_DIR'].$new_ca.".JPG" );
+      echo json_encode(array('result' => $output[0]));
+      exit;
    }
 }
 ?>

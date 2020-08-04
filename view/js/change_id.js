@@ -9,7 +9,7 @@ $(document).ready(function() {
             request.abort();
         }
 	
-        if (document.getElementById('old_codice_archivo').value == "") {
+        if (document.getElementById('old_codice_archivio').value == "") {
 	    alert ("Manca il codice archivio originale.");
 	    return false;
 	}

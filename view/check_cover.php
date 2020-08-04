@@ -7,7 +7,7 @@ require_once "../view/session.php";
 require_once "../view/config.php";
 require_once "../class/Member.php";
 
-exec('/Users/sani/opt/anaconda3/bin/python ../class/check_copertine.py', $output, $status);
+exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 ?>
 
 <!DOCTYPE html>
