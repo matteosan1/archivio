@@ -49,11 +49,13 @@ try:
 
     ca = set(ca)
     co = set(co)
-    print ("Copertine mancanti: ")
-    print (json.dumps(sorted(list(ca - co))))
+    mancanti = sorted(list(ca - co))
+    non_assegnate = sorted(list(co - ca))
+    print ("Copertine mancanti ({}):".format(len(mancanti)))
+    print (json.dumps(mancanti))
     
-    print ("Copertine non assegnate:")
-    print (json.dumps(sorted(list(co - ca))))
+    print ("Copertine non assegnate ({}):".format(len(non_assegnate)))
+    print (json.dumps(non_assegnate))
 except:
     print (traceback.exc())
     sys.exit()
