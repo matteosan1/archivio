@@ -23,7 +23,8 @@ $tagl1 = $member->getL1Tags();
 		  $("#footer1").load("/view/footer.html");
 		  $("#footer2").load("/view/footer.html");
 		  $("#footer3").load("/view/footer.html");
-		  $("#footer4").load("/view/footer.html"); 
+		  $("#footer4").load("/view/footer.html");
+  		  $("#footer5").load("/view/footer.html");	
 		});
 		</script>
 		<style>
@@ -66,98 +67,26 @@ body {font-family: Arial;}
   border-top: none;
 }
 </style>
-	    	</head>
+</head>
 
-<script type="text/javascript">
-var request;
-$(document).ready(function() {
-    $('.delete_user').click(function() {
-	var name = $(this).closest('tr').find('.display_name').text();
-	var r = confirm("Sicuro di voler rimuovere l'utente " + name + " ?");
-  	if (r == true) {
-	    var tr = $(this).closest('tr'),
-            del_id = $(this).attr('id');
-            $.ajax({
-               url: "../class/remove_user.php?delete_id="+del_id,
-               cache: false,
-               success:function(result){
-	          tr.fadeOut(1000, function(){
-	              $(this).remove();
-	          });
-	       }
-	    });
-       } else {
-          return false;
-       }    
-    });
+<script type="text/javascript" src="js/management.js"></script>
+<script type="text/javascript" src="js/change_id.js"></script>
 
-    $(document).on('click', '[id^="mybutton-"]', function() {
-        var dataForm = new FormData(document.getElementById("new_tagl2"));
-	if (request) {
-            request.abort();
-        }
-
-        request = $.ajax({
-                url: "../class/validate_new_category.php",
-                type: "post",
-                data: dataForm,
-                contentType: false,
-                cache: false,
-                processData:false                       
-        });
-
-        request.done(function (response){
-//			   console.log(response);
-                if (response != 1) {
-		    $('#registered').html(response);
-		    return false;
-                } else {
-                    window.location.href = "../view/management.php";
-                    return true;
-                }
-        });
-
-        request.fail(function (response){                           
-                console.log(
-                    "The following error occurred: " + response
-                );
-        });
-        return false;
-
-    });
-//var allButtons = document.querySelectorAll('.button--1, .button--2');
-});
-
-function relocate_home()
-{
-     location.href = "new_registration.php";
-}
-
-function relocate_home2(type, id)
-{
-    location.href = "new_category.php?type=" + type;
-}
-
-function relocate_home3(type, name, id)
-{
-    location.href = "validate_new_category.php?type=" + type + "&id=" + id + "&name=" + name;
-}
-
-
-</script>
-         <style>
-   	    table,th,tr,td
+<style>
+	    table,th,tr,td
             {
                 border: 1px solid black;
             }
-	</style>
-	<body>
-	    <?php include "../view/header.php"; ?>
+</style>
+<body>
+<?php include "../view/header.php"; ?>
+
 <div class="tab">
   <button id=pippo class="tablinks" onclick="openCity(event, 'gestione_utenti')">Utenti</button>
   <button class="tablinks" onclick="openCity(event, 'book_cat')">Tipologia Libri</button>
   <button class="tablinks" onclick="openCity(event, 'ebook_cat')">Tipologia eDoc</button>
   <button class="tablinks" onclick="openCity(event, 'tags')">Tag Fotografie</button>
+  <button class="tablinks" onclick="openCity(event, 'ca')">Modifica Cod. Archivio</button>
 </div>
 
 <div id="registered" style="color:red"></div>
@@ -251,12 +180,11 @@ function relocate_home3(type, name, id)
 	    </div>
 	    <br>
 <div id="footer3" align="center"></div>
-
 </div>
 
 <div id="tags" class="tabcontent">
      <div align=center>
-     <div id="result_edoc"></div>
+     <div id="result_tags"></div>
      	  <br>
 	    <table>
 		<col width="130">
@@ -302,6 +230,36 @@ function relocate_home3(type, name, id)
 	    </form>
   <br>
 <div id="footer4" align="center"></div>
+</div>
+
+<div id="ca" class="tabcontent">
+   <div align=center>
+   <div align=center id=result1 style="color:green"></div>
+   <div align=center id=error1 style="color:red"></div>
+   <br>
+      <form enctype="multipart/form-data" class="change_id" name="change_id" id="change_id" action method="POST">
+      <table>
+        <tr>
+          <td>
+            <label for="fname" class="fname">Vecchio Codice Archivio:</label>
+          </td>
+          <td>
+            <input type="text" size="50" id="old_codice_archivio" name="old_codice_archivio">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="fname" class="fname">Nuovo Codice Archivio:</label>
+          </td>
+          <td>
+            <input type="text" size="50" id="new_codice_archivio" name="new_codice_archivio">
+          </td>
+        </tr>
+      </table>
+      <button class="btn btn-sm btn-info btn-change-id" id="change_id"><img src="/view/icons/update_small.png">&nbsp;Modifica</button>        
+    </form>
+  <br>
+<div id="footer5" align="center"></div>
 </div>
 
 <script>
