@@ -1,13 +1,12 @@
 <?php
-
 require_once "../view/config.php";
 
-$title = str_replace(" ", "+", $_POST['title']);
-$author = str_replace(" ", "+", $_POST['author']);
+$ch = curl_init();
+$title = curl_escape($ch,$_POST['title']);
+$author = curl_escape($ch, $_POST['author']);
 
 $URL = $GLOBALS['OCLC_URL']."?title=".$title."&author=".$author."&summary=false";
 
-$ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $URL);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

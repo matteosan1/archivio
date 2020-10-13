@@ -145,10 +145,14 @@ function getLastByIndex($search) {
 					       
     $result = json_decode(curl_exec($ch), true);
     curl_close($ch);
-    
-    $codice_archivio_esploso = explode(".", end($result['response']['docs'])['codice_archivio']);
-    $indice_codice_archivio = end($codice_archivio_esploso);
-    
+
+    if ($result['response']['numFound'] == 0) {
+       return 0;
+    } else {   
+      $codice_archivio_esploso = explode(".", end($result['response']['docs'])['codice_archivio']);
+      $indice_codice_archivio = end($codice_archivio_esploso);
+    }
+
     return $indice_codice_archivio;
 }
 

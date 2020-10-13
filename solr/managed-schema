@@ -636,6 +636,7 @@
   <field name="access_permission_extract_for_accessibility" type="booleans"/>
   <field name="access_permission_fill_in_form" type="booleans"/>
   <field name="access_permission_modify_annotations" type="booleans"/>
+  <field name="add" type="text_general"/>
   <field name="add.commitWithin" type="plongs"/>
   <field name="add.doc.Content-Length" type="plongs"/>
   <field name="add.doc.Content-Type" type="text_general"/>
@@ -670,7 +671,7 @@
   <field name="add.doc.tipologia" type="text_general"/>
   <field name="add.doc.xmpTPg_NPages" type="plongs"/>
   <field name="altre_responsabilita" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
-  <field name="anno" type="pint" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="anno" type="pint" docValues="true" multiValued="false" indexed="true" stored="true"/>
   <field name="cdd" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="codice_archivio" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="cp_revision" type="plongs"/>
@@ -692,6 +693,7 @@
   <field name="dcterms_modified" type="pdates"/>
   <field name="description" type="text_general"/>
   <field name="descrizione" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="doc" type="text_general"/>
   <field name="edizione" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="ente" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="exif_DateTimeOriginal" type="pdates"/>
@@ -736,6 +738,7 @@
   <field name="pdf_hasXMP" type="booleans"/>
   <field name="pdf_unmappedUnicodeCharsPerPage" type="plongs"/>
   <field name="prima_responsabilita" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="private" type="pint" docValues="true" multiValued="false" indexed="true" stored="true"/>
   <field name="resourceName" type="text_general"/>
   <field name="serie" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="soggetto" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
@@ -1015,4 +1018,6 @@
   <copyField source="upd_tagl1" dest="upd_tagl1_str" maxChars="256"/>
   <copyField source="Keywords_tmp" dest="Keywords_tmp_str" maxChars="256"/>
   <copyField source="Device_manufacturer" dest="Device_manufacturer_str" maxChars="256"/>
+  <copyField source="add" dest="add_str" maxChars="256"/>
+  <copyField source="doc" dest="doc_str" maxChars="256"/>
 </schema>

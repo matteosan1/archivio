@@ -5,39 +5,41 @@ DB="prova5"
 #~/Downloads/solr-8.4.1/bin/solr create -c biblioteca
 
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"delete-field" : { "name":"id" }}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"delete-field" : { "name":"id" }}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"codice_archivio","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"codice_archivio","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"anno","type":"pint","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"anno","type":"pint","docValues":true,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"cdd","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"private","type":"pint","docValues":true,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"timestamp","type":"pdates","docValues":false,"multiValued":false,"indexed":true,"stored":true,"default":"NOW"}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"cdd","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tipologia","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"timestamp","type":"pdates","docValues":false,"multiValued":false,"indexed":true,"stored":true,"default":"NOW"}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"titolo","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tipologia","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"sottotitolo","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"titolo","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"prima_responsabilita","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"sottotitolo","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"altre_responsabilita","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"prima_responsabilita","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"soggetto","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"altre_responsabilita","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"luogo","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"soggetto","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"edizione","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"luogo","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"ente","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"edizione","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"serie","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"ente","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"descrizione","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"serie","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"note","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"descrizione","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"note","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
 #curl 'http://localhost:8983/solr/biblioteca/update?commit=true' --data-binary @example/exampledocs/BIBLIOTECA\ FALASSI.csv -H 'Content-type:application/csv'
 
