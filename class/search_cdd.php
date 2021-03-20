@@ -2,12 +2,13 @@
 
 require_once "../view/config.php";
 
-$title = str_replace(" ", "+", $_POST['title']);
-$author = str_replace(" ", "+", $_POST['author']);
-
-$URL = $GLOBALS['OCLC_URL']."?title=".$title."&author=".$author."&summary=false";
-
 $ch = curl_init();
+
+$title = curl_escape($ch, $_POST['title']);
+$author = curl_escape($ch, $_POST['author']);
+
+$URL = $GLOBALS['OCLC_URL']."?title=".$title."&author=".$author;
+
 curl_setopt($ch, CURLOPT_URL, $URL);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -17,18 +18,21 @@ $data = curl_exec($ch);
 curl_close($ch);
 
 if ($data == false) {
-    echo json_encode(array("error"=>"OCLC server down. Contatta l\'amministratore."));
+    echo json_encode(array("error"=>"OCLC server down. Passa alla ricerca manuale."));
 } else {
     $xml = simplexml_load_string($data);
-    if (isset($xml->recommendations->ddc->mostRecent)) {
-       echo json_encode(array("cdd"=>$xml->recommendations->ddc->mostRecent['sfa']));
-    } else if (isset($xml->recommendations->dcc->mostPopular)) {
-       echo json_encode(array("cdd"=>$xml->recommendations->ddc->mostPopular['sfa']));
-    } else if (isset($xml->recommendations->dcc->latestEdition)) {
-       echo json_encode(array("cdd"=>$xml->recommendations->ddc->latestEdition['sfa']));
+    if (isset($xml->workCount)) {
+       echo $xml->workCount;
     } else {
-       echo json_encode(array("error"=>"Volume non trovato."));
+        if (isset($xml->recommendations->ddc->mostRecent)) {
+    	   echo json_encode(array("cdd"=>$xml->recommendations->ddc->mostRecent['sfa']));
+    	} else if (isset($xml->recommendations->dcc->mostPopular)) {
+      	   echo json_encode(array("cdd"=>$xml->recommendations->ddc->mostPopular['sfa']));
+    	} else if (isset($xml->recommendations->dcc->latestEdition)) {
+       	   echo json_encode(array("cdd"=>$xml->recommendations->ddc->latestEdition['sfa']));
+    	} else {
+       	   echo json_encode(array("error"=>"Volume non trovato."));
+    	}
     }
 }
-
 ?>

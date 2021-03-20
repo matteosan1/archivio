@@ -2,9 +2,12 @@
 
 require_once "../view/config.php";
 require_once "../class/solr_curl.php";
+require_once "../view/solr_client.php";
 require_once "../class/resize_image.php";
 
 function process_ebook($i) {
+    global $client;
+    
     if ($_POST['tipologia'] == "----") {
         $prefix = "UNK";
     } else {
@@ -36,10 +39,14 @@ function process_ebook($i) {
     $index = getLastByIndex($prefix) + 1;
     $ca = $prefix.".".str_pad($index, 5, "0", STR_PAD_LEFT);
 
-    $data["codice_archivio"] = $ca;
-    $data["tipologia"] = $_POST['tipologia'];
-    $data["note"] = $_POST['note'];
-    $data["resourceName"] = basename($_FILES['edoc']['name'][$i]);
+    $update = $client->createUpdate();
+    $doc = $update->createDocument();
+
+    $doc->codice_archivio = $ca;
+    $doc->tipologia = $_POST['tipologia'];
+    $doc->note = $_POST['note'];
+    $doc->resourceName = basename($_FILES['edoc']['name'][$i]);
+
     if (isset($data['X-TIKA:content'])) {
         $text = trim(preg_replace('/(\t){1,}/', '', $data['X-TIKA:content']));
         $text = trim(preg_replace('/(\n){2,}/', "\n", $text));
@@ -49,6 +56,10 @@ function process_ebook($i) {
 
     if (isset($data['X-Parsed-By'])) {
         unset($data['X-Parsed-By']);
+    }
+
+    foreach ($data as $key => $value) {
+       $doc->$key = $value;
     }
 
     if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
@@ -82,14 +93,23 @@ function process_ebook($i) {
         }
     }
 
+    $error = "";
+    try {
+       $update->addDocuments(array($doc));
+       $update->addCommit();
+       $result = $client->update($update);
+    } catch (Solarium\Exception\HttpException $e) {
+        $error = $e->getMessage();
+    }
+
     $ret = json_decode(upload_csv2(array2csv($data)), true);
 
     //if (isset($_POST['do_ocr'])) {
     //	  unlink($tmp_filename);
     //}
 
-    if ($ret['responseHeader']['status'] != 0) {
-        array_push($arr_result['error'], $ret['error']['msg']);
+    if ($error != 0) {
+        array_push($arr_result['error'], $error);
         return;
     }
 }

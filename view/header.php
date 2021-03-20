@@ -1,6 +1,9 @@
 <?php
 require_once dirname(__FILE__)."/../class/Member.php";
 
+$displayName = $_SESSION["name"];
+$role = $_SESSION["role"];
+
 $m = new Member();
 $new_notes = $m->getNNotes($displayName, $role);
 

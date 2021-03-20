@@ -4,47 +4,46 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
-require_once "../class/solr_curl.php";
+require_once "../view/solr_client.php";
 require_once "../class/resize_image.php";
-
-//function customError($errno, $errstr) {
-//  echo json_encode(array('error' => $errstr));
-//  exit;
-//}
-
-//set_error_handler("customError");
 
 function endsWith($haystack, $needle) {
     return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 }
 
 if (isset($_POST)) {
+   $update = $client->createUpdate();
+   $doc = $update->createDocument();
 
-   $data = array();
    foreach ($_POST as $key => $value) {
        if (endsWith($key, "_upd")) {
        	  $real_key = rtrim($key, "_upd");
+       } else if (startsWith($key, "upd_")) {
+          $real_key = ltrim($key, "upd_") {
        } else {
           $real_key = $key;
        }
-       
-       if ($real_key == "codice_archivio") {
-       	  $data[$real_key] = $value;
-       } else {
-          $data[$real_key] = array("set"=>$value);
-       }
+
+       $doc->$real_key = $value;
+   }
+
+   $error = "";
+
+   try {
+      $update->addDocument($doc);
+      $update->addCommit();
+      $result = $client->update($update);
+   } catch (Solarium\Exception\HttpException $e) {
+      $error = $e->getMessage();
    }
    
-   $ret = upload_json_string(json_encode(array($data)));
-
    if (isset($_FILES['copertina'])) {
      if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
      	$cover_name = $_POST['codice_archivio'].".JPG";
      	$ext = explode(".", $_FILES['copertina']['name']);
      	if (strtolower(end($ext)) != "jpg" and strtolower(end($ext)) != "jpeg") {
-     	   echo json_encode(array('error' => "La copertina deve essere salvata in jpg.".strtolower(end($ext))));
-           exit;
+     	   $error = "La copertina deve essere salvata in jpg.".strtolower(end($ext));
      	} else {
 	  $resize = new ResizeImage($cover_tmp);
       	  $resize->resizeTo(200, 200, 'maxHeight');
@@ -52,13 +51,16 @@ if (isset($_POST)) {
 
 	  $res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
 	  if ($res != 1) {
-	     $ret = json_encode(array("error" => "Errore nella fase di copia della copertina."));
+	     $error = "Errore nella fase di copia della copertina.";
 	  }
 	}
       }
     }
 
-    print_r ($ret);
-    exit;
+    if ($error == "") {
+       echo json_encode(array('result' => "Doc ".$doc->codice_archivio." aggiornato in ".$result->getQueryTime()." ms"));
+    } else {
+       echo json_encode(array("error" => $error));
+    }
 }
 ?>

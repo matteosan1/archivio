@@ -4,59 +4,13 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
-require_once "../class/solr_curl.php";
+require_once '../view/solr_client.php';
+require_once "../class/solr_utilities.php";
 require_once "../class/resize_image.php";
 
-function customError($errno, $errstr) {
-  echo json_encode(array('error' => $errstr));
-  exit;
-}
-
-set_error_handler("customError");
-
 if (isset($_POST)) {
-   //if (isset($_POST["catalogo"])) {
-   //   if (isset($_FILES['filecsv'])) {
-   //      if ($_FILES["filecsv"]["size"] > 0) {
-   //         $result = upload_csv($_FILES['filecsv']['tmp_name']);
-   //
-   //	    if (array_key_exists("error", $result)) {
-   //             echo json_encode(array('error' => $result['error']['msg']));
-   //	        exit();
-   //	    }
-   //      }
-   //   }	  
-   //
-   //   if (isset($_FILES['filezip'])) {
-   //      if ($_FILES["filezip"]["size"] > 0) {
-   //          $zip = new ZipArchive;
-   //          $res = $zip->open($_FILES["filezip"]['tmp_name']);
-   //          if ($res == true) {
-   //             $zip->extractTo($GLOBALS['COVER_DIR']); 
-   //             $zip->close();
-   //          }
-   //
-   //	     if ($zip->open($_FILES["filezip"]['tmp_name']) == TRUE) {
-   //	     	for ($i=0; $i<$zip->numFiles; $i++) {
-   //	            $filename = $zip->getNameIndex($i);
-   //		    rename($GLOBALS['COVER_DIR'].$filename, $GLOBALS['COVER_DIR'].strtoupper($filename));
-   //	     	}
-   //		$zip->close();
-   //	     }
-   //      }     
-   //   }
-   //
-   //   echo json_encode(array("result" => "Catalogo inserito correttamente."));
-   //   exit;
-   //} else {
-     //if (isset($_POST['update_or_insert'])) {
-     //    $version = 1;
-     //} else {
      $version = -1;
-     //}
 
-     //$id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
-     //print_r($id);
      if ($_POST['prefissi'] == "") {
        $id = getLastByIndex($_POST['anno']) + 1;
        $codice_archivio = $_POST['anno'].".".str_pad($id, 2, "0", STR_PAD_LEFT);
@@ -64,8 +18,35 @@ if (isset($_POST)) {
        $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
        $codice_archivio = $_POST['prefissi'].".".$_POST['anno'].".".str_pad($id, 2, "0", STR_PAD_LEFT);
      }
-     $header = "codice_archivio|tipologia|titolo|sottotitolo|prima_responsabilita|altre_responsabilita|luogo|edizione|ente|serie|anno|descrizione|cdd|soggetto|note|_version_\n";
-     $data = $codice_archivio."|".$_POST['tipologia']."|".$_POST['titolo']."|".$_POST['sottotitolo']."|".$_POST['prima_responsabilita']."|".$_POST['altre_responsabilita']."|".$_POST['luogo']."|".$_POST['edizione']."|".$_POST['ente']."|".$_POST['serie']."|".$_POST['anno']."|".$_POST['descrizione']."|".$_POST['cdd']."|".$_POST['soggetto']."|".$_POST['note']."|".$version."\n";
+
+     $update = $client->createUpdate();
+
+     $doc = $update->createDocument();
+     $doc->codice_archivio = $codice_archivio;
+     $doc->tipologia = $_POST['tipologia'];
+     $doc->titolo = $_POST['titolo'];
+     $doc->sottotitolo = $_POST['sottotitolo'];
+     $doc->prima_responsabilita = $_POST['prima_responsabilita'];
+     $doc->altre_responsabilita = $_POST['altre_responsabilita'];
+     $doc->luogo = $_POST['luogo'];
+     $doc->edizione = $_POST['edizione'];
+     $doc->ente = $_POST['ente'];
+     $doc->serie = $_POST['serie'];
+     $doc->anno = $_POST['anno'];
+     $doc->descrizione = $_POST['descrizione'];
+     $doc->cdd = $_POST['cdd'];
+     $doc->soggetto = $_POST['soggetto'];
+     $doc->note = $_POST['note'];
+     $doc->_version_ = $version;
+
+     $error = "";
+     try {
+     	 $update->addDocuments(array($doc));
+     	 $update->addCommit();
+     	 $result = $client->update($update);
+     } catch (Solarium\Exception\HttpException $e) {
+         $error = $e->getMessage();
+     } 
      
      if ($_FILES['copertina']['name'] != "") {
      	$cover_tmp = $_FILES['copertina']['tmp_name'];
@@ -81,25 +62,16 @@ if (isset($_POST)) {
       	$resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
 
 	$res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
-     	//$target_directory = $GLOBALS['COVER_DIR'].$cover_name;
-	//if (!move_uploaded_file($cover_tmp, $target_directory)) {
 	if ($res != 1) {
 	   echo json_encode(array('error' => "Errore nella fase di copia della copertina."));
 	   exit;
 	}
      }
 
-     $fileName = $GLOBALS['UPLOAD_DIR'].'newbook_'.date("d-m-y-H-i-s").'.csv';
-     file_put_contents($fileName, $header.$data, LOCK_EX);
-     	
-     $result = upload_csv($fileName);
-     unlink($fileName);
-
-     if ($result['responseHeader']['status'] != 0) {
-        echo json_encode(array('error' => $result['error']['msg']));  
+     if ($error != "") {
+        echo json_encode(array('error' => $error));  
      } else {
         echo json_encode(array('result' => "Volume ".$codice_archivio." inserito correttamente."));
      }
-  //}
 }
 ?>

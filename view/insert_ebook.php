@@ -104,11 +104,10 @@ $(function() {
     	   </tr>
     	   <tr>
 	        <td>
-		    <label for="do_ocr">Unisci per creare un singolo documento </label>
+		    <label for="do_merge">Unisci per creare un singolo documento </label>
 		</td>
     		<td>
 		    <input type="checkbox" id="do_merge" name="do_merge" value="merge">
-    		</td>
     		</td>
     	   </tr>
     	   <tr>

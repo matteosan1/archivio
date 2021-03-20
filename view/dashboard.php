@@ -1,12 +1,10 @@
 <?php
 require_once "session.php";
 require_once "config.php";
+require_once "solr_client.php";
 
-exec("curl -s -o /dev/null -I -w '%{http_code}' ".$GLOBALS['SOLR_TEST'], $output, $result);
-
-if ($result != 0 or $output[0] != 200) { 
-   echo "<div style='color:red' align='center'>Il server Solr non &egrave; attivo. Contattare l'amministratore del sistema.</div>";
-}
+$displayName = $_SESSION["name"];
+$role = $_SESSION["role"];
 ?>
 
 <html>
@@ -35,6 +33,7 @@ if ($result != 0 or $output[0] != 200) {
 	   printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/edoc.png">eDoc</button></td>', "'/view/insert_ebook.php'");
 	}
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/insert_pic.png">Fotografie</button></td>', "'/view/upload_image.php'");
+   	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/download.png">Stampe/Lastre</button></td>', "'/view/upload_slide.php'");
 	printf('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/upload_video.png">Video</button></td>', "'/view/upload_video.php'");
 	echo '</tr>';
 	echo '<tr>';
@@ -42,6 +41,7 @@ if ($result != 0 or $output[0] != 200) {
 	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/backup.png">Backup</button></td>', "'/view/backup.php'");
 	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/restore.png">Ripristino&nbsp;&nbsp;&nbsp;&nbsp;Catalogo</button></td>', "'/view/restore.php'");
 	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/copertina.png">Controlla&nbsp;&nbsp;&nbsp;&nbsp;Copertine</button></td>', "'/view/check_cover.php'");
+   	   printf ('<td align="center"><button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/search.png">Ricerca</button></td>', "'/view/main.php'");
 	}
 	echo '</tr>';
 ?>

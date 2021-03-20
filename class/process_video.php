@@ -4,7 +4,8 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
-require_once "../class/solr_curl.php";
+require_once "../view/solr_client.php";
+require_once "../class/solr_utilities.php";
 
 $target_directory = $GLOBALS['VIDEO_DIR'];
 $maxsize = $GLOBALS['MAX_UPLOAD_BYTE'];
@@ -24,8 +25,8 @@ for ($i=0; $i<$countfiles; $i++) {
     if (!isset($ret['error'])) {
         $ret = processVideo($i, end($ext));
 
-	if (isset($ret['error'])) {
-	    echo '{"error":"'.$ret['error'].'"';
+	if (ret != "") {
+	    echo '{"error":"'.$ret.'"';
 	    exit;
 	}
     } else {
@@ -54,7 +55,7 @@ function basicCheckOnFile($i) {
 }
 
 function processVideo($i, $ext) {
-    global $target_directory;
+    global $target_directory, $client;
 
     if (! file_exists($target_directory)) {
 	mkdir($target_directory, 0777, TRUE);
@@ -65,18 +66,26 @@ function processVideo($i, $ext) {
 
     // FIXME PENSARE AD EVENTUALE THUMBNAIL PER VIDEO
     if (move_uploaded_file($_FILES['videos']['tmp_name'][$i], $target_directory.$ca.".".$ext)) {
-        
-        $csv_data = array();
-	$csv_data["codice_archivio"] = $ca;
-	$csv_data["tipologia"] = "VIDEO";
-	$csv_data["note"] = $_POST['note'];
 
-	$csv_file = array2csv($csv_data);
-	$ret = upload_csv2($csv_file);
+       $update = $client->createUpdate();
 
-	return $ret;
+       $doc = $update->createDocument();
+       $doc->codice_archivio = $ca;
+       $doc->tipologia = "VIDEO";
+       $doc->note = $_POST['note'];
+
+       $error = "";
+       try {
+          $update->addDocuments(array($doc));
+          $update->addCommit();
+          $result = $client->update($update);
+       } catch (Solarium\Exception\HttpException $e) {
+          $error = $e->getMessage();
+       } 
+
+       return $error;
     } else {
-      return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
+       return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
     }
 }
 ?>

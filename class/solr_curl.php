@@ -4,16 +4,10 @@ ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
+require_once "../view/solr_client.php";
 require_once "../class/Member.php";
 
 $m = new Member();
-
-//function customError($errno, $errstr) {
-//  echo json_encode(array('error' => $errstr));
-//  exit;
-//}
-//
-//set_error_handler("customError");
 
 function array2csv($data, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
 {
@@ -108,48 +102,12 @@ function curlOperationGET($URL) {
     }			       
 }
 
-function lookForDuplicates($resourceName) {
-    $resourceName = urlencode($resourceName);
-    $result = json_decode(curlOperationGET($GLOBALS['SOLR_URL'].'query?fl=codice_archivio&q=resourceName:"'.$resourceName.'"'), true);
-
-    if (isset($result['solr_error'])) {
-       return -2;
-    } else if (isset($result['error']) or (!isset($result['error']) and $result['response']['numFound'] == 0)) {
-       return 1;
-    } else {
-       return -1;
-    }
-}
-
-function getLastByIndex_old($search) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&rows=1");
-    curl_setopt($ch, CURLOPT_HTTPGET, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-    		     			       'Accept: application/json'));
-					       
-    $result = json_decode(curl_exec($ch), true);
-    curl_close($ch);
-    
-    return $result['response']['numFound'];
-}
-
-function getLastByIndex($search) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL']."query?fl=codice_archivio&q=codice_archivio:".$search."*&rows=10000000&wt=json&sort=codice_archivio+asc");
-    curl_setopt($ch, CURLOPT_HTTPGET, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-    		     			       'Accept: application/json'));
-					       
-    $result = json_decode(curl_exec($ch), true);
-    curl_close($ch);
-    
-    $codice_archivio_esploso = explode(".", end($result['response']['docs'])['codice_archivio']);
-    $indice_codice_archivio = end($codice_archivio_esploso);
-    
-    return $indice_codice_archivio;
+function listCodiceArchivio2($isBiblio="book_categories", $selection="*") {
+    global $m;
+    $query = "q=(".$m->curlFlBiblio($isBiblio).")+AND+codice_archivio:".$selection;
+    $serResult = file_get_contents($GLOBALS['SOLR_URL'].'query?fl=codice_archivio&'.$query.'&sort=codice_archivio+asc&wt=phps&rows='.$GLOBALS['MAX_ROWS']);
+        
+    return unserialize($resResult);
 }
 
 function listCodiceArchivio($isBiblio="book_categories", $selection="*") {
@@ -159,22 +117,6 @@ function listCodiceArchivio($isBiblio="book_categories", $selection="*") {
     $result = curlOperationGET($GLOBALS['SOLR_URL'].'query?fl=codice_archivio&'.$query.'&sort=codice_archivio+asc&wt=json&rows='.$GLOBALS['MAX_ROWS']);
 
     return $result;
-}
-
-function removeItems($cod) {
-   $result = "";
-   $data = array("delete" => array("query" => "codice_archivio:".$cod)); 
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'update?commit=true');
-   curl_setopt($ch, CURLOPT_POST, true);
-   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-		
-   $result = json_decode(curl_exec($ch), true);
-   curl_close($ch);
-
-   return $result;
 }
 
 function findBook2($cod) {
@@ -196,21 +138,6 @@ function findBook2($cod) {
    $json_result = array("doc" => $doc, "type_group" => $tip);
    // FIXME GESTIONE ERRORI
    return json_encode($json_result);
-}
-
-function findBook($cod) {
-
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $GLOBALS['SOLR_URL'].'query?q=codice_archivio:'.$cod.'&wt=json');
-   curl_setopt($ch, CURLOPT_HTTPGET, true);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));     
-
-   // FIXME MODIFICARE QUANDO CI SARA UN SOLO RISULTATO PER FORZA !!!!					  
-   $result = json_decode(curl_exec($ch), true);
-   curl_close($ch);
-
-   return $result['response']['docs'][0];
 }
 
 function backup($upload_time, $all) {
@@ -330,6 +257,27 @@ function restore($file, $isCsv) {
       	}     
     }
 }
+
+function findBook($cod) {
+   global $client;
+    
+   $query = $client->createSelect();
+
+   $query->setQuery('codice_archivio:'.$cod);
+
+   $resultset = $client->select($query);
+   
+   if ($resultset->getNumFound() == 1) {
+      $docs = $resultset->getDocuments();
+      echo json_encode($docs[0]);
+   } else {
+      echo "ERRORE CI SONO TROPPI DOCUMENTI";
+   }
+}
+
+
+//listCodiceArchivio('slide');
+//  exit;
 
 if (isset($_POST['func'])) {
   if ($_POST['func'] == 'find') {

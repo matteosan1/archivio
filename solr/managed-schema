@@ -670,7 +670,7 @@
   <field name="add.doc.tipologia" type="text_general"/>
   <field name="add.doc.xmpTPg_NPages" type="plongs"/>
   <field name="altre_responsabilita" type="text_general" docValues="false" multiValued="false" indexed="true" stored="true"/>
-  <field name="anno" type="pint" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="anno" type="pint" docValues="true" multiValued="false" indexed="true" stored="true"/>
   <field name="cdd" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="codice_archivio" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="cp_revision" type="plongs"/>

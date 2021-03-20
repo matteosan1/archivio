@@ -9,7 +9,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{"delete-field" :
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"codice_archivio","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/prova5/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"anno","type":"pint","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"update-field":{"name":"anno","type":"pint","docValues":true,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"cdd","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/prova5/schema
 

@@ -15,54 +15,54 @@ class Member
 
     function getL1Tags() {
     	$query = "SELECT id, name FROM tags WHERE parent_id=-1;";
-	$result = $this->ds->select($query, array(), array());
+ 	    $result = $this->ds->select($query, array(), array());
 
-	return $result;
+	    return $result;
     }
 
     function getTagNameById($id) {
         $query = "SELECT name FROM tags WHERE id=?;";
-	$paramType = array(SQLITE3_INTEGER);
+	    $paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($id);
-	$result = $this->ds->select($query, $paramType, $paramArray);
+	    $result = $this->ds->select($query, $paramType, $paramArray);
 
-	return $result[0]['name'];
+	    return $result[0]['name'];
     }
 
     function getL2Tags($tagl1) {
     	$query = "SELECT * FROM tags WHERE parent_id=?;";
-	$paramType = array(SQLITE3_INTEGER);
+	    $paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($tagl1);
-	$result = $this->ds->select($query, $paramType, $paramArray);
+	    $result = $this->ds->select($query, $paramType, $paramArray);
 
-	return $result;
+     	return $result;
     }
 
     function getAllCategories($table_name="book_categories")
     {
-	$group = 1;
-	if ($table_name == 'ebook_categories') {
-	    $group = 2;
-	}
+	    $group = 1;
+	    if ($table_name == 'ebook_categories') {
+	         $group = 2;
+	    }
 	
-	if ($table_name == 'all') {
-	    $query = "SELECT * FROM categories";
-	} else {
-    	    $query = "SELECT * FROM categories WHERE cgroup=?;";
-	};
-	$paramType = array(SQLITE3_INTEGER);
+	    if ($table_name == 'all') {
+	         $query = "SELECT * FROM categories";
+	    } else {
+    	     $query = "SELECT * FROM categories WHERE cgroup=?;";
+	    };
+	    $paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($group);
-	$result = $this->ds->select($query, $paramType, $paramArray);
+	    $result = $this->ds->select($query, $paramType, $paramArray);
     
     	return $result;
     }
 
     function getAllPrefissi()
     {
-	$query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
-	$paramType = array();
+	    $query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
+	    $paramType = array();
     	$paramArray = array();
-	$result = $this->ds->select($query, $paramType, $paramArray);
+	    $result = $this->ds->select($query, $paramType, $paramArray);
     
     	return $result;
     }
@@ -70,24 +70,26 @@ class Member
     function curlFlBiblio($category="book_categories") {
 
     	if ($category == "video") {
-	   $cats = array(array("VIDEO"));
-	} else if ($category == "image") {
-	   $cats = array(array("FOTOGRAFIA"));
-	} else {
+	       $cats = array(array("VIDEO"));
+	    } else if ($category == "image") {
+	       $cats = array(array("FOTOGRAFIA"));
+        } else if ($category == "slide") {
+           $cats = array(array("STAMPA"), array("LASTRA"));
+	    } else {
            $cats = $this->getAllCategories($category);
-	}
+	    }
 
-	$res = array();
-	for ($i=0; $i<count($cats); $i++) {
-	    $res[$i] = "tipologia:".$cats[$i][0];
-	}
+	    $res = array();
+	    for ($i=0; $i<count($cats); $i++) {
+	        $res[$i] = "tipologia:".$cats[$i][0];
+	    }
 
-       return implode("+OR+", $res);
+        return implode("+OR+", $res);
     }
     
     function findTypeGroup($tipologia) {
     	$query = "SELECT cgroup FROM category WHERE category=\"".$tipologia."\";";
-	$result = $this->ds->select($query, array(), array());
+	    $result = $this->ds->select($query, array(), array());
     
     	return $result;
     }
@@ -104,7 +106,7 @@ class Member
 
     function getAllRoles()
     {
-	$query = "SELECT * FROM roles;";
+	    $query = "SELECT * FROM roles;";
     	$paramType = array();
     	$paramArray = array();
     	$result = $this->ds->select($query, $paramType, $paramArray);
@@ -151,6 +153,7 @@ class Member
 	    $_SESSION["name"] = $memberResult[0]["display_name"];
 	    $_SESSION["role"] = $memberResult[0]["role"];
 	    $_SESSION["time"] = date('Y-m-d H:i:s');
+
 	    return true;
         }
     }

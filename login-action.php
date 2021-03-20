@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (! empty($_POST["login"])) {
@@ -11,7 +12,7 @@ if (! empty($_POST["login"])) {
     if (! $isLoggedIn) {
         $_SESSION["errorMessage"] = "Invalid Credentials";
     }
-    
+
     header("Location: ./index.php");
     exit();
 }

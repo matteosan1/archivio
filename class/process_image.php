@@ -5,9 +5,12 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
 require_once "../class/exif.php";
-require_once "../class/solr_curl.php";
+require_once "../class/Member.php";
+require_once "../view/solr_client.php";
+require_once "../class/solr_utilities.php";
 require_once "../class/resize_image.php";
 
+$m = new Member();
 $tagl1 = $m->getTagNameById($_POST['tagl1']);
 $tagl2 = $m->getTagNameById($_POST['tagl2']);
 $list_of_tags = explode(",", $_POST['list_of_tags']);
@@ -51,11 +54,9 @@ function basicCheckOnFile($i) {
 }
 
 function checkForDuplicates($resourceName) {
-    $duplicate = lookForDuplicates($resourceName);
-    if ($duplicate == -2) {
-         echo json_encode(array("error" => "Il server SOLR non &egrave; attivo. Contattare l'amministratore."));
-         exit;
-    }
+
+    $duplicate = lookForDuplicates($resourceName);    
+
     if ($duplicate == -1) {
        echo json_encode(array("error"=>"Il file ".$resourceName." esiste gi&agrave;."));
        exit;
@@ -64,6 +65,7 @@ function checkForDuplicates($resourceName) {
 
 function addEXIF($filename) {
     global $list_of_tags, $tagl1, $tagl2;
+    
     $objIPTC = new IPTC($filename);
     $additional_tags = implode(" ", $list_of_tags);
     //print_($$additional_tags);
@@ -97,12 +99,13 @@ function processZip($zipfilename) {
 }
 
 function processImage($tmp_name, $real_name, $ext, $move=true) {
-    global $target_directory;
+    global $target_directory, $client;
+    
     //print ($target_directory);
     if (! file_exists($target_directory)) {
-	mkdir($target_directory, 0777, TRUE);
+	    mkdir($target_directory, 0777, TRUE);
     }
-    
+
     $index = getLastByIndex("FOTO") + 1;
     $ca = "FOTO.".str_pad($index, 6, "0", STR_PAD_LEFT);
     
@@ -126,19 +129,35 @@ function processImage($tmp_name, $real_name, $ext, $move=true) {
     
     addEXIF($name);
 
+    $update = $client->createUpdate();
+    $doc = $update->createDocument();
+    
     $command = "/usr/bin/java -jar ".$GLOBALS['TIKA_APP']." -j -t -J ".$name;
     $output = shell_exec($command);
     $data = json_decode($output, true)[0];
 
-    $data["codice_archivio"] = $ca;
-    $data["tipologia"] = "FOTOGRAFIA";
-    $data["resourceName"] = basename($real_name); 
+    $doc->codice_archivio = $ca;
+    $doc->tipologia = "FOTOGRAFIA";
+    $doc->resourceName = basename($real_name);
 
-    $ret = json_decode(upload_csv2(array2csv($data)), true);
+    foreach ($data as $key => $value) {
+       $doc->$key = $value;
+    }
 
-    if (isset($ret['error'])) {
-        echo json_encode($ret);
+    $error = "";
+    try {
+       $update->addDocuments(array($doc));
+       $update->addCommit();
+       $result = $client->update($update);
+    } catch (Solarium\Exception\HttpException $e) {
+        $error = $e->getMessage();
+    }
+
+    if ($error != "") {
+        echo json_encode($error);
 	exit;
     }
+       
+    return $error;
 }
 ?>
