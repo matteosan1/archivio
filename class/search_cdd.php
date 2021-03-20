@@ -1,5 +1,4 @@
 <?php
-
 require_once "../view/config.php";
 
 $ch = curl_init();

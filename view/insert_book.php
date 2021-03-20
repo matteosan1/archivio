@@ -250,7 +250,7 @@ $prefissi = $m->getAllPrefissi();
 	    <input type="text" id="tipologia_upd" name="tipologia" cols="60" readonly="readonly">
 	</td>
 	<td rowspan=4>
-    	    <img id="thumbnail" src="">
+    	    <img id="thumbnail" width="200px" src="">
 	</td>
     </tr>
     <tr>

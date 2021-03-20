@@ -1,0 +1,51 @@
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+1- setup apache to point to /var/www/archivio
+2- setup database solr versione finale
+3- setup programmi accessori per programma archivio
+7- controllare se alla cancellazione del record corrisponde la cancellazione dei media
+
+
+IMPOSTARE UTF-8 nella shell
+
+INSTALLAZIONE
+sudo apt install git apache2 php sqlite3 php-sqlite3 php-gd php-mbstring php-xml openjdk-11-jdk curl
+
+
+configurazione apache
+basta copiare la configurazione in /etc/apache2.conf
+stessa cosa con php in /etc/php/7.2/apache2/php.ini
+
+installazione solr
+scaricare binari dal sito
+installare come descritto in evernote
+ricordarsi il link alle copertine da solr in /opt/solr-8.4.1/server/solr-webapp/webapp
+
+setup DB
+chmod 777 a directory sql e ai file dentro
+
+INSTALLAZIONE PROGRAMMA ARCHIVIO
+git clone http://github.com/matteosa1/archivio.git
+git checkout tag_da_usare
+creare link simbolici alle directory
+- creare le seguenti directory da aggiornare nel config.php:
+tutto chmod 777
+drwxrwxrwx  2 biblioteca biblioteca   4096 mag 27 16:55 photo
+drwxrwxrwx  2 biblioteca biblioteca   4096 mag 27 16:55 video
+drwxrwxr-x  2 biblioteca biblioteca  65536 mag 27 17:48 copertine
+drwxrwxrwx  2 biblioteca biblioteca   4096 mag 27 18:35 backup
+drwxrwxrwx  2 biblioteca biblioteca   4096 mag 27 18:50 thumbnails
+drwxrwxrwx  2 biblioteca biblioteca   4096 mag 27 18:52 edoc
+creare /var/wwww/myupload
+chmod 777 per sql e DB e per tutte le directory sopra
+
+
+SETUP PROGRAMMI ACCESSORI
+sudo apt install tesseract-ocr tesseract-ocr-ita imagemagick ghostscript-x
+
+https://tika.apache.org/download.html (tika-app.jar)
+
+pdf2image check pdftoppm (poppler-utils)
+
+

@@ -7,7 +7,7 @@ require_once "../view/session.php";
 require_once "../view/config.php";
 require_once "../class/Member.php";
 
-exec('/Users/sani/opt/anaconda3/bin/python ../class/check_copertine.py', $output, $status);
+exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +34,7 @@ onymous">
 
 <body>
 <?php include "../view/header.php"; ?>
-<h3>Libri senza copertina:</h3>
+<h3><?php echo $output[0];?></h3>
 <?php
     $table = array_chunk(json_decode($output[1], true), 10);
     echo "<table border=1px>";
@@ -48,7 +48,7 @@ onymous">
     echo "</table>";
 ?>
 <br>
-<h3>Copertine senza libri:</h3>
+<h3><?php echo $output[2];?></h3>
 <?php
     $table = array_chunk(json_decode($output[3], true), 10);
     echo "<table border=1px>";

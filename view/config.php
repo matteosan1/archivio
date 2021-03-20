@@ -1,6 +1,6 @@
 <?php
 $GLOBALS['SOLR_BASE_URL'] = 'http://localhost:8983/solr';
-$GLOBALS['SOLR_URL'] = $GLOBALS['SOLR_BASE_URL'].'/prova5/';
+$GLOBALS['SOLR_URL'] = $GLOBALS['SOLR_BASE_URL'].'/archivio/';
 $GLOBALS['SOLR_TEST'] = $GLOBALS['SOLR_BASE_URL'].'/admin/cores?action=STATUS';
 $GLOBALS['MAX_ROWS'] = '5000';
 $GLOBALS['MAX_UPLOAD_BYTE'] = 200000000;
@@ -23,7 +23,8 @@ $GLOBALS['TIKA_APP'] = '/usr/local/bin/tika-app-1.24.1.jar';
 $GLOBALS['MERGE_PDF_BIN'] = '/usr/local/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
 $GLOBALS['PDF2IMAGE_BIN'] = '/usr/local/bin/pdf2image';
 $GLOBALS['CONVERT_BIN'] = '/usr/local/bin/convert';
-
+$GLOBALS['PYTHON_BIN'] = '/usr/bin/python3';
+    
 $config = array(
     'endpoint' => array(
             'localhost' => array(
@@ -37,5 +38,4 @@ $config = array(
         )
     )
 );
-
 ?>

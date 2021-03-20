@@ -1,9 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 import requests, os, sqlite3, sys, traceback, json
 
-db = "/Users/sani/site/Usered/sql/db_archivio.db"
-url = 'http://localhost:8983/solr/prova5/select'
+db = "../sql/db_archivio.db"
+url = 'http://localhost:8983/solr/archivio/select'
+dir_copertine = '/home/archivio/copertine'    
 rows = 2000000
 
 def curlFlBiblio():
@@ -21,12 +22,10 @@ def curlFlBiblio():
         
         return "+OR+".join(sel)
     except:
-        print (traceback.exc())
+        print (traceback.format_exc())
         sys.exit()
 
 try:
-    dir_copertine = '/Users/sani/Pictures/copertine'
-    
     headers = {
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -45,15 +44,18 @@ try:
     co = []
     for a, b, c in os.walk(dir_copertine):
         for f in c:
-            co.append(f.split(".JPG")[0])
+            if f.endswith(".JPG") or f.endswith(".jpg") or f.endswith(".JPEG") or f.endswith(".jpeg"):
+                co.append(f.split(".JPG")[0])
 
     ca = set(ca)
     co = set(co)
-    print ("Copertine mancanti: ")
-    print (json.dumps(sorted(list(ca - co))))
+    mancanti = sorted(list(ca - co))
+    non_assegnate = sorted(list(co - ca))
+    print ("Copertine mancanti ({}):".format(len(mancanti)))
+    print (json.dumps(mancanti))
     
-    print ("Copertine non assegnate:")
-    print (json.dumps(sorted(list(co - ca))))
+    print ("Copertine non assegnate ({}):".format(len(non_assegnate)))
+    print (json.dumps(non_assegnate))
 except:
-    print (traceback.exc())
+    print (traceback.format_exc())
     sys.exit()
