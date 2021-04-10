@@ -1,0 +1,519 @@
+{
+    "id":"upd_book",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    
+    "html":
+    [
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Codice Archivio: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "codice_archivio_upd",
+                                    "id":   "codice_archivio_upd",
+                                    "value_chg": "codice_archivio",
+                                    "size":"25",
+                                    "type": "text",
+                                    "readonly": "readonly"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"2",
+                            "html":
+                            [
+                                {
+                                    "value":"Aggiorna",
+                                    "id":    "aggiorna",
+                                    "class": "aggiorna",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tipologia: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "tipologia_upd",
+                                    "id":   "tipologia_upd",
+                                    "value_chg": "tipologia",
+                                    "cols":"60",
+                                    "type": "text",
+                                    "readonly": "readonly"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Titolo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "titolo_upd",
+                                    "id":   "titolo_upd",
+                                    "value_chg": "titolo",
+                                    "placeholder":"Titolo del libro",
+                                    "size":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"5",
+                            "html":
+                            [
+                                {
+                                    "type":"img",
+                                    "heigth":"150px",
+                                    "src_chg":"",
+                                    "onerror":"this.src='../img/no_image.png'"   
+                                }
+                            ]
+                        }
+
+                    ]                    
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Sottotitolo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "sottotitolo_upd",
+                                    "id":   "sottotitolo_upd",
+                                    "value_chg": "sottotitolo",
+                                    "placeholder":"Eventuale sottotitolo",
+                                    "size":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Prima Responsabilit&agrave;: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "prima_responsabilita_upd",
+                                    "id":   "prima_responsabilita_upd",
+                                    "value_chg": "prima_responsabilita",              
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Altre Responsabilit&agrave;: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "altre_responsabilita_upd",
+                                    "id":   "altre_responsabilita_upd",
+                                    "value_chg": "altre_responsabilita",              
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },                                         
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Lugo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "luogo_upd",
+                                    "id":   "luogo_upd",
+                                    "value_chg": "luogo",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Edizione: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "edizione_upd",
+                                    "id":   "edizione_upd",
+                                    "value_chg": "edizione",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Ente: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "ente_upd",
+                                    "id":   "ente_upd",
+                                    "value_chg": "ente",
+                                    "size":"25",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Serie: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "serie_upd",
+                                    "id":   "serie_upd",
+                                    "value_chg": "serie",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Anno: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "anno_upd",
+                                    "id":   "anno_upd",
+                                    "value_chg": "anno",
+                                    "placeholder":"2020",
+                                    "size":"4",
+                                    "type": "number",
+                                    "readonly":"readonly"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Descrizione: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "descrizione_upd",
+                                    "id":   "descrizione_upd",
+                                    "value_chg": "descrizione",
+                                    "placeholder":"XX p. : ill. ; YY cm",
+                                    "size":"35",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"CDD: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "cdd_upd",
+                                    "id":   "cdd_upd",
+                                    "value_chg": "cdd",
+                                    "placeholder":"123.456789",
+                                    "size":"20",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Soggetto: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "soggetto_upd",
+                                    "id":   "soggetto_upd",
+                                    "value_chg": "soggetto",
+                                    "size":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Note: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"note_upd",
+                                    "id":"note_upd",
+                                    "type": "textarea",
+                                    "html_chg": "note",
+                                    "placeholder":"note",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"File copertina (JPG): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"copertina_upd",
+                                    "id":"copertina_upd",
+                                    "type": "file",
+                                    "value": "",
+                                    "accept": ".jpg,.jpeg"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

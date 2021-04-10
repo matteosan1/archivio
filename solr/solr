@@ -4,6 +4,16 @@ DB="prova5"
 
 #~/Downloads/solr-8.4.1/bin/solr create -c biblioteca
 
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"nome_cognome","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"ruolo","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"evento","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"categoria","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tecnica","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+
+
+
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"delete-field" : { "name":"id" }}' http://localhost:8983/solr/archivio/schema
 

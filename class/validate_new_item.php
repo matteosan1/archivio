@@ -11,6 +11,10 @@ function endsWith($haystack, $needle) {
     return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 }
 
+function startsWith($haystack, $needle) {
+    return substr_compare($haystack, $needle, strlen($needle)) === 0;
+}
+
 if (isset($_POST)) {
    $update = $client->createUpdate();
    $doc = $update->createDocument();
@@ -19,7 +23,7 @@ if (isset($_POST)) {
        if (endsWith($key, "_upd")) {
        	  $real_key = rtrim($key, "_upd");
        } else if (startsWith($key, "upd_")) {
-          $real_key = ltrim($key, "upd_") {
+          $real_key = ltrim($key, "upd_");
        } else {
           $real_key = $key;
        }

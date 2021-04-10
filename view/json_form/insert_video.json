@@ -1,0 +1,120 @@
+{
+    "id":"new_video",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    "html":
+    [
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Video da caricare: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"videos[]",
+                                    "id":"videos[]",
+                                    "type": "file",
+                                    "value": "",
+                                    "accept": ".mpg,.mpeg,.ogg,.mp4,.avi,.wmv,.mov,.flv,.mtk"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"2",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "class": "inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Anno: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "anno",
+                                    "id":   "anno",
+                                    "value": "",
+                                    "placeholder":"2020",
+                                    "size":"4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Note: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"note",
+                                    "id":"note",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"note",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

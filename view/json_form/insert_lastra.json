@@ -1,0 +1,189 @@
+{
+    "id":"insert_form",
+    "class":"insert_form",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    "html":
+    [        
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Foto (JPG o ZIP): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"userfile",
+                                    "id":"userfile",
+                                    "type": "file",
+                                    "value": "",
+                                    "accept": ".jpg,.jpeg,.zip"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"2",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "class": "inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tag L1: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "tagl1",
+                                    "id":   "tagl1",
+                                    "class": "tagl1",
+                                    "type":"select",
+	                                "options" : {
+		                                "null" : {
+			                                "selected" : "selected",
+			                                "html" : "----"
+		                                }
+	                                }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tag L2: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "tagl2",
+                                    "id":   "tagl2",
+                                    "class": "tagl2",
+                                    "type":"select",
+	                                "options" : {
+		                                "null" : {
+			                                "selected" : "selected",
+			                                "html" : "----"
+		                                }
+	                                }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Fotografo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "autore",
+                                    "id":   "autore",
+                                    "class": "autore",
+                                    "type":  "text",
+	                                "value" : "",
+                                    "placeholder" :"Nome Cognome"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tag Addizionali: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"list_of_tags",
+                                    "id":  "list_of_tags",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"(lista tag separati da virgola)",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

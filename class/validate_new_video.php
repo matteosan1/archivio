@@ -67,23 +67,24 @@ function processVideo($i, $ext) {
     // FIXME PENSARE AD EVENTUALE THUMBNAIL PER VIDEO
     if (move_uploaded_file($_FILES['videos']['tmp_name'][$i], $target_directory.$ca.".".$ext)) {
 
-       $update = $client->createUpdate();
+        $update = $client->createUpdate();
 
-       $doc = $update->createDocument();
-       $doc->codice_archivio = $ca;
-       $doc->tipologia = "VIDEO";
-       $doc->note = $_POST['note'];
+        $doc = $update->createDocument();
+        $doc->codice_archivio = $ca;
+        $doc->tipologia = "VIDEO";
+        $doc->anno = $_POST['anno'];        
+        $doc->note = $_POST['note'];
 
-       $error = "";
-       try {
-          $update->addDocuments(array($doc));
-          $update->addCommit();
-          $result = $client->update($update);
-       } catch (Solarium\Exception\HttpException $e) {
-          $error = $e->getMessage();
-       } 
+        $error = "";
+        try {
+            $update->addDocuments(array($doc));
+            $update->addCommit();
+            $result = $client->update($update);
+        } catch (Solarium\Exception\HttpException $e) {
+            $error = $e->getMessage();
+        } 
 
-       return $error;
+        return $error;
     } else {
        return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
     }

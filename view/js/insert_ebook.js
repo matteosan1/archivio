@@ -1,57 +1,102 @@
 var request;
+
+function openPage(pageName, elmnt) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+    }
+    document.getElementById(pageName).style.display = "block";
+}
+
 $(document).ready(function() {
-    setInterval(checkForWarning, 1000 * 60)
+    setInterval(checkForWarning, 1000 * 60);
+    $('html, body').animate({
+        //scrollTop: $('#scroll').offset().top
+        scrollTop: $('#scroll').scrollTop(0)
+    }, 'slow');
     
-    $('.btn-insert-ebook').click(function() {
-	var formData = new FormData(document.getElementById("new_ebook"));
-	
-	if (request) {
+    $("#tipologia").change(function() {
+        var tipo = document.getElementById("tipologia").value;
+
+        request = $.ajax({
+            url: "../class/solr_utilities.php",
+            type: "POST",
+            data: {'type':tipo, 'callback':'newitem'},
+        });
+        
+        request.done(function (response) {
+            //console.debug(response);
+            var data = JSON.parse(response);
+            //console.debug(data);
+            //var testData = !!document.getElementById("insert_form");
+            //console.debug(testData);
+            //var elements = document.getElementById("insert_form").elements;
+
+            //for (var i = 0, element; element = elements[i++];) {
+            //    element.remove();
+            //}
+            $('#insert_form').replaceWith('<form class="insert_form" id="insert_form"></form>');
+            $("#insert_form").dform(data);
+            return false;
+        });
+    });
+
+    $(document).on('submit','.insert_form', function(){
+    //$("#insert_form").submit(function() {
+	    var formData = new FormData(document.getElementById("insert_form"));
+	    if (request) {
             request.abort();
         }
-	
-	var filename = document.getElementById('edoc').value;
-        if (filename == "") {
-	    alert ("Il documento da analizzare deve essere specificato.");
-	    return false;
-	} else {
-	    var parts = filename.split('.');
- 	    var ext = parts[parts.length - 1].toLowerCase();
-	    
-	    if (ext != 'jpg' && ext != 'jpeg' &&
-		ext != 'tiff' && ext != 'tif' &&
-		ext != 'doc' && ext != 'msg' &&
-      		ext != 'docx' && ext != 'eml' &&
-      		ext != 'pdf') {
-		alert ("Non è possibile inserire documento in formato " + ext);
-  	  	return false;
-	    } else {
+        formData.append('tipologia', document.getElementById('tipologia').value);
+
+	    //var filename = document.getElementById('scan').value;
+        //if (filename == "") {
+	    //    alert ("Il documento da analizzare deve essere specificato.");
+	    //    return false;
+	    //} else {
+	    //    var parts = filename.split('.');
+ 	    //    var ext = parts[parts.length - 1].toLowerCase();
+	    //    
+	    //    if (ext != 'jpg' && ext != 'jpeg' &&
+		//        ext != 'tiff' && ext != 'tif' &&
+		//        ext != 'doc' && ext != 'msg' &&
+      	//	    ext != 'docx' && ext != 'eml' &&
+      	//	    ext != 'pdf') {
+		//        alert ("Non è possibile inserire documento in formato " + ext);
+  	  	//        return false;
+	    //    } else {
 		request = $.ajax({
-                    url: "../class/validate_new_ebook.php",
-                    type: "post",
-                    data: formData,
-                    contentType: false,
-               	    cache: false,
-                    processData:false                       
-        	});
-		
-       		request.done(function (response) {
-	            console.log(response);
-	            var dict = JSON.parse(response);
-                    if(dict.hasOwnProperty('error')){
+            url: "../class/validate_new_ebook.php",
+            type: "post",
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData:false                       
+        });
+		        
+       	request.done(function (response) {
+	        console.log(response);
+	        var dict = JSON.parse(response);
+            if(dict.hasOwnProperty('error')){
     			$('#error1').html(dict['error']);
-			return false;
-                    } else {
-			$('#error1').html("");
-			$('#result1').html(dict['result']);
-			setTimeout(function(){
+			    return false;
+            } else {
+			    $('#error1').html("");
+			    $('#result1').html(dict['result']);
+			    setTimeout(function(){
            		    location.reload();
       			}, 2000);
-                    }
+            }
 		});
-      	    }
-	}
-	
-	return false;
+    //}
+	    //                      }
+	    
+	    return false;
     });
     
     $('.btn_ocr').click(function() {
@@ -90,72 +135,96 @@ $(document).ready(function() {
 	}
 	return false;
     });
-    
-    $('.btn-delete-ebook').click(function() {
-    	var formData = new FormData(document.getElementById("delete_ebook"));
-        
-        if (request) {
-            request.abort();
-        }
-	
-	request = $.ajax({
-            url: "../class/remove.php",
-            type: "post",
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData:false                       
+
+    $("#lets_search_for_delete").bind('submit',function() {
+        var value = $('#str_for_delete').val();
+        $.post('/class/codice_archivio_selection.php',{value:value, type:"delete", category:"ebook_categories"}, function(data) {
+            $("#search_results_for_delete").html(data);
         });
-	
-        request.done(function (response) {
-	    response = JSON.parse(response);
-            if(response.hasOwnProperty('error')){
-    	        $('#error3').html(response['error']);
-		return false;
-            } else {
-		$('#error3').html("");
-		$('#result3').html(response['result']);
-		setTimeout(function(){
-           	    location.reload();
-      		}, 1000); 
+        return false;
+    });
+
+    $('#submit_delete').click(function() {
+        var r = confirm("Sicuro di voler rimuovere i volumi selezionati ?");
+        if (r == true) {
+    	    var formData = new FormData(document.getElementById("delete_ebook"));
+            if (request) {
+                request.abort();
             }
-        });
 	
-        request.fail(function (response){			    
-            console.log(
-                "The following error occurred: " + response
-            );
+	        request = $.ajax({
+                url: "../class/remove.php",
+                type: "post",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData:false                       
+            });
+	        
+            request.done(function (response) {
+	            response = JSON.parse(response);
+                if(response.hasOwnProperty('error')){
+    	            $('#error3').html(response['error']);
+		            return false;
+                } else {
+		            $('#error3').html("");
+		            $('#result3').html(response['result']);
+		            setTimeout(function(){
+           	            location.reload();
+      		        }, 1000); 
+                }
+            });
+	        
+            request.fail(function (response){			    
+                console.log(
+                    "The following error occurred: " + response
+                );
+            });
+        }
+	    return false;
+    });
+
+
+    function addOption(selectbox, text, value) {
+        var optn = document.createElement("OPTION");
+        optn.text = text;
+        optn.value = value;
+        selectbox.options.add(optn);
+    }
+    
+    $("#lets_search_for_update").bind('submit',function() {
+        var value = $('#str').val();
+        $.post('/class/codice_archivio_selection.php',{category:"ebook_categories", value:value, type:"update"}, function(data) {
+            var data_decoded = JSON.parse(data);
+            $('#sel_edoc').empty();
+            $.each(data_decoded, function(key, codice_archivio) {
+                addOption(document.form_sel_edoc.sel_edoc, codice_archivio, codice_archivio);
+            });
         });
-	return false;
+        return false;
     });
     
-    $(".sel_ebook").change(function() {
-	var sel = document.getElementById("volume").value;
-	request = $.ajax({
-            url: "../class/solr_curl.php",
+    $("#form_sel_edoc").change(function() {
+        var sel = document.getElementById("sel_edoc").value;
+
+	    request = $.ajax({
+            url: "../class/solr_utilities.php",
             type: "POST",
-            data: {'sel':sel, 'func':'find'},
+            data: {'codice_archivio':sel, 'callback':'finditem'},
         });
-	
-	request.done(function (response){
-	    var dict = JSON.parse(response);
-	    document.getElementById("codice_archivio_upd").value = dict["codice_archivio"];
-	    document.getElementById("tipologia_upd").value = dict["tipologia"];
-	    if (dict.hasOwnProperty("text")) {
-	        document.getElementById("text_upd").value = dict['text'];
-	    }
 	    
-	    if (dict.hasOwnProperty('note')) {
-	        document.getElementById("note_upd").value = dict["note"];
-	    }
-	    
-	    var ext = dict['resourceName'].split('.').pop().toLowerCase();
-	    if (ext == "jpeg" || ext == "jpg" || ext == "tiff" || ext == "tif" || ext == "pdf") {
-		document.getElementById("thumbnail").src = "/thumbnails/" + dict['codice_archivio'] + "." + ext.toUpperCase();
-		console.debug("/thumbnails/" + dict['codice_archivio'] + ext.toUpperCase());
-	    }
+	    request.done(function (response) {
+            //console.debug(response);
+	        var data = JSON.parse(response);
+            //if (dict.hasOwnProperty('error')) {
+            //    $('#error2').html(dict['error']);
+		    //    return false;
+            //} else {
+            $("#update_form").dform(data);
+            //}
+            return false;
         });
-	return true;
+	    return true;
     });
     
     $('.btn-update-ebook').click(function() {
@@ -175,20 +244,20 @@ $(document).ready(function() {
         });
 	
         request.done(function (response) {
-	    console.log(response);
+	        console.log(response);
       	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
-		$('#error2').html(dict['error']);
-		return false;
+		        $('#error2').html(dict['error']);
+		        return false;
             } else {
-	        $('#error2').html("");
-	        $('#result2').html("L'immagine &egrave; stato aggiornato in " + dict['responseHeader']['QTime'] + " ms");
-		setTimeout(function(){
-           	    location.reload();
-      		}, 2000); 		
+	            $('#error2').html("");
+	            $('#result2').html(dict['result']);
+		        setTimeout(function(){
+           	        location.reload();
+      		    }, 2000); 		
             }
         });
-	
+	    
         request.fail(function (response){                           
             console.log(
                 "The following error occurred: " + response

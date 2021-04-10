@@ -38,12 +38,18 @@ class Member
      	return $result;
     }
 
-    function getAllCategories($table_name="book_categories")
+    function getAllCategories($table_name="book_categories", $only_names=false)
     {
 	    $group = 1;
 	    if ($table_name == 'ebook_categories') {
-	         $group = 2;
-	    }
+	        $group = 2;
+        } else if ($table_name == 'photo_categories') {
+            $group = 3;
+        } else if ($table_name == 'old_photo') {
+            $group = 3;
+        } else if ($table_name == 'digital_photo') {
+            $group = 3;
+        }
 	
 	    if ($table_name == 'all') {
 	         $query = "SELECT * FROM categories";
@@ -53,6 +59,14 @@ class Member
 	    $paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($group);
 	    $result = $this->ds->select($query, $paramType, $paramArray);
+
+        if ($only_names) {
+            $res = array();
+	        for ($i=0; $i<count($result); $i++) {
+	            $res[$i] = $result[$i][0];
+	        }
+            return $res;
+        }
     
     	return $result;
     }
@@ -63,18 +77,32 @@ class Member
 	    $paramType = array();
     	$paramArray = array();
 	    $result = $this->ds->select($query, $paramType, $paramArray);
-    
     	return $result;
+    }
+
+    function getPrefisso($tipologia)
+    {
+	    $query = "SELECT category, prefix FROM categories";
+	    $paramType = array();
+    	$paramArray = array();
+	    $result = $this->ds->select($query, $paramType, $paramArray);
+        foreach ($result as $r) {
+            if ($r['category'] == $tipologia) 
+    	        return $r['prefix'];
+        }
+        return "NONE";
     }
 
     function curlFlBiblio($category="book_categories") {
 
-    	if ($category == "video") {
+    	if ($category == "video_categories") {
 	       $cats = array(array("VIDEO"));
-	    } else if ($category == "image") {
-	       $cats = array(array("FOTOGRAFIA"));
-        } else if ($category == "slide") {
-           $cats = array(array("STAMPA"), array("LASTRA"));
+	    } else if ($category == "photo_categories") {
+	       $cats = array(array("FOTOGRAFIA"), array("STAMPA"), array("LASTRA"));
+        } else if ($category == "ebook_categories") {
+	       $cats = array(array("BOZZETTO"), array("PERGAMENA"));
+	    } else if ($category == "monturato") {
+	       $cats = array(array("MONTURATO"));
 	    } else {
            $cats = $this->getAllCategories($category);
 	    }
@@ -84,7 +112,7 @@ class Member
 	        $res[$i] = "tipologia:".$cats[$i][0];
 	    }
 
-        return implode("+OR+", $res);
+        return implode(" OR ", $res);
     }
     
     function findTypeGroup($tipologia) {
@@ -251,7 +279,19 @@ class Member
 	   
 	   return true;
     }
+
+    function fillCombo($table_name)
+    {
+        $query = "SELECT name FROM ".$table_name." ORDER BY name;";
+	    
+	    $paramType = array();
+    	$paramArray = array();
+	    $result = $this->ds->select($query, $paramType, $paramArray);
+
+    	return $result;
+    }
+
 }
 
-//$m = new Member();
-//$m->addCategory("pluto", "pippo");
+$m = new Member();
+$m->fillCombo("bozzetto_categories");

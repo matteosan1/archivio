@@ -1,0 +1,511 @@
+{
+    "id":"new_book",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    "html":
+    [
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Prefisso Codice Archivio: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "prefissi",
+                                    "id":   "prefissi",
+                                    "class": "prefissi",
+                                    "type":"select",
+	                                "options" : {
+		                                "" : {
+			                                "selected" : "selected",
+			                                "html" : ""
+		                                }
+	                                }
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"2",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "class": "inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tipologia: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "tipologia",
+                                    "id":   "tipologia",
+                                    "class": "tipologia",
+                                    "type":"select",
+	                                "options" : {
+		                                "" : {
+			                                "selected" : "selected",
+			                                "html" : "----"
+		                                }
+	                                }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Titolo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "titolo",
+                                    "id":   "titolo",
+                                    "value": "",
+                                    "placeholder":"Titolo del libro",
+                                    "cols":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]                    
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Sottotitolo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "sottotitolo",
+                                    "id":   "sottotitolo",
+                                    "value": "",
+                                    "placeholder":"Eventuale sottotitolo",
+                                    "cols":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Prima Responsabilit&agrave;: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "prima_responsabilita",
+                                    "id":   "prima_responsabilita",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Altre Responsabilit&agrave;: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "altre_responsabilita",
+                                    "id":   "altre_responsabilita",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },                                         
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Lugo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "luogo",
+                                    "id":   "luogo",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Edizione: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "edizione",
+                                    "id":   "edizione",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Ente: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "ente",
+                                    "id":   "ente",
+                                    "value": "",
+                                    "size":"25",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Serie: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "serie",
+                                    "id":   "serie",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Anno: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "anno",
+                                    "id":   "anno",
+                                    "value": "",
+                                    "placeholder":"2020",
+                                    "size":"4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Descrizione: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "descrizione",
+                                    "id":   "descrizione",
+                                    "value": "",
+                                    "placeholder":"XX p. : ill. ; YY cm",
+                                    "size":"35",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"CDD: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "cdd",
+                                    "id":   "cdd",
+                                    "value": "",
+                                    "placeholder":"123.456789",
+                                    "size":"20",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Soggetto: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "soggetto",
+                                    "id":   "soggetto",
+                                    "value": "",
+                                    "size":"60",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Note: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"note",
+                                    "id":"note",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"note",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"File copertina (JPG): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"copertina",
+                                    "id":"copertina",
+                                    "type": "file",
+                                    "value": "",
+                                    "accept": ".jpg,.jpeg"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
