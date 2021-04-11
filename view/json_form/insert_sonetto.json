@@ -1,0 +1,342 @@
+{
+    "id":"insert_form",
+    "class":"insert_form",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    "html":
+    [        
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Scansione (JPG, TIFF, PDF, DOC): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"scan[]",
+                                    "id":"scan[]",
+                                    "type": "file",
+                                    "value": "",
+                                    "multiple":"multiple",
+                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png,.doc,.docx,.pdf"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "class": "inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Testo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"testo_ocr",
+                                    "id":"testo_ocr",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html":
+                            [
+                                {
+                                    "value":"OCR",
+                                    "id":    "OCR",
+                                    "class": "OCR",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Autore: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "autore",
+                                    "id":   "autore",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Committente: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "committente",
+                                    "id":   "committente",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Ricorrenza: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "ricorrenza",
+                                    "id":   "ricorrenza",
+                                    "class": "ricorrenza",
+                                    "type":"select",
+                                    "options" : {
+                                        "null" : {
+                                            "selected" : "selected",
+                                            "html" : "----"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Dedica: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "dedica",
+                                    "id":   "dedica",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Data: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "date",
+                                    "id":   "date",
+                                    "type" : "text",
+                                    "placeholder":"AAAA-MM-GG",
+                                    "size":"10"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Stampato da: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "stampato_da",
+                                    "id":   "stampato_da",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Dimensioni: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "dimensioni",
+                                    "id":   "dimensioni",
+                                    "value": "",
+                                    "placeholder":"11.1x22.2",
+                                    "size":"14",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Note: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"note",
+                                    "id":"note",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"note",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

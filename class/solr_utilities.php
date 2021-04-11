@@ -193,6 +193,7 @@
             $filename = $dir."insert_libro.json";     
         } else if ($type == "VERBALE") {
         } else if ($type == "SONETTO") {
+            $filename = $dir."insert_sonetto.json";
         } else if ($type == "ARTICOLO_GIORNALE") {
         } else if ($type == "DELIBERA") {
         } else if ($type == "BOZZETTO") {
@@ -282,9 +283,19 @@
                 $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$i] =
                     array("html" => $data);
                 $i++;
-            }            
+            }
+        } else if ($type == "SONETTO") {
+            $m = new Member();
+            $tech = $m->fillCombo("sonetto_events");
+            $i = 0;
+            foreach ($tech as $row) {
+                $data = $row['name'];
+                //           table      tr         td      
+                $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] =
+                    array("html" => $data);
+                $i++;
+            }
         }
-
 
         print_r (json_encode($json));
     }

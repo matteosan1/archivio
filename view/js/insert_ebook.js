@@ -46,8 +46,11 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('submit','.insert_form', function(){
-    //$("#insert_form").submit(function() {
+    //$(document).on('change','.date', function(){
+    //    $("#date").datepicker();
+    //});
+    
+    $(document).on('click','.inserisci', function(){
 	    var formData = new FormData(document.getElementById("insert_form"));
 	    if (request) {
             request.abort();
@@ -70,72 +73,79 @@ $(document).ready(function() {
 		//        alert ("Non è possibile inserire documento in formato " + ext);
   	  	//        return false;
 	    //    } else {
+        console.debug("MALE");
+        
+        //request = $.ajax({
+        //    url: "../class/validate_new_ebook.php",
+        //    type: "post",
+        //    data: formData,
+        //    contentType: false,
+        //    cache: false,
+        //    processData:false                       
+        //});
+		//        
+       	//request.done(function (response) {
+	    //    console.log(response);
+	    //    var dict = JSON.parse(response);
+        //    if(dict.hasOwnProperty('error')){
+    	//		$('#error1').html(dict['error']);
+		//	    return false;
+        //    } else {
+		//	    $('#error1').html("");
+		//	    $('#result1').html(dict['result']);
+		//	    setTimeout(function(){
+        //   		    location.reload();
+      	//		}, 2000);
+        //    }
+		//});
+	    
+	    return false;
+    });
+
+    $(document).on('click','.OCR', function(){
+	    var filenames = document.getElementById('scan[]').files;
+        //console.debug(filenames);
+        if (filenames.length == 0) {
+	        alert ("Il documento da analizzare deve essere specificato.");
+	        return false;
+	    } else {
+            for (var i = 0; i < filenames.length; i++) {                
+	            var parts = filenames[i]['name'].split('.');
+ 	            var ext = parts[parts.length - 1].toLowerCase();
+                
+	            // FIXME AGGIUNGERE pdf2image per processare pdf
+	            if (ext != 'jpg' && ext != 'jpeg' &&
+		            ext != 'tiff' && ext != 'tif') {
+		            alert ("Non è possibile effetturare OCR su file " + ext);
+  	  	            return false;
+                }
+            }
+	    }
+
+        if (request) {
+            request.abort();
+        }
+
+  	    var formData = new FormData(document.getElementById("insert_form"));
 		request = $.ajax({
-            url: "../class/validate_new_ebook.php",
+            url: "../class/check_ocr.php",
             type: "post",
             data: formData,
             contentType: false,
             cache: false,
-            processData:false                       
-        });
-		        
-       	request.done(function (response) {
-	        console.log(response);
-	        var dict = JSON.parse(response);
-            if(dict.hasOwnProperty('error')){
-    			$('#error1').html(dict['error']);
-			    return false;
-            } else {
-			    $('#error1').html("");
-			    $('#result1').html(dict['result']);
-			    setTimeout(function(){
-           		    location.reload();
-      			}, 2000);
-            }
+            processData:false,
+            beforeSend: function(){$("#overlay").show();}
 		});
-    //}
-	    //                      }
-	    
+		
+		request.done(function (response) {
+            setInterval(function() {$("#overlay").hide(); }, 500);
+	        $('#testo_ocr').html(response);
+		    return false;
+		});
+
 	    return false;
     });
     
-    $('.btn_ocr').click(function() {
-	var formData = new FormData(document.getElementById("new_ebook"));
-        if (request) {
-            request.abort();
-        }
-	
-	var filename = document.getElementById('edoc').value;
-        if (filename == "") {
-	    alert ("Il documento da analizzare deve essere specificato.");
-	    return false;
-	} else {
-	    var parts = filename.split('.');
- 	    var ext = parts[parts.length - 1].toLowerCase();
-	    // FIXME AGGIUNGERE pdf2image per processare pdf
-	    if (ext != 'jpg' && ext != 'jpeg' &&
-		ext != 'tiff' && ext != 'tif') {
-		alert ("Non &egrave; possibile fare analisi OCR con file " + ext);
-  	  	return false;
-	    } else {
-		request = $.ajax({
-               	    url: "../class/check_ocr.php",
-               	    type: "post",
-               	    data: formData,
-               	    contentType: false,
-                    cache: false,
-                    processData:false                       
-		});
-		
-		request.done(function (response) {				
-	            $('#testo_ocr').html(response);
-		    return false;
-		});
-      	    }
-	}
-	return false;
-    });
-
     $("#lets_search_for_delete").bind('submit',function() {
         var value = $('#str_for_delete').val();
         $.post('/class/codice_archivio_selection.php',{value:value, type:"delete", category:"ebook_categories"}, function(data) {

@@ -9,25 +9,6 @@ require_once "../class/Member.php";
 
 $m = new Member();
 $categories = $m->getAllCategories("ebook_categories");
-
-//$selects = "";
-//$size = 0;
-//
-//function fillSelection() {
-//    global $selects, $size;
-//
-//    $selects = "";
-//    $res = listCodiceArchivio("ebook_categories");
-//
-//    foreach ($res as $select) {
-//        $selects = $selects.'<option value="'.$select.'">'.$select.'</option>';
-//    }
-//
-//    $size = count($res);
-//        if ($size > 14) {
-//           $size = 15;
-//    }
-//}
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +31,7 @@ $categories = $m->getAllCategories("ebook_categories");
 </style>
 </head>
     <script type="text/javascript" src="js/autologout.js"></script>
-    <script type="text/javascript" src="jquery.dform-1.1.0.js"></script>
+    <script type="text/javascript" src="js/jquery.dform-1.1.0.js"></script>
     <script type="text/javascript" src="js/insert_ebook.js"></script>
 
 <body>
@@ -83,6 +64,7 @@ $categories = $m->getAllCategories("ebook_categories");
         </form>
         <br>
         <form id="insert_form"></form>
+        <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
         <div id="footer1" align="center"></div>
       </div>
     </div>     
