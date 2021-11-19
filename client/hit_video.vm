@@ -1,0 +1,60 @@
+##set($docId = $doc.getFirstValue($request.schema.uniqueKeyField.name))
+#set ($title = $doc.getFieldValue('filename')[0]) ##.split(".+?/(?=[^/]+$)")[1])
+
+<div class="result-document">
+  <table width="100%">
+    <col width="20%">
+    <col width="50%">
+    <col width="30%">
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Nome:
+    </th>	
+    <td align="left" valign="top">     
+     <a href="#url_root/video/$title" download>
+       <b>$title</b></a>
+    </td>
+       <td rowspan="5" align="center">
+      <img height=200 src="#url_root/img/video_record.png" />
+     </td>
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Data:
+    </th>	
+    <td align="left" valign="top">     
+      #field("data")
+    </td>
+     </tr>
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Durata:
+    </th>	
+    <td align="left" valign="top">     
+      #field("durata")
+    </td>
+     </tr>
+
+    <tr>
+    <th align="right" valign="top" style="field-name">
+      Formato:
+    </th>	
+    <td align="left" valign="top">
+      #field("format")
+    </td>
+     </tr>
+
+
+  </table>
+  #if ($doc.fieldNames.contains("note")) 
+      <div class="result-body">
+         <b>NOTE:</b> #field("note")
+      </div>
+  #end  
+  #if($debug)
+    <a href="#" onclick='jQuery(this).siblings("pre").toggle(); return false;'>toggle explain</a>
+
+    <pre style="display:none">
+      $response.getExplainMap().get($docId)
+    </pre>
+  #end
+</div>

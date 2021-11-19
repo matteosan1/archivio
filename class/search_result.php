@@ -8,12 +8,12 @@ require_once "../view/solr_client.php";
 require_once "../class/pagination.class.php";
 require_once "../class/Member.php";
     
-require_once("../view/libro_output.php");
-require_once("../view/monturato_output.php");
-require_once("../view/fotografia_output.php");
-require_once("../view/stampa_output.php");
-require_once("../view/bozzetto_output.php");
-require_once("../view/pergamena_output.php");    
+require_once("../view/search_output/libro_output.php");
+require_once("../view/search_output/monturato_output.php");
+require_once("../view/search_output/fotografia_output.php");
+require_once("../view/search_output/stampa_output.php");
+require_once("../view/search_output/bozzetto_output.php");
+require_once("../view/search_output/pergamena_output.php");    
      
     
 if (isset($_GET)) {

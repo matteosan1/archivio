@@ -55,49 +55,48 @@ $(document).ready(function() {
 	    if (request) {
             request.abort();
         }
-        formData.append('tipologia', document.getElementById('tipologia').value);
 
-	    //var filename = document.getElementById('scan').value;
-        //if (filename == "") {
-	    //    alert ("Il documento da analizzare deve essere specificato.");
-	    //    return false;
-	    //} else {
-	    //    var parts = filename.split('.');
- 	    //    var ext = parts[parts.length - 1].toLowerCase();
-	    //    
-	    //    if (ext != 'jpg' && ext != 'jpeg' &&
-		//        ext != 'tiff' && ext != 'tif' &&
-		//        ext != 'doc' && ext != 'msg' &&
-      	//	    ext != 'docx' && ext != 'eml' &&
-      	//	    ext != 'pdf') {
-		//        alert ("Non è possibile inserire documento in formato " + ext);
-  	  	//        return false;
-	    //    } else {
-        console.debug("MALE");
+        var filenames = document.getElementById('scan[]').files;
+        if (filenames.length == 0) {
+	        alert ("Almeno un documento deve essere selezionato.");
+	        return false;
+        }
+
+        var is_ocr = !!document.getElementById('testo_ocr');        
+        if (is_ocr) {
+            var ocr = document.getElementById('testo_ocr').value;
+            if (ocr == "") {
+                if (! confirm('Vuoi proseguire senza OCR ?')) {
+                    return false;
+                } 
+            }
+        }
         
-        //request = $.ajax({
-        //    url: "../class/validate_new_ebook.php",
-        //    type: "post",
-        //    data: formData,
-        //    contentType: false,
-        //    cache: false,
-        //    processData:false                       
-        //});
-		//        
-       	//request.done(function (response) {
-	    //    console.log(response);
-	    //    var dict = JSON.parse(response);
-        //    if(dict.hasOwnProperty('error')){
-    	//		$('#error1').html(dict['error']);
-		//	    return false;
-        //    } else {
-		//	    $('#error1').html("");
-		//	    $('#result1').html(dict['result']);
-		//	    setTimeout(function(){
-        //   		    location.reload();
-      	//		}, 2000);
-        //    }
-		//});
+        formData.append('tipologia', document.getElementById('tipologia').value);
+        
+        request = $.ajax({
+            url: "../class/validate_new_ebook.php",
+            type: "post",
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData:false                       
+        });
+		        
+       	request.done(function (response) {
+	        console.log(response);
+	        var dict = JSON.parse(response);
+            if(dict.hasOwnProperty('error')){
+    			$('#error1').html(dict['error']);
+			    return false;
+            } else {
+			    $('#error1').html("");
+			    $('#result1').html(dict['result']);
+			    setTimeout(function(){
+           		    location.reload();
+      			}, 2000);
+            }
+		});
 	    
 	    return false;
     });
@@ -115,7 +114,8 @@ $(document).ready(function() {
                 
 	            // FIXME AGGIUNGERE pdf2image per processare pdf
 	            if (ext != 'jpg' && ext != 'jpeg' &&
-		            ext != 'tiff' && ext != 'tif') {
+		            ext != 'tiff' && ext != 'tif' &&
+                    ext != 'png') {
 		            alert ("Non è possibile effetturare OCR su file " + ext);
   	  	            return false;
                 }

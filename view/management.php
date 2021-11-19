@@ -9,6 +9,26 @@ $categories_ebook = $member->getAllCategories("ebook_categories");
 $tagl1 = $member->getL1Tags();
 ?> 
 
+    <html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+        <meta charset="UTF-8" />
+        <title>Libri</title>
+	    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
+
+	     $(function(){
+		     $("#footer1").load("/view/footer.html");
+		     $("#footer2").load("/view/footer.html");
+  		     $("#footer3").load("/view/footer.html");
+   		     $("#footer4").load("/view/footer.html");
+   		     $("#footer5").load("/view/footer.html"); 
+	     });
+	    </script>
+        <style>
+         @import url("/view/css/main.css");
+        </style>
+        
 <!DOCTYPE html>
 <html>
 	<head>
@@ -27,60 +47,26 @@ $tagl1 = $member->getL1Tags();
   		  $("#footer5").load("/view/footer.html");	
 		});
 		</script>
-		<style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-</style>
-</head>
-
 <script type="text/javascript" src="js/autologout.js"></script>
 <script type="text/javascript" src="js/management.js"></script>
 <script type="text/javascript" src="js/change_id.js"></script>
-
-<style>
-	    table,th,tr,td
-            {
-                border: 1px solid black;
-            }
 </style>
+</head>
+
 <body>
-<?php include "../view/header.php"; ?>
+<div id="header"><?php include "../view/header.php"; ?></div>
+<div id="scroll"></div>
+
+<div id="content">
+<div class="tab">
+  <div class="testo" align="center"><h2>Biblioteca</h2></div>
+                <button class="tablink_book" onclick="openPage('Insert', this)">Inserimento</button>
+                <button class="tablink_book" onclick="openPage('Update', this)">Aggiornamento</button>
+                <button class="tablink_book" onclick="openPage('Delete', this)">Cancellazione</button>
+                <button class="tablink_book" onclick="openPage('Backup', this)">Backup</button>   
+                <button class="tablink_book" onclick="openPage('Restore', this)">Ripristino</button>
+                <button class="tablink_book" onclick="openPage('Cover', this)">Copertine</button>    
+            </div>
 
 <div class="tab">
   <button id=pippo class="tablinks" onclick="openCity(event, 'gestione_utenti')">Utenti</button>

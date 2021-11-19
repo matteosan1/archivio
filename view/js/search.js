@@ -34,7 +34,7 @@ $(document).ready(function() {
 	    });
 	    
 	    request.done(function (response) {
-   	        console.debug(response);
+   	        //console.debug(response);
             response = JSON.parse(response);
             $("#query-result").html(response['header']);
             $("#pagination-result").html(response['body']);

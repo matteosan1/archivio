@@ -9,10 +9,28 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"na
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"evento","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
 
 
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"committente","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"ricorrenza","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"dedica","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"dimensioni","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"curatore","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"categoria","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tecnica","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
 
 
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"data","type":"pdate","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tipo_delibera","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"argomento_breve","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"testo","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"unanimita","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"favorevoli","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"contrari","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"astenuti","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"straordinaria","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"capitolo","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"pagina","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"num_contestuale","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' http://localhost:8985/solr/archivio/schema
 
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"delete-field" : { "name":"id" }}' http://localhost:8983/solr/archivio/schema
@@ -25,7 +43,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"na
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"cdd","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true}}' http://localhost:8983/solr/archivio/schema
 
-curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"timestamp","type":"pdates","docValues":false,"multiValued":false,"indexed":true,"stored":true,"default":"NOW"}}' http://localhost:8983/solr/archivio/schema
+curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"timestamp","type":"pdate","docValues":false,"multiValued":false,"indexed":true,"stored":true,"default":"NOW"}}' http://localhost:8983/solr/archivio/schema
 
 curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field":{"name":"tipologia","type":"string","docValues":false,"multiValued":false,"indexed":true,"stored":true, required:true}}' http://localhost:8983/solr/archivio/schema
 

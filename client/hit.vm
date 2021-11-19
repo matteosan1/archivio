@@ -1,0 +1,137 @@
+#set($docId = $doc.getFirstValue($request.schema.uniqueKeyField.name))
+
+<div class="result-document">
+	<table width="100%">
+		<col width="20%">
+    		<col width="50%">
+		<col width="30%">
+    		<tr>
+    			<th align="right" valign="top" style="field-name">
+				Codice:
+    			</th>
+			<td>
+				$doc.getFieldValue('codice_archivio')
+			</td>
+
+			<td align="center" rowspan=$doc.fieldNames.size()>
+			      #set( $filename = $doc.getFieldValue('codice_archivio'))
+             	    	      #set( $image = "#url_root/copertine/" + $filename + ".JPG" )
+	      	    	      <img height=199 src="$image" onerror="this.onerror=null;this.src='#url_root/img/no_image.png';" />
+	  	    	</td>
+		</tr>
+   	    	<tr>
+			<th align="right" valign="top" style="field-name">
+				TITOLO:
+			</th>
+			<td>
+				$doc.getFieldValue('titolo')
+			</td>
+		</tr>
+		#if ($doc.getFieldValue('sottotitolo'))
+               	<tr>
+                        <th align="right" valign="top" style="field-name">
+                                Sottotitolo:
+                        </th>
+                        <td>
+                                $doc.getFieldValue('sottotitolo')
+                        </td>
+                </tr>
+             	#end
+		#if ($doc.getFieldValue('prima_responsabilita'))
+                <tr>
+                        <th align="right" valign="top" style="field-name">
+                                Prima responsabilit&agrave;:
+                        </th>
+                        <td>
+                                $doc.getFieldValue('prima_responsabilita')
+                        </td>
+                </tr>
+		#end
+                #if ($doc.getFieldValue('altre_responsabilita'))
+                <tr>
+                        <th align="right" valign="top" style="field-name">
+                                Altre responsabilit&agrave;:
+                        </th>
+                        <td>
+                                $doc.getFieldValue('altre_responsabilita')
+                        </td>
+                </tr>
+		#end
+                #if ($doc.getFieldValue('luogo'))
+                <tr>
+                        <th align="right" valign="top" style="field-name">
+                                Luogo:
+                        </th>
+                        <td>
+                                $doc.getFieldValue('luogo')
+                        </td>
+                </tr>
+		#end
+                #if ($doc.getFieldValue('edizione'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               Edizione:
+                       </th>
+                       <td>
+                               $doc.getFieldValue('edizione')
+                       </td>
+                </tr>
+		#end
+                #if ($doc.getFieldValue('anno'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               Anno:
+                       </th>
+                       <td>
+                               $doc.getFieldValue('anno')
+                       </td>
+                </tr>
+		#end
+                #if ($doc.getFieldValue('descrizione'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               Descrizione:
+                       </th>    
+                       <td>
+                               $doc.getFieldValue('descrizione')
+                       </td>
+                </tr>
+ 		#end
+                #if ($doc.getFieldValue('cdd'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               CDD:
+                       </th>    
+                       <td>
+                               $doc.getFieldValue('cdd')
+                       </td>
+                </tr>
+ 		#end
+		#if ($doc.getFieldValue('soggetto'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               Soggetto:
+                       </th>
+                       <td>
+                               $doc.getFieldValue('soggetto')
+                       </td>
+                </tr>
+		#end
+		#if ($doc.getFieldValue('tipologia'))
+                <tr>
+                       <th align="right" valign="top" style="field-name">
+                               Tipologia:
+                       </th>
+                       <td>
+                               $doc.getFieldValue('tipologia')
+                       </td>
+                </tr>
+		#end
+	</table>
+
+	#if ($doc.fieldNames.contains("note")) 
+     		<div class="result-body">
+        		<b>NOTE:</b> #field("note")
+     		</div>
+ 	#end  
+</div>

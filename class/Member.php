@@ -100,7 +100,7 @@ class Member
 	    } else if ($category == "photo_categories") {
 	       $cats = array(array("FOTOGRAFIA"), array("STAMPA"), array("LASTRA"));
         } else if ($category == "ebook_categories") {
-	       $cats = array(array("BOZZETTO"), array("PERGAMENA"));
+	       $cats = array(array("BOZZETTO"), array("PERGAMENA"), array('SONETTO'));
 	    } else if ($category == "monturato") {
 	       $cats = array(array("MONTURATO"));
 	    } else {

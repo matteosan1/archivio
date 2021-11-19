@@ -3,11 +3,12 @@ require_once "../view/config.php";
 
 $ch = curl_init();
 
-$title = curl_escape($ch, $_POST['title']);
-$author = curl_escape($ch, $_POST['author']);
+$title = "I promessi sposi";//curl_escape($ch, $_POST['title']);
+$author = "Alessandro Manzoni";//curl_escape($ch, $_POST['author']);
 
 $URL = $GLOBALS['OCLC_URL']."?title=".$title."&author=".$author;
-
+print_r ($URL);
+exit;    
 curl_setopt($ch, CURLOPT_URL, $URL);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -20,6 +21,8 @@ if ($data == false) {
     echo json_encode(array("error"=>"OCLC server down. Passa alla ricerca manuale."));
 } else {
     $xml = simplexml_load_string($data);
+    print_r($xml);
+    exit;
     if (isset($xml->workCount)) {
        echo $xml->workCount;
     } else {

@@ -1,18 +1,18 @@
 {
-    "id":"insert_form",
-    "class":"insert_form",
+    "id":"update_form",
+    "class":"update_form",
     "enctype":"multipart/form-data",
     "action":"",
     "method" : "post",
     "html":
-    [        
+    [
         {
             "type":"table",
             "width":"80%",
             "html" :
             [
                 {
-                    "type":"tr",                            
+                    "type":"tr",
                     "html":
                     [
                         {
@@ -21,7 +21,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PDF, DOC): "
+                                    "html":"Codice Archivio: "
                                 }
                             ]
                         },
@@ -30,24 +30,68 @@
                             "html" :
                             [
                                 {
-                                    "name":"scan[]",
-                                    "id":"scan[]",
-                                    "type": "file",
-                                    "value": "",
-                                    "multiple":"multiple",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png,.doc,.docx,.pdf"
+                                    "name": "codice_archivio_upd",
+                                    "id":   "codice_archivio_upd",
+                                    "value_chg": "codice_archivio",
+                                    "size":"25",
+                                    "type": "text",
+                                    "readonly": "readonly"
                                 }
                             ]
                         },
                         {
                             "type":"td",
+                            "rowspan":"2",
                             "html":
                             [
                                 {
-                                    "value":"Inserisci",
-                                    "id":    "inserisci",
-                                    "class": "inserisci",
+                                    "value":"Aggiorna",
+                                    "id":    "aggiorna",
+                                    "class": "aggiorna",
                                     "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Tipologia: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "tipologia_upd",
+                                    "id":   "tipologia_upd",
+                                    "value_chg": "tipologia",
+                                    "cols":"60",
+                                    "type": "text",
+                                    "readonly": "readonly"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "rowspan":"5",
+                            "html":
+                            [
+                                {
+                                    "type":"img",
+                                    "heigth":"150px",
+                                    "src_chg":"",
+                                    "onerror":"this.src='../img/no_image.png'"   
                                 }
                             ]
                         }
@@ -72,24 +116,12 @@
                             "html" :
                             [
                                 {
-                                    "name":"testo_ocr",
-                                    "id":"testo_ocr",
+                                    "name":"text_up",
+                                    "id":"text_upd",
                                     "type": "textarea",
                                     "html": "",
                                     "rows": "10",
                                     "cols": "60"
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html":
-                            [
-                                {
-                                    "value":"OCR",
-                                    "id":    "OCR",
-                                    "class": "OCR",
-                                    "type": "submit"
                                 }
                             ]
                         }
@@ -98,7 +130,7 @@
                 {
                     "type":"tr",
                     "html":
-                    [                     
+                    [
                         {
                             "type":"td",
                             "html" :
@@ -108,21 +140,21 @@
                                     "html":"Autore: "
                                 }
                             ]
-                     },
+                        },
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
-                                    "name": "autore",
-                                    "id":   "autore",
-                                    "value": "",
-                                    "size":"50",
+                                    "name": "autore_upd",
+                                    "id":   "autore_upd",
+                                    "value_chg": "autore",
+                                    "cols":"60",
                                     "type": "text"
                                 }
                             ]
                         }
-                    ]
+                    ]                    
                 },
                 {
                     "type":"tr",
@@ -334,6 +366,7 @@
                             ]
                         }
                     ]
+                    
                 }
             ]
         }

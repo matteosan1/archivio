@@ -85,8 +85,22 @@ function process_ebook($i) {
 }
 
 function convertScan($ca) {
-    if ($_FILES['scan']['error'] == 0) {
-    
+    $countfiles = count($_FILES['scan']['name']);
+
+    if ($countfiles > 1) {
+        $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."ocr.pdf ";
+        for ($i=0; $i<$countfiles; $i++) {
+            $command = $command.$GLOBALS['UPLOAD_DIR']."ocr".$i.".pdf ";
+        }
+        exec($command, $output, $result);
+
+        $target_directory = $GLOBALS['EDOC_DIR'].$ca."pdf";
+
+        if (!move_uploaded_file($tmp_filename, $target_directory)) {
+	        return array($arr_result['error'], "Errore nella fase di copia di ".$_FILES['scan']['name']);
+            return;
+        }
+    } else if ($_FILES['scan']['error'] == 0) {
         $orig_ext = explode(".", $_FILES['scan']['name'][$i]);
         $orig_ext = strtolower(end($orig_ext));
 
@@ -108,10 +122,10 @@ function convertScan($ca) {
         $target_directory = $GLOBALS['EDOC_DIR'].$_FILES['scan']['name'];
 
         if (!move_uploaded_file($tmp_filename, $target_directory)) {
-	        return array($arr_result['error'], "Errore nella fase di copia di ".$_FILES['scan']['name']);
+	        return array($arr_result['error'], "Errore nella fase di copia di ".$ca.$orig_ext;
             return;
         }
-    }
+    } 
 }
 
 if (isset($_POST)) {
@@ -125,23 +139,95 @@ if (isset($_POST)) {
     
     $doc->codice_archivio = $codice_archivio;
     $doc->tipologia = $_POST['tipologia'];
-    $doc->resourceName = basename($_FILES['scan']['name']);
-    
-    if ($_POST['tipologia'] == "PERGAMENA") {
+
+    if ($_POST['tipologia'] == 'SONETTO') {    
+        $arr_check = array();
+        $arr_result = array("result"=>array(), "error"=>array());
+        $countfiles = count($_FILES['scan']['name']);
+        for ($i=0; $i<$countfiles; $i++) {
+            $tmp_filename = $_FILES['scan']['tmp_name'][$i];
+            //$resourceName = basename($_FILES['scan']['name'][$i]);
+            $tmp = explode(".", $_FILES['scan']['name'][$i]);
+
+            //$duplicate = lookForDuplicates($resourceName);
+            //if ($duplicate == -2) {
+      	        //echo json_encode(array("error" => "Il server SOLR non &egrave; attivo. Contattare l'amministratore."));
+	            //exit;
+            //}
+
+            //if ($duplicate == -1) {
+      	        //array_push($arr_result['error'], "Il documento ".$resourceName." &egrave; gi&agrave; stato indicizzato");
+	            //array_push($arr_check, -1);
+	            //continue;
+            //} else {
+      	        //array_push($arr_check, 1);
+            //}
+
+            $ext = strtolower(end($tmp));
+            if ($ext == "pdf") {                
+                $command = "/usr/bin/java -jar ".$GLOBALS['TIKA_APP']." -j -t -J ".$tmp_filename;
+                $output = shell_exec($command);
+                $data = json_decode($output, true)[0];
+
+                if (isset($data['X-TIKA:content'])) {
+                    $text = trim(preg_replace('/(\t){1,}/', '', $data['X-TIKA:content']));
+                    $text = trim(preg_replace('/(\n){2,}/', "\n", $text));
+                    $data['text'] = $text; 
+                    //unset($data['X-TIKA:content']);
+                }
+
+                //if (isset($data['X-Parsed-By'])) {
+                //    unset($data['X-Parsed-By']);
+                //}
+
+                //foreach ($data as $key => $value) {
+                //   $doc->$key = $value;
+                //}
+                $doc->text += $data."\n";
+            } else {
+                $doc->text += $_POST['testo_ocr']."\n";
+                //$tmp_filename = $_FILES['scan']['tmp_name'][0];
+                $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita PDF";
+                exec($command);
+            }
+        }
+
+//        if ($countfiles > 1) {
+//            $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."ocr.pdf ";
+//            for ($i=0; $i<$countfiles; $i++) {
+//                $command = $command.$GLOBALS['UPLOAD_DIR']."ocr".$i.".pdf ";
+//            }
+//            exec($command, $output, $result);
+//        }
+//    
+                    //$doc->resourceName = basename($_FILES['edoc']['name'][$i]);
+        } //else {
+        //    $doc->resourceName = basename($_FILES['scan']['name'][0]);    
+        //}
+        $doc->committente = $_POST['committente']; 
+        $doc->ricorrenza = $_POST['ricorrenza']; 	
+        $doc->autore = $_POST['autore'];
+        $doc->dedica = $_POST['dedica']; 
+        $doc->anno = $_POST['anno'];
+        $doc->date = $_POST['date'];
+        $doc->stampato_da = $_POST['stampato_da'];         
+        $doc->dimensioni = $_POST['dimensioni']; 
+        $doc->note = $_POST['note']; 
+    } else if ($_POST['tipologia'] == "PERGAMENA") {
         $doc->descrizione = $_POST['descrizione']; 
-        $doc->tecnica = $_POST['descrizione']; 	
-        $doc->autore = $_POST['descrizione']; 
-        $doc->anno = $_POST['descrizione']; 
-        $doc->dimensioni = $_POST['descrizione']; 
-        $doc->note = $_POST['descrizione'];
+        $doc->tecnica = $_POST['tecnica']; 	
+        $doc->autore = $_POST['autore']; 
+        $doc->anno = $_POST['anno']; 
+        $doc->dimensioni = $_POST['dimensioni']; 
+        $doc->note = $_POST['note'];
     } else if ($_POST['tipologia'] == "BOZZETTO") {
         $doc->categoria = $_POST['categoria']; 
         $doc->descrizione = $_POST['descrizione']; 
-        $doc->tecnica = $_POST['descrizione']; 	
-        $doc->autore = $_POST['descrizione']; 
-        $doc->anno = $_POST['descrizione']; 
-        $doc->dimensioni = $_POST['descrizione']; 
-        $doc->note = $_POST['descrizione']; 
+        $doc->tecnica = $_POST['tecnica']; 	
+        $doc->autore = $_POST['autore']; 
+        $doc->anno = $_POST['anno']; 
+        $doc->dimensioni = $_POST['dimensioni']; 
+        $doc->note = $_POST['note']; 
     }
     
     $error = "";
@@ -168,61 +254,5 @@ if (isset($_POST)) {
     }
 
     return;
-    
-   $arr_check = array();
-   $arr_result = array("result"=>array(), "error"=>array());
-   $countfiles = count($_FILES['edoc']['name']);
-   for ($i=0; $i<$countfiles; $i++) {
-
-      $tmp_filename = $_FILES['edoc']['tmp_name'][$i];
-      $resourceName = basename($_FILES['edoc']['name'][$i]);
-      $tmp = explode(".", $_FILES['edoc']['name'][$i]);
-
-      // FIXME CONTROLLARE DUPLICATI NEL CASO DI multivalued...
-      $duplicate = lookForDuplicates($resourceName);
-      if ($duplicate == -2) {
-      	 echo json_encode(array("error" => "Il server SOLR non &egrave; attivo. Contattare l'amministratore."));
-	 exit;
-      }
-
-      if (!isset($_POST['do_merge']) and $duplicate == -1) {
-      	 array_push($arr_result['error'], "Il documento ".$resourceName." &egrave; gi&agrave; stato indicizzato");
-	 array_push($arr_check, -1);
-	 continue;
-      } else {
-      	 array_push($arr_check, 1);
-      }
-
-      $ext = strtolower(end($tmp));
-      if (isset($_POST['do_ocr']) and ($ext == "jpeg" or $ext == "jpg" or $ext == "tiff" or $ext == "tif")) {
-      	 $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
-      	 exec($command);
-      }
-   }
-
-   if (isset($_POST['do_merge'])) {
-      $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."ocr.pdf ";
-      for ($i=0; $i<$countfiles; $i++) {
-          $command = $command.$GLOBALS['UPLOAD_DIR']."ocr".$i.".pdf ";
-      }
-      exec($command, $output, $result);
-
-      process_ebook(0);
-    } else {   
-       for ($i=0; $i<$countfiles; $i++) {
-
-       	   if (!isset($_POST['do_merge']) and $arr_check[$i] == -1) {
-       	      continue;
-       	   }
-
-	   process_ebook($i);
-       }
-    }
-
-    if (count($arr_result['error']) != 0) {
-       echo json_encode(array("error" => implode("<br>", $arr_result['error'])));
-    } else {
-       echo json_encode(array("result"=> "Tutti i documenti sono stati inseriti correttamente.")); 
-    }
 }
 ?>

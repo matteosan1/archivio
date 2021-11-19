@@ -238,6 +238,7 @@ $(document).ready(function() {
 		
 	    $.post('/class/search_cdd.php', {author:author, title:title}, function(data) {
 	        data = JSON.parse(data);
+            console.debug(data);
 	        if (data.hasOwnProperty('error')) {
 		        document.getElementById("cdd").value = "";
 		        $("#search_cdd_error").html(data['error']);
@@ -249,13 +250,12 @@ $(document).ready(function() {
 	        }
         });
     }
-    
-    $("#titolo").change( function() {
-        console.debug("pippo");
+
+    $(document).on('change','#titolo', function(){
 	    search_cdd();
     });
-    
-    $("#prima_responsabilita").change( function() {
+
+    $(document).on('change','#prima_responsabilita', function(){
 	    search_cdd();
     });
 

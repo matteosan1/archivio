@@ -127,7 +127,9 @@
             if ($res['tipologia'] == 'BOZZETTO') {
                 $filename = $dir."update_bozzetto.json";        
             } else if ($res['tipologia'] == 'PERGAMENA') {
-                $filename = $dir."update_pergamena.json";        
+                $filename = $dir."update_pergamena.json";
+            } else if ($res['tipologia'] == 'SONETTO') {
+                $filename = $dir."update_sonetto.json";    
             } else if (in_array($res['tipologia'], $libri)) {
                 $book = 1;
                 $filename = $dir."update_libro.json";     
@@ -182,6 +184,20 @@
                 $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$i] = $val;
                 $i++;
             }            
+        } else if ($res['tipologia'] == "SONETTO") {
+            $m = new Member();
+            $tech = $m->fillCombo("sonetto_events");
+            $i = 0;
+            foreach ($tech as $row) {
+                $data = $row['name'];
+                if ($res['ricorrenza'] == $data)
+                    $val = array("html" => $data, "selected" =>  "selected");
+                else
+                    $val = array("html" => $data);    
+                //           table      tr         td      
+                $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
+                $i++;
+            }
         }
     
         print_r (json_encode($json));

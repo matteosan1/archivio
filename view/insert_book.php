@@ -29,7 +29,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
          @import url("/view/css/main.css");
         </style>
         <script type="text/javascript" src="js/autologout.js"></script>
-        <script type="text/javascript" src="jquery.dform-1.1.0.js"></script>
+        <script type="text/javascript" src="js/jquery.dform-1.1.0.js"></script>
         <script type="text/javascript" src="js/insert_book.js"></script>
     </head>
     <body>
@@ -47,13 +47,6 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <button class="tablink_book" onclick="openPage('Cover', this)">Copertine</button>    
             </div>
 
-            <div id="Insert" class="tabcontent">
-                <div align=center id=result1 style="color:green"></div>
-                <div align=center id=error1 style="color:red"></div>
-                <br>
-                <form id="insert_form"></form>
-                <div id="footer1" align="center"></div>
-            </div>
 
             <div id="Update" class="tabcontent">
                 <div align=center id=result2 style="color:green"></div>
