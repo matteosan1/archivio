@@ -3,7 +3,6 @@ $(document).ready(function() {
     setInterval(checkForWarning, 1000 * 60)
     
     $(".btn-search-doc").click(function() {
-        //var formData = new FormData(document.getElementById("new_search"));
         var query = document.getElementById("query").value;
         var libri = document.getElementById("search_libri");
         var foto = document.getElementById("search_foto");
@@ -22,7 +21,7 @@ $(document).ready(function() {
             subsearch += 8;
         if (mont.checked) 
             subsearch += 16;
-
+        console.debug(subsearch);
         request = $.ajax({
 	        url: "../class/search_result.php",
 	        type: 'GET',

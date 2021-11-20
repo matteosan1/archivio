@@ -28,7 +28,10 @@ if (isset($_GET)) {
     $searchValue = "";
     if (isset($_GET['q'])) {           
         $searchValue = $_GET['q'];
-    } 
+    }
+    if ($searchValue == "") {
+        $searchValue = "*";
+    }
 
     $subsearch = 0;
     if(!empty($_GET["sub"])) {
@@ -37,30 +40,35 @@ if (isset($_GET)) {
     
     $query = $client->createSelect();
     $query->setOmitHeader(false);
-    if ($subsearch == 0) {
-        $dismax = $query->getDisMax();
-        //setBoostQuery('cat:"graphics card"^2');
-        $dismax->setQueryFields('note titolo nome_cognome sottotitolo prima_responsabilita altre_responsabilita anno soggetto autore By-line Creation-Date Keywords Last-Modified creator date modified dc_creator dc_description');       
-    } else {
-        for ($i=0; $i<=4; $i++) {
+    $dismax = $query->getEDisMax();//getDisMax();
+    $dismax->setQueryFields('note titolo nome_cognome sottotitolo prima_responsabilita altre_responsabilita anno soggetto autore By-line Creation-Date Keywords Last-Modified creator date modified dc_creator dc_description');       
+    
+    if ($subsearch != 0) {
+        $localParams = "fq=";
+        $firstInsert = 0;
+        for ($i=0; $i<5; $i++) {
             if (($subsearch >> $i) & 1) {
-                if ($i == 0) {                                             
-                    $searchValue .= " AND (".$member->curlFlBiblio('book_categories').")";
-                } else if ($i == 1) { 
-                    $searchValue .= " AND (".$member->curlFlBiblio('all_photo').")";
-                } else if ($i == 2) { 
-                    $searchValue .= " AND (".$member->curlFlBiblio('video').")";
-                } else if ($i == 3) { 
-                    $searchValue .= " AND (".$member->curlFlBiblio('ebook_categories').")";
-                } else if ($i == 4) { 
-                    $searchValue .= " AND (".$member->curlFlBiblio('monturato').")";
+                if ($firstInsert == 1) {
+                    $localParams .= " OR ";
                 }
+                if ($i == 0) {                                             
+                    $localParams .= "(".$member->curlFlBiblio('book_categories').")";
+                } else if ($i == 1) { 
+                    $localParams .= "(".$member->curlFlBiblio('all_photo').")";
+                } else if ($i == 2) { 
+                    $localParams .= "(".$member->curlFlBiblio('video').")";
+                } else if ($i == 3) { 
+                    $localParams .= "(".$member->curlFlBiblio('ebook_categories').")";
+                } else if ($i == 4) { 
+                    $localParams .= "(".$member->curlFlBiblio('monturato').")";
+                }
+                $firstInsert = 1;
             }
         }
-
-        //print ($searchValue);
+    } else {
+        $localParams = "";
     }
-
+    
     $hl = $query->getHighlighting();
     $hl->setSnippets(10);
     $hl->setMergeContiguous(true);
@@ -80,7 +88,29 @@ if (isset($_GET)) {
 
     $query->setRows($perPage->perpage);
     $query->setStart($offset);
-    $query->setQuery($searchValue);
+
+    // curl 'http://localhost:8985/solr/archivio2/query?q=sani&fq=tipologia:LIBRO&defType=dismax'
+    
+    if (strpos(":", $searchValue) !== false) {
+        $dismax->setQueryAlternative($localParams." ".$searchValue);
+    } else {
+        if ($localParams == "") {
+            $query->setQuery($searchValue);
+        } else {
+            $query->createFilterQuery('fq')->setQuery($localParams);
+            $query->setQuery($searchValue);
+        }
+    }    
+    //$dismax->queryalternative()
+    //$query->setQuery($searchValue);
+
+    //$request = $client->createRequest($query);
+
+    // you can now use the request object for getting an uri (ie. to use in you own code)
+    // or you could modify the request object
+    //echo 'Request URI: ' . $request->getUri() . '<br/>';
+    //select?omitHeader=false&wt=json&json.nl=flat&q=%7B%21+fq%3D%28tipologia%3AMONTURATO%29+sani&start=0&rows=10&fl=%2A%2Cscore&sort=codice_archivio+asc&defType=edismax&qf=note+titolo+nome_cognome+sottotitolo+prima_responsabilita+altre_responsabilita+anno+soggetto+autore+By-line+Creation-Date+Keywords+Last-Modified+creator+date+modified+dc_creator+dc_description&hl=true&hl.fl=note+Keywords&hl.snippets=10&hl.mergeContiguous=true&hl.simple.pre=%3Cu%3E&hl.simple.post=%3C%2Fu%3E&facet.field=%7B%21key%3Danno%7Danno&facet=true<br/>
+    
     $resultset = $client->select($query);
     $highlighting = $resultset->getHighlighting();
     
