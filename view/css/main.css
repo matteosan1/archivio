@@ -68,7 +68,7 @@ img:before {
     position: absolute;
     height: 50px;
     width: 50px;
-    background-image: url(../img/no_image.png);
+    background-image: url(/img/no_image.png);
 }
 
 #overlay {

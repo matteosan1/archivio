@@ -10,7 +10,7 @@ $role = $_SESSION["role"];
 <html>
 <head>
 	<title>Lavagna</title>
-	<link href="./view/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="/view/css/style.css" rel="stylesheet" type="text/css" />
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 	<script>
 	$(function(){
@@ -22,7 +22,10 @@ $role = $_SESSION["role"];
     </style>
 </head>
 <body>
-<div id="header"><?php include "header.php"; ?></div>
+<div id="header"><?php
+    include "header.php";
+    checkServer();
+    ?></div>
 <br>
     <div id="content" align="center">
     <table width=80%>
