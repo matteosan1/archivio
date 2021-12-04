@@ -49,7 +49,7 @@ require_once "../view/session.php";
     <tr>
     <td>
     <form enctype="multipart/form-data" action method="POST" id="new_search" name="new_search" class="new_search">
-    <input type="text" size="50" id="query" name="query"><button id="clear">X</button>
+    <input type="text" size="50" id="query" name="query">
     </td>
     <td>
     &nbsp;<button id="search" class="btn btn-sm btn-info btn-search-doc"><img src="/view/icons/plus.png">&nbsp;Cerca</button>
@@ -64,7 +64,12 @@ require_once "../view/session.php";
         <td><input type="checkbox" id="search_foto" name="search_foto"><label for="search_foto">&nbsp;Fotografie</label></td>
         <td><input type="checkbox" id="search_video" name="search_video"><label for="search_video">&nbsp;Video</label></td>
         <td><input type="checkbox" id="search_edoc" name="search_edoc"><label for="search_edoc">&nbsp;eDoc</label></td>
-        <td><input type="checkbox" id="search_mont" name="search_mont"><label for="search_mont">&nbsp;Monturati</label></td>    
+        <td><input type="checkbox" id="search_mont" name="search_mont"><label for="search_mont">&nbsp;Monturati</label></td>
+        <?php
+    if ($_SESSION['role'] == 'admin') {
+        echo '<td><input type="checkbox" id="search_delibera" name="search_delibera"><label for="search_delibera">&nbsp;Delibere</label></td>';
+    }
+    ?> 
         </tr>
         </table>
     </td>

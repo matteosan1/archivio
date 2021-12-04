@@ -1,15 +1,13 @@
 <?php
     require_once '../view/formats.php';
     
-    function pergamenaOutput($document, $highlighting) {
+    function sonettoOutput($document, $highlighting) {
         $out = '<table class="result_table" width=90%>';
-        // FIXME mancano campi di sicuro
 
         $field_conversion = array("codice_archivio"=>"Codice Archivio", "tipologia"=>"Tipologia",
-                                  "autore"=>"Autore",
-                                  "descrizione"=>"Descrizione", "tecnica"=>"Tecnica",
-                                  "anno"=>"Anno", "dimensioni"=>"Dimensioni", 
-                                  "note"=>"Note");
+                                  "autore"=>"Autore", "dedica"=>"Dedica", "committente"=>"Committente",
+                                  "ricorrenza"=>"Ricorrenza", "stampato_da"=>"Stampato da",
+                                  "anno"=>"Anno", "dimensioni"=>"Dimensioni", "note"=>"Note");
     
         foreach ($field_conversion as $key => $value) {
             if (!empty($document[$key])) {
@@ -23,11 +21,9 @@
             }
 
             if ($key == 'codice_archivio') {
-                // FIXME SINGLE VALUE
-                $out .= codiceArchivioFormatBOz($value, $val, 'THUMBNAILS_DIR', $document->resourceName[0]);
+                $out .= codiceArchivioFormatEdoc($value, $val, 'THUMBNAILS_DIR');
             } else if  ($key == 'note') {  
                 $highlightedDoc = $highlighting->getResult($document->codice_archivio);
-                //print (gettype($highlightedDoc));
                 $out .= noteFormat($val, $highlightedDoc);  
             } else {
                 $out .= '<tr><th align="right" valign="middle">'.$value.': </th><td valign="middle" align="left">'.$val."</td></tr>";    

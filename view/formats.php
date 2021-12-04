@@ -17,6 +17,22 @@
         return $note;
     }
 
+    function testoFormat($key, $value, $val, $highlightedDoc, $up=1) {
+        $out = '';
+        $edge = 'border-top';
+        if ($up == 0) {
+            $edge = 'border-bottom';
+        }
+
+        if (array_key_exists($key, $highlightedDoc)) {
+            $text = combineHighlight($highlightedDoc[$key], $val);
+            $out .= '<tr style="'.$edge.': 1px solid #d3d3d3;"><th align="right" valign="middle">'.$value.': </th><td valign="middle" align="left">'.$text."</td></tr>";
+        } else {
+            $out .= '<tr style="'.$edge.': 1px solid #d3d3d3;"><th align="right" valign="middle">'.$value.': </th><td valign="middle" align="left">'.$val."</td></tr>";
+        }
+        return $out;
+    }
+    
     function noteFormat($val, $highlightedDoc) {
         $out = '';
         if (count($highlightedDoc) == 0) {
@@ -46,10 +62,26 @@
     }
         
     function codiceArchivioFormat($value, $val, $label) {
-        $path = $GLOBALS[$label].$val.".JPG";
+        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
         $path_no_image = 'this.src="../img/no_image.png"';
         $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
         $out .= '<td width=200px rowspan="15" valign="top" align="center"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></td></tr>";
+        return $out;
+    }
+
+    function codiceArchivioFormatEdoc($value, $val, $label) {
+        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
+        $path_no_image = 'this.src="../img/no_image.png"';
+        $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
+        $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.PDF'.'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
+        return $out;
+    }
+
+    function codiceArchivioFormatBoz($value, $val, $label, $resourceName) {
+        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
+        $path_no_image = 'this.src="../img/no_image.png"';
+        $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
+        $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$resourceName.'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
         return $out;
     }
 ?>

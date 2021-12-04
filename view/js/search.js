@@ -9,6 +9,7 @@ $(document).ready(function() {
         var video = document.getElementById("search_video");
         var edoc = document.getElementById("search_edoc");
         var mont = document.getElementById("search_mont");
+        var delibera = document.getElementById("search_delibera");
 
         var subsearch = 0;
         if (libri.checked) 
@@ -21,7 +22,10 @@ $(document).ready(function() {
             subsearch += 8;
         if (mont.checked) 
             subsearch += 16;
-        console.debug(subsearch);
+        if (delibera.checked)
+            subsearch += 32;
+
+        //console.debug(subsearch);
         request = $.ajax({
 	        url: "../class/search_result.php",
 	        type: 'GET',
@@ -33,7 +37,7 @@ $(document).ready(function() {
 	    });
 	    
 	    request.done(function (response) {
-   	        //console.debug(response);
+   	        console.debug(response);
             response = JSON.parse(response);
             $("#query-result").html(response['header']);
             $("#pagination-result").html(response['body']);
@@ -68,6 +72,7 @@ function getresult(page) {
     var video = document.getElementById("search_video");
     var edoc = document.getElementById("search_edoc");
     var mont = document.getElementById("search_mont");
+    var delibera = document.getElementById("search_delibera");
     
     var subsearch = 0;
     if (libri.checked) 
@@ -80,6 +85,8 @@ function getresult(page) {
         subsearch += 8;
     if (mont.checked) 
         subsearch += 16;
+    if (delibera.checked) 
+        subsearch += 32;
 
     request = $.ajax({
 	    url: "../class/search_result.php",

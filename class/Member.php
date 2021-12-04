@@ -49,8 +49,12 @@ class Member
             $group = 3;
         } else if ($table_name == 'digital_photo') {
             $group = 3;
+        }  else if ($table_name == 'delibera_categories') {
+            $group = 6;
+        }  else if ($table_name == 'vestizione_categories') {
+            $group = 4;
         }
-	
+        
 	    if ($table_name == 'all') {
 	         $query = "SELECT * FROM categories";
 	    } else {
@@ -80,6 +84,24 @@ class Member
     	return $result;
     }
 
+    function getAllRuoli()
+    {
+	    $query = "SELECT ruolo FROM ruoli_monturati ORDER BY ruolo";
+	    $paramType = array();
+    	$paramArray = array();
+	    $result = $this->ds->select($query, $paramType, $paramArray);
+    	return $result;
+    }
+
+    function getRicorrenze()
+    {
+        $query = "SELECT ricorrenza FROM ricorrenze ORDER BY ricorrenza";
+	    $paramType = array();
+    	$paramArray = array();
+	    $result = $this->ds->select($query, $paramType, $paramArray);
+    	return $result;
+    }
+    
     function getPrefisso($tipologia)
     {
 	    $query = "SELECT category, prefix FROM categories";
@@ -95,10 +117,8 @@ class Member
 
     function curlFlBiblio($category="book_categories") {
 
-    	if ($category == "video_categories") {
+    	if ($category == "video") {
 	       $cats = array(array("VIDEO"));
-	    } else if ($category == "photo_categories") {
-	       $cats = array(array("FOTOGRAFIA"), array("STAMPA"), array("LASTRA"));
         } else if ($category == "ebook_categories") {
 	       $cats = array(array("BOZZETTO"), array("PERGAMENA"), array('SONETTO'));
 	    } else if ($category == "monturato") {
@@ -280,9 +300,9 @@ class Member
 	   return true;
     }
 
-    function fillCombo($table_name)
+    function fillCombo($table_name, $col_name="name")
     {
-        $query = "SELECT name FROM ".$table_name." ORDER BY name;";
+        $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
 	    
 	    $paramType = array();
     	$paramArray = array();

@@ -116,10 +116,10 @@
                             "html" :
                             [
                                 {
-                                    "name":"text_up",
-                                    "id":"text_upd",
+                                    "name":"testo_upd",
+                                    "id":"testo_upd",
                                     "type": "textarea",
-                                    "html": "",
+                                    "html_chg": "testo",
                                     "rows": "10",
                                     "cols": "60"
                                 }
@@ -175,9 +175,9 @@
                             "html" :
                             [
                                 {
-                                    "name": "committente",
-                                    "id":   "committente",
-                                    "value": "",
+                                    "name": "committente_upd",
+                                    "id":   "committente_upd",
+                                    "value_chg": "committente",
                                     "size":"50",
                                     "type": "text"
                                 }
@@ -206,11 +206,9 @@
                                 {
                                     "name": "ricorrenza",
                                     "id":   "ricorrenza",
-                                    "class": "ricorrenza",
                                     "type":"select",
                                     "options" : {
                                         "null" : {
-                                            "selected" : "selected",
                                             "html" : "----"
                                         }
                                     }
@@ -238,12 +236,12 @@
                             "html" :
                             [
                                 {
-                                    "name": "dedica",
-                                    "id":   "dedica",
-                                    "value": "",
+                                    "name": "dedica_upd",
+                                    "id":   "dedica_upd",
+                                    "value_chg": "dedica",
                                     "size":"50",
                                     "type": "text"
-                                }
+                                }                                
                             ]
                         }
                     ]
@@ -267,11 +265,12 @@
                             "html" :
                             [
                                 {
-                                    "name": "date",
-                                    "id":   "date",
+                                    "name": "data_upd",
+                                    "id":   "data_upd",
+                                    "value_chg":"data",
                                     "type" : "text",
                                     "placeholder":"AAAA-MM-GG",
-                                    "size":"10"
+                                    "size":"12"
                                 }
                             ]
                         }
@@ -296,9 +295,9 @@
                             "html" :
                             [
                                 {
-                                    "name": "stampato_da",
-                                    "id":   "stampato_da",
-                                    "value": "",
+                                    "name": "stampato_da_upd",
+                                    "id":   "stampato_da_upd",
+                                    "value_chg": "stampato_da",
                                     "size":"50",
                                     "type": "text"
                                 }
@@ -325,9 +324,9 @@
                             "html" :
                             [
                                 {
-                                    "name": "dimensioni",
-                                    "id":   "dimensioni",
-                                    "value": "",
+                                    "name": "dimensioni_upd",
+                                    "id":   "dimensioni_upd",
+                                    "value_chg": "dimensioni",
                                     "placeholder":"11.1x22.2",
                                     "size":"14",
                                     "type": "text"
@@ -358,7 +357,7 @@
                                     "name":"note",
                                     "id":"note",
                                     "type": "textarea",
-                                    "html": "",
+                                    "html_chg": "note",
                                     "placeholder":"note",
                                     "rows": "10",
                                     "cols": "60"

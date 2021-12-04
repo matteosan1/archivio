@@ -1,5 +1,5 @@
-{
-    "id":"update_form",
+ {
+    "id":"update_vestizione",
     "enctype":"multipart/form-data",
     "action":"",
     "method" : "post",
@@ -80,49 +80,6 @@
                                     "readonly": "readonly"
                                 }
                             ]
-                        },
-                        {
-                            "type":"td",
-                            "rowspan":"5",
-                            "html":
-                            [
-                                {
-                                    "type":"img",
-                                    "heigth":"150px",
-                                    "src_chg":"",
-                                    "onerror":"this.src='../img/no_image.png'"   
-                                }
-                            ]
-                        }
-                    ]
-                },
-
-                {
-                    "type":"tr",
-                    "html":
-                    [                     
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Descrizione: "
-                                }
-                            ]
-                     },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "descrizione_upd",
-                                    "id":   "descrizione_upd",
-                                    "value_chg": "descrizione",
-                                    "size":"60",
-                                    "type": "text"
-                                }
-                            ]
                         }
                     ]
                 },
@@ -136,7 +93,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Tecnica: "
+                                    "html":"Ricorrenza: "
                                 }
                             ]
                         },
@@ -145,11 +102,13 @@
                             "html" :
                             [
                                 {
-                                    "name": "tecnica_upd",
-                                    "id":   "tecnica_upd",
+                                    "name": "evento_upd",
+                                    "id":   "evento_upd",
                                     "type":"select",
 	                                "options" : {
-		                                "null" : {"html" : "----"}
+		                                "null" : {
+			                                 "html" : "----"
+		                                }
 	                                }
                                 }
                             ]
@@ -166,7 +125,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Autore: "
+                                    "html":"Ruolo: "
                                 }
                             ]
                         },
@@ -175,22 +134,18 @@
                             "html" :
                             [
                                 {
-                                    "name": "autore_upd",
-                                    "id":   "autore_upd",
-                                    "value_chg": "autore",
-                                    "cols":"60",
-                                    "type": "text"
-                                },
-                                {
-                                    "name": "resourceName_upd",
-                                    "id":   "resourceName_upd",
-                                    "value_chg": "resourceName",
-                                    "cols":"60",
-                                    "type": "hidden"
+                                    "name": "ruolo_upd",
+                                    "id":   "ruolo_upd",
+                                    "type":"select",
+	                                "options" : {
+		                                "null" : {
+			                                "html" : "----"
+		                                }
+	                                }
                                 }
                             ]
                         }
-                    ]                    
+                    ]
                 },
                 {
                     "type":"tr",
@@ -202,38 +157,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Anno: "
-                                }
-                            ]
-                     },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "anno_upd",
-                                    "id":   "anno_upd",
-                                    "value_chg": "anno",
-                                    "placeholder":"2020",
-                                    "size":"4",
-                                    "type": "number",
-                                    "readonly":"readonly"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Dimensioni: "
+                                    "html":"Nome e Cognome: "
                                 }
                             ]
                         },
@@ -242,19 +166,19 @@
                             "html" :
                             [
                                 {
-                                    "name": "dimensioni_upd",
-                                    "id":   "dimensioni_upd",
-                                    "value_chg": "dimensioni",
-                                    "placeholder":"11.1x22.2",
-                                    "size":"14",
+                                    "name": "nome_cognome_upd",
+                                    "id":   "nome_cognome_upd",
+                                    "value_chg": "nome_cognome",
+                                    "cols":"40",
                                     "type": "text"
                                 }
                             ]
                         }
-                    ]
+                    ]                    
                 },
+                
                 {
-                    "type":"tr",                            
+                    "type":"tr",
                     "html":
                     [
                         {
@@ -263,7 +187,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Note: "
+                                    "html":"Data : "
                                 }
                             ]
                         },
@@ -272,45 +196,14 @@
                             "html" :
                             [
                                 {
-                                    "name":"note",
-                                    "id":"note",
-                                    "type": "textarea",
-                                    "html_chg": "note",
-                                    "placeholder":"note",
-                                    "rows": "10",
-                                    "cols": "60"
+                                    "name": "data_upd",
+                                    "id":   "data_upd",
+                                    "type" : "text",
+                                    "value_chg": "data",
+                                    "size":"12"
                                 }
                             ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan",
-                                    "id":"scan",
-                                    "type": "file",
-                                    "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
-                                }
-                            ]
-                        }
+                        }  
                     ]
                 }
             ]

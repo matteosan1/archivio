@@ -2,6 +2,7 @@
     require_once "../view/config.php";
     require_once "../view/solr_client.php";
     require_once "../class/Member.php";
+    require_once "../view/session.php";
     
     function listCodiceArchivio($isBiblio="book_categories", $selection="*") {
         global $client;
@@ -12,7 +13,7 @@
         $query = $client->createSelect();
         $query->setQuery('codice_archivio:'.$q);
         $query->addSort('codice_archivio', $query::SORT_ASC);
-        $query->setRows($GLOBALS['MAX_ROWS']);
+        $query->setRows($_SESSION['rows']); //GLOBALS['MAX_ROWS']);
         $query->setFields('codice_archivio');
         $resultset = $client->select($query);
 
@@ -59,6 +60,7 @@
         $query = $client->createSelect();
 
         $query->setQuery('codice_archivio:'.$search.'*');
+        $query->setRows(500);
         $query->setFields('codice_archivio');
         $query->addSort('codice_archivio', $query::SORT_ASC);    
 
@@ -132,14 +134,21 @@
                 $filename = $dir."update_sonetto.json";    
             } else if (in_array($res['tipologia'], $libri)) {
                 $book = 1;
-                $filename = $dir."update_libro.json";     
+                $filename = $dir."update_libro.json";
+            } else if ($res['tipologia'] == "DELIBERA") {
+                $filename = $dir."update_delibera.json";  
             } else if ($res['tipologia'] == 'VIDEO') {
                 $filename = $dir."update_video.json";
+            } else if ($res['tipologia'] == 'MONTURATO') {
+                $filename = $dir."update_vestizione.json";
             }
         } else {
             $res = array('error'=>"ERRORE CI SONO TROPPI DOCUMENTI");
         }
-    
+
+        if (array_key_exists('data', $res)) {
+            $res['data'] = substr($res['data'], 0, 10);
+        }
         $str = file_get_contents($filename);
         $json = utf8enc(json_decode($str, true), $res, $book);
     
@@ -169,7 +178,28 @@
                 //           table      tr         td      
                 $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
                 $i++;
-            }            
+            }
+        } else if ($res['tipologia'] == "DELIBERA") {
+            $m = new Member();
+            $cat = $m->fillCombo("delibera_categories");
+            $i = 0;
+            foreach ($cat as $row) {
+                $data = $row['name'];
+                //           table      tr         td
+                if (strtolower($res['tipo_delibera']) == strtolower($data))
+                    $val = array("html" => $data, "selected" => "selected");
+                else
+                    $val = array("html" => $data);
+                $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
+                $i++;
+            }
+            // FIXME CAMBIARE IN PINT
+            if ($res['unanimita'] === "0") {
+                unset($json['html'][0]['html'][7]['html'][1]['html'][0]['checked']);
+            }
+            if ($res['straordinaria'] == 0) {
+                unset($json['html'][0]['html'][6]['html'][1]['html'][0]['checked']);
+            }
         } else if ($res['tipologia'] == "PERGAMENA") {
             $m = new Member();
             $tech = $m->fillCombo("pergamena_techniques");
@@ -195,11 +225,37 @@
                 else
                     $val = array("html" => $data);    
                 //           table      tr         td      
-                $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
+                $json['html'][0]['html'][5]['html'][1]['html'][0]['options'][$i] = $val;
+                $i++;
+            }
+        } else if ($res['tipologia'] == "MONTURATO") {
+            $m = new Member();
+            $ricorrenze = $m->fillCombo("ricorrenze", "ricorrenza");
+            $ruoli = $m->fillCombo("ruoli_monturati", "ruolo");
+            $i = 0;
+            foreach ($ricorrenze as $row) {
+                $data = $row['ricorrenza'];
+                //           table      tr         td
+                if (strtolower($res['evento']) == strtolower($data))
+                    $val = array("html" => $data, "selected" => "selected");
+                else
+                    $val = array("html" => $data);
+                $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] = $val;
+                $i++;
+            }
+
+            $i = 0;
+            foreach ($ruoli as $row) {
+                $data = $row['ruolo'];
+                //           table      tr         td
+                if (strtolower($res['ruolo']) == strtolower($data))
+                    $val = array("html" => $data, "selected" => "selected");
+                else
+                    $val = array("html" => $data);
+                $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$i] = $val;
                 $i++;
             }
         }
-    
         print_r (json_encode($json));
     }
 
@@ -211,7 +267,6 @@
         } else if ($type == "SONETTO") {
             $filename = $dir."insert_sonetto.json";
         } else if ($type == "ARTICOLO_GIORNALE") {
-        } else if ($type == "DELIBERA") {
         } else if ($type == "BOZZETTO") {
             $filename = $dir."insert_bozzetto.json";   
         } else if ($type == "PERGAMENA") {
@@ -222,13 +277,17 @@
             $filename = $dir."insert_stampa.json";
         } else if ($type == "VIDEO") {
             $filename = $dir."insert_video.json";
-        }    
+        } else if ($type == "DELIBERA") {
+            $filename = $dir."insert_delibera.json";
+        } else if ($type == "VESTIZIONE") {   
+            $filename = $dir."insert_vestizione.json";
+        }
 
         $str = file_get_contents($filename);
         $json = json_decode($str, true);
-    
+
+        $m = new Member();
         if ($type == "LIBRO") {
-            $m = new Member();
             $prefissi = $m->getAllPrefissi();
             $categories = $m->getAllCategories('book_categories');
             foreach ($prefissi as $category) {
@@ -241,7 +300,6 @@
                     array("html" => $category['category']);
             }
         } else if ($type == "FOTOGRAFIA") {
-            $m = new Member();
             $l1tags = $m->getL1Tags();
 
             foreach ($l1tags as $row) {
@@ -258,7 +316,6 @@
                 $json['html'][0]['html'][0]['html'][0]['html'] = "Lastra (JPG o TIFF): ";
             }
     
-            $m = new Member();
             $l1tags = $m->getL1Tags();
 
             foreach ($l1tags as $row) {
@@ -269,7 +326,6 @@
                     array("html" => $data);
             }            
         } else if ($type == "BOZZETTO") {
-            $m = new Member();
             $cat = $m->fillCombo("bozzetto_categories");
             $i = 0;
             foreach ($cat as $row) {
@@ -290,7 +346,6 @@
                 $i++;
             }            
         } else if ($type == "PERGAMENA") {
-            $m = new Member();
             $tech = $m->fillCombo("pergamena_techniques");
             $i = 0;
             foreach ($tech as $row) {
@@ -300,8 +355,18 @@
                     array("html" => $data);
                 $i++;
             }
+        } else if ($type == "DELIBERA") {
+            $tech = $m->fillCombo("delibera_categories");
+            $i = 0;
+            foreach ($tech as $row) {
+                $data = $row['name'];
+                //           table      tr         td      
+                $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] =
+                    array("html" => $data);
+                $i++;
+            }
+    
         } else if ($type == "SONETTO") {
-            $m = new Member();
             $tech = $m->fillCombo("sonetto_events");
             $i = 0;
             foreach ($tech as $row) {
@@ -311,8 +376,20 @@
                     array("html" => $data);
                 $i++;
             }
-        }
+        } else if ($type == "VESTIZIONE") {
+            $ruoli = $m->getAllRuoli();
+            $ricorrenze = $m->getRicorrenze();
+    
+            foreach ($ricorrenze as $ricorrenza) {
+                $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$ricorrenza['ricorrenza']] =
+                    array("html" => $ricorrenza['ricorrenza']);
+            }
 
+            foreach ($ruoli as $ruolo) {
+                $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$ruolo['ruolo']] =
+                    array("html" => $ruolo['ruolo']);
+            }
+        }
         print_r (json_encode($json));
     }
     
@@ -337,33 +414,43 @@
         return $data;
     }
     
-    function restore($file, $isCsv=1) {
-        if ($isCsv) {
-            if ($file['size'] > 0) {
-                $newfilename = $GLOBALS['BACKUP_DIR'].$file['name'];
-                move_uploaded_file($file["tmp_name"], $newfilename);
-                $command = $GLOBALS['SOLR_BIN'].' -params "separator=%7C" '.$newfilename;
-                $output = array();
-                exec($command, $output, $r);
-                if ($r == 0) {
-                    return 0;
-                } else {
-                    print_r(json_encode(array('error'=>implode('<br>', $output))));
-                    return 1;
-                }
-            }
-        } else {
-            $zip = new ZipArchive;
-            if ($zip->open($file["tmp_name"]) === TRUE) {
-                $zip->extractTo($GLOBALS['COVER_DIR']);
-                $zip->close();
-                return 0; 
-            } else {
-                print_r (json_encode(array('error'=>"Problemi con il file zip")));
-                return 1;
-            }
-        }
+function restore($file_csv, $file_zip) {
+    $params = "-b --action restore ";
+    if (!empty($file_csv)) {
+        $params .= " --fcsv ".$file_csv;
     }
+
+    if (!empty($file_zip)) {
+        $params .= " --fzip ".$file_zip;
+    }
+
+    exec("../class/core_manager.py ".$params." ", $output, $status);
+    if ($status == 0) {
+        print_r(json_encode(array('result'=>implode('<br>', $output))));    
+    } else {
+        print_r(json_encode(array('error'=>implode('<br>', $output))));
+    }        
+//        if ($isCsv) {
+//            if ($file['size'] > 0) {
+//                $newfilename = $GLOBALS['BACKUP_DIR'].$file['name'];
+//                move_uploaded_file($file["tmp_name"], $newfilename);
+//                $command = $GLOBALS['SOLR_BIN'].' -params "separator=%7C" '.$newfilename;
+//                $output = array();
+//                exec($command, $output, $r);
+//
+//            }
+//        } else {
+//            $zip = new ZipArchive;
+//            if ($zip->open($file["tmp_name"]) === TRUE) {
+//                $zip->extractTo($GLOBALS['COVER_DIR']);
+//                $zip->close();
+//                return 0; 
+//            } else {
+//                print_r (json_encode(array('error'=>"Problemi con il file zip")));
+//                return 1;
+//            }
+//        }
+}
 
     function curlOperationGET($URL) {
         $ch = curl_init();
@@ -384,48 +471,16 @@
         return $data;
     }
 
-    function backup($upload_time) {
-        $m = new Member();
-    
-        $q_string = ($m->curlFlBiblio());
-        $last_upload = date('Y-m-d\T\0\0\:\0\0\:\0\0\Z', strtotime($upload_time));
-        $date_for_file = date('Y-m-d', strtotime($upload_time));
-
-        $URL = $GLOBALS['SOLR_URL'].'select?csv.separator=%7C&fl=codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp&sort=codice_archivio+asc&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.urlencode($q_string).'&wt=csv&rows='.$GLOBALS['MAX_ROWS'];
-
-        $data = curlOperationGET($URL, $last_upload);
-        if ($data == false) {
-            print_r(json_encode(array("error"=>"Ci sono problemi con il Server.")));
-        }
-
-        $csv_filename = $GLOBALS['BACKUP_DIR'].'backup_'.$date_for_file.'.csv';
-        $csv_url = "http://localhost/backup/".'backup_'.$date_for_file.'.csv';
-    
-        file_put_contents($csv_filename, iconv(mb_detect_encoding($data, mb_detect_order(), true), "UTF-8", $data)); 
-
-
-        $URL = $GLOBALS['SOLR_URL'].'select?fl=codice_archivio&fq=timestamp:['.$last_upload.'%20TO%20NOW]&q='.urlencode($q_string).'&wt=json&rows='.$GLOBALS['MAX_ROWS'];
-        $data = json_decode(curlOperationGET($URL), true);
-        if ($data == false) {
-            print_r(json_encode(array("error"=>"Ci sono problemi con il Server.")));
-        }
-        
-        $zip = new ZipArchive();
-        $zip_filename = $GLOBALS['BACKUP_DIR'].'cover_'.$date_for_file.'.zip';
-        $zip_url = "http://localhost/backup/".'cover_'.$date_for_file.'.zip';
-        if ($zip->open($zip_filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-            foreach($data['response']['docs'] as $entry) {
-                $zip->addFile("/Users/sani/site/Usered/".$GLOBALS['COVER_DIR'].$entry['codice_archivio'].".JPG", $entry['codice_archivio'].".JPG");
-            }
-            $zip->close();
-         } else {
-            echo json_encode(array("error"=>"Non posso aprire ".$zip_filename));
-            exit;
-         }
-
-        $res = array("result" => '<a href="'.$csv_url.'">Catalogo  CSV</a>&nbsp;'.' <a href="'.$zip_url.'">Copertine ZIP</a><br>');
-        print_r (json_encode($res));
-    }
+function backup($upload_time) {
+    $params = "-b --action backup --date ".$upload_time;
+    exec("../class/core_manager.py ".$params." ", $output, $status);
+   
+    if ($status == 0) {
+        print_r(json_encode(array('result'=>implode('<br>', $output))));
+    } else {
+        print_r(json_encode(array('error'=>implode('<br>', $output))));
+    }        
+}
     
 if (isset($_POST['callback'])) {
     if ($_POST['callback'] == 'finditem') {
@@ -434,22 +489,8 @@ if (isset($_POST['callback'])) {
         newItem($_POST['type']);
     } else if ($_POST['callback'] == 'backup') {
         backup($_POST['last_upload']);
-    }
-} else if (isset($_POST['func'])) {
-    if ($_POST['func'] == 'restore') {
-        if ($_FILES['filecsv']['error'] == 0) {
-            $r = restore($_FILES['filecsv']);
-            if ($r == 1) 
-                return;
-        }
-
-        if ($_FILES['filezip']['error'] == 0) {
-            $r = restore($_FILES['filezip'], 0);
-            if ($r == 1) 
-                return;
-        }
-        
-        print_r (json_encode(array('result'=>'Catalogo importato correttamente.')));
+    } else if ($_POST['callback'] == 'restore') {
+        restore($_POST['filecsv'], $_POST['filezip']);   
     }
 }
 ?>

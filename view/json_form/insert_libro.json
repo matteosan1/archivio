@@ -115,6 +115,7 @@
                                     "value": "",
                                     "placeholder":"Titolo del libro",
                                     "cols":"60",
+                                    "size":"50",
                                     "type": "text"
                                 }
                             ]
@@ -145,6 +146,7 @@
                                     "value": "",
                                     "placeholder":"Eventuale sottotitolo",
                                     "cols":"60",
+                                    "size":"50",
                                     "type": "text"
                                 }
                             ]
@@ -219,7 +221,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Lugo: "
+                                    "html":"Luogo: "
                                 }
                             ]
                         },

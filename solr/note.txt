@@ -1,3 +1,10 @@
+1. FACETING PER RICERCHE *:* non ordinato
+2. CONTROLLARE ACCENTI NEL TESTO IN PRODUZIONE
+
+TEST EVERYTHING
+POI CANCELLA ARCHIVIO2
+REIMPORTA E CAMBIA UNANIMITA IN DELIBERE DA string a int
+
 ;; This buffer is for text that is not saved, and for Lisp evaluation.
 ;; To create a file, visit it with C-x C-f and enter text in its buffer.
 

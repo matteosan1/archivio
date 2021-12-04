@@ -42,6 +42,7 @@
         $doc->cdd = $_POST['cdd'];
         $doc->soggetto = $_POST['soggetto'];
         $doc->note = $_POST['note'];
+        $doc->privato = 0;
         //$doc->_version_ = $version;
 
         $error = "";

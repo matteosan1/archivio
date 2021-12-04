@@ -1,6 +1,5 @@
 {
     "id":"insert_form",
-    "class":"insert_form",
     "enctype":"multipart/form-data",
     "action":"",
     "method" : "post",
@@ -30,12 +29,11 @@
                             "html" :
                             [
                                 {
-                                    "name":"scan[]",
-                                    "id":"scan[]",
+                                    "name":"scan",
+                                    "id":"scan",
                                     "type": "file",
                                     "value": "",
-                                    "multiple":"multiple",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png,.doc,.docx,.pdf"
+                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
                                 }
                             ]
                         },
@@ -235,11 +233,11 @@
                             "html" :
                             [
                                 {
-                                    "name": "date",
-                                    "id":   "date",
+                                    "name": "data",
+                                    "id":   "data",
                                     "type" : "text",
                                     "placeholder":"AAAA-MM-GG",
-                                    "size":"10"
+                                    "size":"12"
                                 }
                             ]
                         }

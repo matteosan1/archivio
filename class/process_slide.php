@@ -52,6 +52,7 @@ if (isset($_POST)) {
     $doc->anno = $_POST['anno'];
     $doc->Keywords = $list_of_tags;
     $doc->autore = $_POST['author'];
+    $doc->privato = 0;
     
 //    if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
 //        $resize = new ResizeImage($_FILES['userfile']['tmp_name'][$i]);

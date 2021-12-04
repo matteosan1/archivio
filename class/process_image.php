@@ -139,6 +139,7 @@ function processImage($tmp_name, $real_name, $ext, $move=true) {
     $doc->codice_archivio = $ca;
     $doc->tipologia = "FOTOGRAFIA";
     $doc->resourceName = basename($real_name);
+    $doc->privato = 0;
 
     foreach ($data as $key => $value) {
        $doc->$key = $value;

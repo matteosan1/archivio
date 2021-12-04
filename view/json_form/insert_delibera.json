@@ -1,8 +1,8 @@
 {
-    "id":"update_form",
+    "id":"new_delibera",
     "enctype":"multipart/form-data",
     "action":"",
-    "method" : "post",
+    "method":"post",
     "html":
     [
         {
@@ -10,8 +10,8 @@
             "width":"80%",
             "html" :
             [
-                {
-                    "type":"tr",
+               {
+                    "type":"tr",                            
                     "html":
                     [
                         {
@@ -20,7 +20,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Codice Archivio: "
+                                    "html":"Argomento: "
                                 }
                             ]
                         },
@@ -29,12 +29,13 @@
                             "html" :
                             [
                                 {
-                                    "name": "codice_archivio_upd",
-                                    "id":   "codice_archivio_upd",
-                                    "value_chg": "codice_archivio",
-                                    "size":"25",
-                                    "type": "text",
-                                    "readonly": "readonly"
+                                    "name":"argomento_breve",
+                                    "id":  "argomento_breve",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"testo",
+                                    "rows": "3",
+                                    "cols": "60"
                                 }
                             ]
                         },
@@ -44,10 +45,41 @@
                             "html":
                             [
                                 {
-                                    "value":"Aggiorna",
-                                    "id":    "aggiorna",
-                                    "class": "aggiorna",
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "class": "inserisci",
                                     "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+               },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Testo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"testo",
+                                    "id":"testo",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"testo",
+                                    "rows": "10",
+                                    "cols": "60"
                                 }
                             ]
                         }
@@ -63,7 +95,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Tipologia: "
+                                    "html":"Organo Deliberante: "
                                 }
                             ]
                         },
@@ -72,42 +104,115 @@
                             "html" :
                             [
                                 {
-                                    "name": "tipologia_upd",
-                                    "id":   "tipologia_upd",
-                                    "value_chg": "tipologia",
-                                    "cols":"60",
-                                    "type": "text",
-                                    "readonly": "readonly"
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "rowspan":"5",
-                            "html":
-                            [
-                                {
-                                    "type":"img",
-                                    "heigth":"150px",
-                                    "src_chg":"",
-                                    "onerror":"this.src='../img/no_image.png'"   
+                                    "id":   "tipo_delibera",
+                                    "type":"select",
+	                                "options" : {
+		                                "null" : {
+			                                "selected" : "----",
+			                                "html" : "----"
+		                                }
+                                    }
                                 }
                             ]
                         }
                     ]
                 },
-
                 {
                     "type":"tr",
                     "html":
-                    [                     
+                    [
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
                                     "type":"label",
-                                    "html":"Descrizione: "
+                                    "html":"Data: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "data",
+                                    "id":   "data",
+                                    "type" : "text",
+                                    "placeholder":"AAAA-MM-GG",
+                                    "size":"12"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Straordinaria: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "straordinaria",
+                                    "id":   "straordinaria",
+                                    "class": "straordinaria",
+                                    "type":"checkbox"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Unanimit&agrave: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "unanimita",
+                                    "id":   "unanimita",
+                                    "class": "unanimita",
+                                    "type":"checkbox"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Favorevoli: "
                                 }
                             ]
                      },
@@ -116,11 +221,12 @@
                             "html" :
                             [
                                 {
-                                    "name": "descrizione_upd",
-                                    "id":   "descrizione_upd",
-                                    "value_chg": "descrizione",
-                                    "size":"60",
-                                    "type": "text"
+                                    "name": "favorevoli",
+                                    "id":   "favorevoli",
+                                    "value": "",
+                                    "placeholder":"0",
+                                    "size":"4",
+                                    "type": "number"
                                 }
                             ]
                         }
@@ -136,21 +242,21 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Tecnica: "
+                                    "html":"Contrari: "
                                 }
                             ]
-                        },
+                     },
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
-                                    "name": "tecnica_upd",
-                                    "id":   "tecnica_upd",
-                                    "type":"select",
-	                                "options" : {
-		                                "null" : {"html" : "----"}
-	                                }
+                                    "name": "contrari",
+                                    "id":   "contrari",
+                                    "value": "",
+                                    "placeholder":"0",
+                                    "size":"4",
+                                    "type": "number"
                                 }
                             ]
                         }
@@ -166,7 +272,37 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Autore: "
+                                    "html":"Astenuti: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "astenuti",
+                                    "id":   "astenuti",
+                                    "value": "",
+                                    "placeholder":"0",
+                                    "size":"4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Numero Contestuale: "
                                 }
                             ]
                         },
@@ -175,18 +311,11 @@
                             "html" :
                             [
                                 {
-                                    "name": "autore_upd",
-                                    "id":   "autore_upd",
-                                    "value_chg": "autore",
-                                    "cols":"60",
+                                    "name": "num_contestuale",
+                                    "id":   "num_contestuale",
+                                    "value": "",
+                                    "cols":"10",
                                     "type": "text"
-                                },
-                                {
-                                    "name": "resourceName_upd",
-                                    "id":   "resourceName_upd",
-                                    "value_chg": "resourceName",
-                                    "cols":"60",
-                                    "type": "hidden"
                                 }
                             ]
                         }
@@ -202,7 +331,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Anno: "
+                                    "html":"Capitolo: "
                                 }
                             ]
                      },
@@ -211,103 +340,42 @@
                             "html" :
                             [
                                 {
-                                    "name": "anno_upd",
-                                    "id":   "anno_upd",
-                                    "value_chg": "anno",
-                                    "placeholder":"2020",
-                                    "size":"4",
-                                    "type": "number",
-                                    "readonly":"readonly"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Dimensioni: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "dimensioni_upd",
-                                    "id":   "dimensioni_upd",
-                                    "value_chg": "dimensioni",
-                                    "placeholder":"11.1x22.2",
-                                    "size":"14",
-                                    "type": "text"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Note: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"note",
-                                    "id":"note",
-                                    "type": "textarea",
-                                    "html_chg": "note",
-                                    "placeholder":"note",
-                                    "rows": "10",
-                                    "cols": "60"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan",
-                                    "id":"scan",
-                                    "type": "file",
+                                    "name": "capitolo",
+                                    "id":   "capitolo",
                                     "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
+                                    "placeholder":"0",
+                                    "size":"4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Pagina: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "pagina",
+                                    "id":   "pagina",
+                                    "value": "",
+                                    "placeholder":"0",
+                                    "size":"4",
+                                    "type": "number"
                                 }
                             ]
                         }

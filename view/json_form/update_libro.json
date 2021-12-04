@@ -1,5 +1,5 @@
 {
-    "id":"upd_book",
+    "id":"update_form",
     "enctype":"multipart/form-data",
     "action":"",
     "method" : "post",
@@ -77,8 +77,9 @@
                                     "id":   "tipologia_upd",
                                     "value_chg": "tipologia",
                                     "cols":"60",
+                                    "size":"40",
                                     "type": "text",
-                                    "readonly": "readonly"
+                                    "readonly":"readonly"
                                 }
                             ]
                         }

@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
+require_once "../view/session.php";
 require_once "../view/config.php";
 require_once "../view/solr_client.php";
 require_once "../class/pagination.class.php";
@@ -13,9 +14,10 @@ require_once("../view/search_output/monturato_output.php");
 require_once("../view/search_output/fotografia_output.php");
 require_once("../view/search_output/stampa_output.php");
 require_once("../view/search_output/bozzetto_output.php");
-require_once("../view/search_output/pergamena_output.php");    
+require_once("../view/search_output/pergamena_output.php");
+require_once("../view/search_output/sonetto_output.php");
+require_once("../view/search_output/delibera_output.php");    
      
-    
 if (isset($_GET)) {
     $member = new Member();
   
@@ -40,27 +42,36 @@ if (isset($_GET)) {
     
     $query = $client->createSelect();
     $query->setOmitHeader(false);
-    $dismax = $query->getEDisMax();//getDisMax();
-    $dismax->setQueryFields('note titolo nome_cognome sottotitolo prima_responsabilita altre_responsabilita anno soggetto autore By-line Creation-Date Keywords Last-Modified creator date modified dc_creator dc_description');       
+    $dismax = $query->getEDisMax();
+    $dismax->setQueryFields('codice_archivio privato note titolo nome_cognome sottotitolo prima_responsabilita altre_responsabilita anno soggetto autore data Keywords Creation-Date modified Last-Modified tipo_delibera argomento_breve testo straordinaria unanimita');
+    
+    $localParams = "";
+    if ($_SESSION['role'] == 'admin') {
+        $localParams .= "privato:[* TO 1]";
+    } else {
+       $localParams .= "privato:0";
+    }
     
     if ($subsearch != 0) {
-        $localParams = "fq=";
         $firstInsert = 0;
-        for ($i=0; $i<5; $i++) {
-            if (($subsearch >> $i) & 1) {
-                if ($firstInsert == 1) {
-                    $localParams .= " OR ";
+        for ($i=0; $i<10; $i++) {
+            if (($subsearch & pow(2, $i)) == pow(2, $i)) {
+                if ($firstInsert == 0) {
+                    $localParams .= " AND ";
                 }
+
                 if ($i == 0) {                                             
                     $localParams .= "(".$member->curlFlBiblio('book_categories').")";
-                } else if ($i == 1) { 
-                    $localParams .= "(".$member->curlFlBiblio('all_photo').")";
-                } else if ($i == 2) { 
+                } else if ($i == 1) {
+                    $localParams .= "(".$member->curlFlBiblio('photo_categories').")";
+                } else if ($i == 2) {
                     $localParams .= "(".$member->curlFlBiblio('video').")";
                 } else if ($i == 3) { 
                     $localParams .= "(".$member->curlFlBiblio('ebook_categories').")";
                 } else if ($i == 4) { 
                     $localParams .= "(".$member->curlFlBiblio('monturato').")";
+                } else if ($i == 5) {
+                    $localParams .= "(".$member->curlFlBiblio('delibera_categories').")";
                 }
                 $firstInsert = 1;
             }
@@ -68,11 +79,11 @@ if (isset($_GET)) {
     } else {
         $localParams = "";
     }
-    
+
     $hl = $query->getHighlighting();
     $hl->setSnippets(10);
     $hl->setMergeContiguous(true);
-    $hl->setFields('note Keywords');
+    $hl->setFields('note Keywords testo argomento_breve');
     $hl->setSimplePrefix($GLOBALS['HIGHLIGHT_BEGIN']);
     $hl->setSimplePostfix($GLOBALS['HIGHLIGHT_END']);
 
@@ -88,8 +99,6 @@ if (isset($_GET)) {
 
     $query->setRows($perPage->perpage);
     $query->setStart($offset);
-
-    // curl 'http://localhost:8985/solr/archivio2/query?q=sani&fq=tipologia:LIBRO&defType=dismax'
     
     if (strpos(":", $searchValue) !== false) {
         $dismax->setQueryAlternative($localParams." ".$searchValue);
@@ -101,15 +110,8 @@ if (isset($_GET)) {
             $query->setQuery($searchValue);
         }
     }    
-    //$dismax->queryalternative()
-    //$query->setQuery($searchValue);
-
     //$request = $client->createRequest($query);
-
-    // you can now use the request object for getting an uri (ie. to use in you own code)
-    // or you could modify the request object
     //echo 'Request URI: ' . $request->getUri() . '<br/>';
-    //select?omitHeader=false&wt=json&json.nl=flat&q=%7B%21+fq%3D%28tipologia%3AMONTURATO%29+sani&start=0&rows=10&fl=%2A%2Cscore&sort=codice_archivio+asc&defType=edismax&qf=note+titolo+nome_cognome+sottotitolo+prima_responsabilita+altre_responsabilita+anno+soggetto+autore+By-line+Creation-Date+Keywords+Last-Modified+creator+date+modified+dc_creator+dc_description&hl=true&hl.fl=note+Keywords&hl.snippets=10&hl.mergeContiguous=true&hl.simple.pre=%3Cu%3E&hl.simple.post=%3C%2Fu%3E&facet.field=%7B%21key%3Danno%7Danno&facet=true<br/>
     
     $resultset = $client->select($query);
     $highlighting = $resultset->getHighlighting();
@@ -137,6 +139,10 @@ if (isset($_GET)) {
             $output .= bozzettoOutput($document, $highlighting);
         } else if ($document->tipologia == "PERGAMENA") {
             $output .= pergamenaOutput($document, $highlighting);
+        } else if ($document->tipologia == "SONETTO") {
+            $output .= sonettoOutput($document, $highlighting);
+        } else if ($document->tipologia == "DELIBERA") {
+            $output .= deliberaOutput($document, $highlighting);
         } else {
             continue;
         }

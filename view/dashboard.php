@@ -1,10 +1,11 @@
 <?php
 require_once "session.php";
-require_once "config.php";
+require "config.php";
 require_once "solr_client.php";
 
 $displayName = $_SESSION["name"];
 $role = $_SESSION["role"];
+numberRows();
 ?>
 
 <html>
@@ -24,12 +25,18 @@ $role = $_SESSION["role"];
 <body>
 <div id="header"><?php
     include "header.php";
-    checkServer();
+    ping();
     ?></div>
 <br>
     <div id="content" align="center">
-    <table width=80%>
+    <table width=95%>
     <tr>
+    <td align="left" rowspan=5 width=15%>
+        <h3>Archivio:</h3>
+        <?php summary(); ?>
+    </td>
+    </tr>
+    <tr width=80%>
         <td colspan=2>
 <?php
         echo '<div align="center">';
@@ -89,6 +96,13 @@ $role = $_SESSION["role"];
 ?>
         </td>
         <td>
+    <?php
+    if ($role == "admin") {
+        echo '<div align="center">';
+        printf('<button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/delibera.png">Delibere</button>', "'/view/insert_delibere.php'");
+        echo '</div>';
+    }
+?>
         </td>
     </tr>
     </table>

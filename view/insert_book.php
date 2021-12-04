@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/session.php";
 require_once "../view/config.php";
-    
+
 exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 ?>
 
@@ -47,7 +47,17 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <button class="tablink_book" onclick="openPage('Cover', this)">Copertine</button>    
             </div>
 
-
+            <div id="Insert" class="tabcontent">
+              <div align=center id=result1 style="color:green"></div>
+              <div align=center id=error1 style="color:red"></div>
+              <br>
+              <div align="center">
+                <form id="insert_form"></form>
+                <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
+                <div id="footer1" align="center"></div>
+              </div>
+            </div>
+        
             <div id="Update" class="tabcontent">
                 <div align=center id=result2 style="color:green"></div>
                 <div align=center id=error2 style="color:red"></div>
@@ -107,10 +117,6 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                             <br></td>
                         </tr>
                 </form>
-                        <tr>
-                            <td><br><label for="backup_res">File di backup:</label></td>
-                            <td><div id="link"></div></td>
-                        </tr>
                     </table>
                 </div>
                 <br>
@@ -141,7 +147,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 </form>
                 </div>
                 <br>
-                <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
+                <div id="overlay"><div><img src="/view/icons/loading.gif" width="64px" height="64px"/></div></div>
                 <div id="footer5" align="center"></div>
             </div>
 
@@ -151,16 +157,18 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <br>
                 <h3><?php echo $output[0];?></h3>
 <?php
-    $table = array_chunk(json_decode($output[1], true), 10);
-    echo "<table border=1px>";
-    for ($i=0; $i<count($table); $i++) {
-    	echo "<tr>";
-        for ($j=0; $j<count($table[$i]); $j++) {    
-    	    echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
-	}
-	echo "</tr>";
+    if (!is_null($output[1])) {
+        $table = array_chunk(json_decode($output[1], true), 10);
+        echo "<table border=1px>";
+        for ($i=0; $i<count($table); $i++) {
+    	    echo "<tr>";
+            for ($j=0; $j<count($table[$i]); $j++) {    
+    	        echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
+	    }
+	    echo "</tr>";
+        }
+        echo "</table>";
     }
-    echo "</table>";
 ?>
 <br>
 <h3><?php echo $output[2];?></h3>
@@ -169,7 +177,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
     echo "<table border=1px>";
     for ($i=0; $i<count($table); $i++) {
     	echo "<tr>";
-        for ($j=0; $j<8; $j++) {    
+        for ($j=0; $j<count($table[$i]); $j++) {    
     	    echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
 	}
 	echo "</tr>";

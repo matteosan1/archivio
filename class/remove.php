@@ -32,7 +32,7 @@
     	        //} else if ($_POST['type'] == "ebook"}
     	        //} else if ($_POST['type'] == "book"}
     	        //}	  
-                echo json_encode(array('result' => "Volumi rimossi con successo in ".$result->getQueryTime(). "ms."));
+                echo json_encode(array('result' => "Record rimossi con successo in ".$result->getQueryTime(). "ms."));
             } else {
                 echo json_encode(array('error' => $error));
             }

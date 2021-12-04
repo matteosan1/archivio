@@ -1,8 +1,8 @@
-{
-    "id":"insert_form",
+ {
+    "id":"new_vestizione",
     "enctype":"multipart/form-data",
     "action":"",
-    "method":"post",
+    "method" : "post",
     "html":
     [
         {
@@ -10,31 +10,34 @@
             "width":"80%",
             "html" :
             [
-
                 {
                     "type":"tr",
                     "html":
-                    [                     
+                    [
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
                                     "type":"label",
-                                    "html":"Descrizione: "
+                                    "html":"Ricorrenza: "
                                 }
                             ]
-                     },
+                        },
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
-                                    "name": "descrizione",
-                                    "id":   "descrizione",
-                                    "value": "",
-                                    "size":"60",
-                                    "type": "text"
+                                    "name": "evento",
+                                    "id":   "evento",
+                                    "type":"select",
+	                                "options" : {
+		                                "null" : {
+			                                 "selected" : "selected",
+			                                 "html" : "----"
+		                                }
+	                                }
                                 }
                             ]
                         },
@@ -46,6 +49,7 @@
                                 {
                                     "value":"Inserisci",
                                     "id":    "inserisci",
+                                    "class": "inserisci",
                                     "type": "submit"
                                 }
                             ]
@@ -62,7 +66,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Tecnica: "
+                                    "html":"Ruolo: "
                                 }
                             ]
                         },
@@ -71,15 +75,15 @@
                             "html" :
                             [
                                 {
-                                    "name": "tecnica",
-                                    "id":   "tecnica",
+                                    "name": "ruolo",
+                                    "id":   "ruolo",
                                     "type":"select",
 	                                "options" : {
 		                                "null" : {
 			                                "selected" : "selected",
 			                                "html" : "----"
 		                                }
-                                    }
+	                                }
                                 }
                             ]
                         }
@@ -95,7 +99,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Autore: "
+                                    "html":"Nome e Cognome: "
                                 }
                             ]
                         },
@@ -104,16 +108,18 @@
                             "html" :
                             [
                                 {
-                                    "name": "autore",
-                                    "id":   "autore",
+                                    "name": "nome_cognome",
+                                    "id":   "nome_cognome",
                                     "value": "",
-                                    "cols":"60",
+                                    "placeholder":"Mario Rossi",
+                                    "cols":"40",
                                     "type": "text"
                                 }
                             ]
                         }
                     ]                    
                 },
+                
                 {
                     "type":"tr",
                     "html":
@@ -124,24 +130,23 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Anno: "
+                                    "html":"Data : "
                                 }
                             ]
-                     },
+                        },
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
-                                    "name": "anno",
-                                    "id":   "anno",
-                                    "value": "",
-                                    "placeholder":"2020",
-                                    "size":"6",
-                                    "type": "number"
+                                    "name": "data",
+                                    "id":   "data",
+                                    "type" : "text",
+                                    "placeholder":"AAAA-MM-GG",
+                                    "size":"12"
                                 }
                             ]
-                        }
+                        }  
                     ]
                 },
                 {
@@ -154,7 +159,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Dimensioni: "
+                                    "html":"File comparsa (CSV): "
                                 }
                             ]
                         },
@@ -163,72 +168,11 @@
                             "html" :
                             [
                                 {
-                                    "name": "dimensioni",
-                                    "id":   "dimensioni",
-                                    "value": "",
-                                    "placeholder":"11.1x22.2",
-                                    "size":"14",
-                                    "type": "text"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Note: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"note",
-                                    "id":"note",
-                                    "type": "textarea",
-                                    "html": "",
-                                    "placeholder":"note",
-                                    "rows": "10",
-                                    "cols": "60"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan",
-                                    "id":"scan",
+                                    "name":"comparsa",
+                                    "id":  "comparsa",
                                     "type": "file",
                                     "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
+                                    "accept": ".csv"
                                 }
                             ]
                         }

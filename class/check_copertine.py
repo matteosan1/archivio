@@ -1,14 +1,9 @@
 #! /usr/bin/env python3
 
-import requests, os, sqlite3, sys, traceback, json
+import os, sqlite3, sys, traceback, json
+from utils import readConfiguration, GET
 
-db = "../sql/db_archivio.db"
-url = 'http://localhost:8983/solr/archivio/select'
-dir_copertine = '/home/archivio/copertine'    
-rows = 2000000
-
-def curlFlBiblio():
-    global db
+def curlFlBiblio(db):
     try:
         conn = sqlite3.connect(db)
         c = conn.cursor()
@@ -26,21 +21,16 @@ def curlFlBiblio():
         sys.exit()
 
 try:
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        'Accept': 'application/json',
-        'Connection': 'keep-alive',
-    }
-    
-    selection = curlFlBiblio()
-    response = requests.get('{}?q={}&fl=codice_archivio&wt=json&rows={}'.format(url, selection, rows), headers=headers)
-    
-    r = response.json()
+    GLOBALS = readConfiguration()
+    selection = curlFlBiblio("../sql/" + GLOBALS['DATABASENAME'])
+    r = GET(GLOBALS, 'admin/cores?action=STATUS&core='+GLOBALS['SOLR_CORE']+'&indexInfo=true')
+    rows = r['status'][GLOBALS['SOLR_CORE']]['index']['numDocs']
 
+    command = '{}/select?q={}&fl=codice_archivio&wt=json&rows={}'.format(GLOBALS['SOLR_CORE'], selection, rows)
+    r = GET(GLOBALS, command)
     ca = [ v['codice_archivio'] for v in r['response']['docs']]
-    
+
+    dir_copertine = GLOBALS['COVER_DIR']
     co = []
     for a, b, c in os.walk(dir_copertine):
         for f in c:

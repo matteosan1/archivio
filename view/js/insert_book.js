@@ -147,7 +147,6 @@ $(document).ready(function() {
         var value = $('#str').val();
         $.post('/class/codice_archivio_selection.php',{category:"book_categories", value:value, type:"update"}, function(data){
             //console.debug(data);
-            //console.debug("pippo");
 	        var data_decoded = JSON.parse(data);
 	        $('#volume').empty();
             $.each(data_decoded, function(key, codice_archivio) {
@@ -170,6 +169,7 @@ $(document).ready(function() {
             //console.debug(response);
             var data = JSON.parse(response);
             //console.debug(data);
+            document.getElementById("update_form").innerHTML = "";
             $("#update_form").dform(data);
             return false;
         });
@@ -178,14 +178,14 @@ $(document).ready(function() {
 
     $("#update_form").submit(function() {
         //console.debug(response);
-        //var formData = new FormData(document.getElementById("upd_book"));
-        var formData = new FormData(document.getElementById("upd_book"));
-        //console.debug(formData.val())
-        
+        var formData = new FormData(document.getElementById("update_form"));
+                
         if (request) {
             request.abort();
         }
-	    
+
+        var tipo = document.getElementById("tipologia_upd").value;
+        formData.set("tipologia_upd", tipo);
         request = $.ajax({
             url: "../class/validate_new_item.php",
             type: "post",
@@ -196,7 +196,7 @@ $(document).ready(function() {
         });
 	    
         request.done(function (response) {
-            console.log(response);
+            //console.log(response);
             var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
                 $('#error2').html(dict['error']);
@@ -223,12 +223,12 @@ $(document).ready(function() {
 	    var author = document.getElementById("prima_responsabilita").value;
         
 	    if (title == "") {
-	        $('#search_cdd_error').html("Manca il titolo per cercare il CDD")
+	        $('#error1').html("Manca il titolo per cercare il CDD")
 	        return false;
 	    }
         
 	    if (author == "") {
-	        $('#search_cdd_error').html("Manca l'autore per cercare il CDD")
+	        $('#error1').html("Manca l'autore per cercare il CDD")
 	        return false;
 	    }
         
@@ -237,15 +237,15 @@ $(document).ready(function() {
         }
 		
 	    $.post('/class/search_cdd.php', {author:author, title:title}, function(data) {
+            //console.debug(data);
 	        data = JSON.parse(data);
-            console.debug(data);
 	        if (data.hasOwnProperty('error')) {
 		        document.getElementById("cdd").value = "";
-		        $("#search_cdd_error").html(data['error']);
+		        $("#error1").html(data['error']);
 	            return false;
 	        } else {
-		        $("#search_cdd_error").html("");
-		        document.getElementById("cdd").value = data['cdd'][0];
+		        $("#error1").html("");
+		        document.getElementById("cdd").value = data['result'];
 		        return false;
 	        }
         });
@@ -261,7 +261,8 @@ $(document).ready(function() {
 
     $('.btn-backup').click(function() {
 	    var formData = new FormData(document.getElementById("fm_backup"));
-	    
+        var mydate = document.getElementById("last_upload").value;
+
 	    if(document.getElementById("last_upload").value == '') {
 	        alert ("Devi scegliere una data !");
 	        return false;
@@ -271,8 +272,8 @@ $(document).ready(function() {
             request.abort();
         }
         
-        var mydate = document.getElementById("last_upload").value;
-        
+        $('#result4').html("");
+        $('#error4').html("");        
         request = $.ajax({
             url: "../class/solr_utilities.php",
             type: "POST",
@@ -280,15 +281,15 @@ $(document).ready(function() {
             beforeSend: function(){$("#overlay").show();}
         });
 	    
-        request.done(function (response){
-            //console.log(response);
+        request.done(function (response) {
+            console.log(response);
             response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
-                alert (response['error']);
+                $('#error4').html(response['error']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
 		        return false;
             } else {
-		        $('#link').html(response['result']);
+		        $('#result4').html(response['result']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
                 return true;
             }
@@ -304,37 +305,46 @@ $(document).ready(function() {
             request.abort();
         }
 	    
-	    var file1 = document.getElementById('filecsv').value;
-	    var file2 = document.getElementById('filezip').value;
-	    if (file1 == "" && file2 == "") {
+	    var var1 = document.getElementById('filecsv').value;
+	    var var2 = document.getElementById('filezip').value;
+        var file1 = "";
+        var file2 = "";
+	    if (var1 == "" && var2 == "") {
 	        alert("Devi specificare almeno un file (CSV o ZIP).");
 	        return false;
 	    }
+
+        if (var1 != "") {
+            file1 = document.getElementById('filecsv').files[0].name;
+        }
+
+        if (var2 != "") {
+            file2 = document.getElementById('filezip').files[0].name;
+        }
         
+        $('#result5').html("");
+        $('#error5').html("");        
         request = $.ajax({
             url: "../class/solr_utilities.php",
             type: "POST",
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData:false,
+            data: {'callback':'restore', 'filecsv':file1, 'filezip':file2},
             beforeSend: function(){$("#overlay").show();}
         });
 	    
         request.done(function (response){
-            console.debug(response);
+            //console.debug(response);
             var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
                 $('#error5').html(dict['error']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
                 return false;
             } else {
-		$('#error').html("");
                 $('#result5').html(dict['result']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
-                setTimeout(function(){
-                    location.reload();
-                }, 2000);
+                //setTimeout(function(){
+                //    location.reload();
+                //}, 2000);
+                return true;
             }
         });
 	

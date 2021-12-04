@@ -74,6 +74,7 @@ function processVideo($i, $ext) {
         $doc->tipologia = "VIDEO";
         $doc->anno = $_POST['anno'];        
         $doc->note = $_POST['note'];
+        $doc->privato = 0;
 
         $error = "";
         try {
