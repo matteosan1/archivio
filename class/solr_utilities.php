@@ -266,7 +266,6 @@
         } else if ($type == "VERBALE") {
         } else if ($type == "SONETTO") {
             $filename = $dir."insert_sonetto.json";
-        } else if ($type == "ARTICOLO_GIORNALE") {
         } else if ($type == "BOZZETTO") {
             $filename = $dir."insert_bozzetto.json";   
         } else if ($type == "PERGAMENA") {
@@ -281,6 +280,8 @@
             $filename = $dir."insert_delibera.json";
         } else if ($type == "VESTIZIONE") {   
             $filename = $dir."insert_vestizione.json";
+        } else if ($type == "DOCUMENTO") {   
+            $filename = $dir."insert_doc.json";
         }
 
         $str = file_get_contents($filename);

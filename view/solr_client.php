@@ -24,11 +24,12 @@ function summary() {
     $facet_text = "";
     echo "<table>";
     foreach($facet as $value => $count) {
-        if (strlen($value) > 20) {
-            $l = strlen($value) - 17;
-            $offset = (strlen($value) - $l)/2;
-            $value = substr_replace($value, '...', $offset, $l);
-        }
+        $value = str_replace("_", " ", $value);
+//        if (strlen($value) > 20) {
+//            $l = strlen($value) - 17;
+//            $offset = (strlen($value) - $l)/2;
+//            $value = substr($value, 0, 10)."...".substr($value, -10, 10); //substr_replace($value, '...', $offset, $l);
+//       }
         echo "<tr>";
         echo "<td>".$value."</td>"."<td>".$count."</td>";
         echo "</tr>";

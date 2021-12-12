@@ -24,6 +24,7 @@ def POST(GLOBALS, command, params, h=None, f=None):
                              verify=cacert,
                              headers=headers,
                              data=data)
+    print (response.content)
     return response.json()
 
 def GET_nojson(GLOBALS, command, params):

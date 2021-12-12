@@ -69,11 +69,21 @@
         return $out;
     }
 
-    function codiceArchivioFormatEdoc($value, $val, $label) {
+    function codiceArchivioFormatEdoc($value, $val, $resourceName, $label) {
+        $tmp = explode(".", $resourceName);
+        $ext = strtolower(end($tmp));
         $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
         $path_no_image = 'this.src="../img/no_image.png"';
         $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
-        $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.PDF'.'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
+        $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.'.strtoupper($ext).'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
+        return $out;
+    }
+
+    function codiceArchivioFormatSon($value, $val, $label) {
+        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
+        $path_no_image = 'this.src="../img/no_image.png"';
+        $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
+        $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.PDF "><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
         return $out;
     }
 
@@ -82,6 +92,16 @@
         $path_no_image = 'this.src="../img/no_image.png"';
         $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
         $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$resourceName.'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
+        return $out;
+    }
+
+    function tipologiaEdoc($value, $val, $type) {
+        if (strpos($type, "word", 0)) {
+            $icon = "icons/doc.png";
+        } else {
+            $icon = "icons/pdf.png";
+        }
+        $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val.'<img src="'.$icon.'" height=30></td>';   
         return $out;
     }
 ?>

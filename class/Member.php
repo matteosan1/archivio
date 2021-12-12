@@ -120,7 +120,7 @@ class Member
     	if ($category == "video") {
 	       $cats = array(array("VIDEO"));
         } else if ($category == "ebook_categories") {
-	       $cats = array(array("BOZZETTO"), array("PERGAMENA"), array('SONETTO'));
+	       $cats = array(array("BOZZETTO"), array("PERGAMENA"), array('SONETTO'), array('DOCUMENTO'));
 	    } else if ($category == "monturato") {
 	       $cats = array(array("MONTURATO"));
 	    } else {

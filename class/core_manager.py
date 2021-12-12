@@ -5,7 +5,7 @@ import requests, argparse, json, subprocess, sys
 
 from math import floor, ceil, log
 from datetime import date
-from os import remove, listdir, path, chmod
+from os import remove, path, chmod, walk
 from lxml import etree
 from zipfile import ZipFile
 from io import StringIO
@@ -24,39 +24,43 @@ class ManageCore:
     def __init__(self):
         self.G = readConfiguration()
 
-    def changeSchema(self):
-        err = self.run_cmd(["bash", "./new_fields.sh",
-                            self.G['SOLR_CORE'], self.G['SOLR_PORT']]).split('\n')
+    def changeSchema(self, core):
+        err = self.run_cmd(["bash", "../solr/new_fields.sh", core, self.G['SOLR_PORT'], self.G['SOLR_DIR']]).split('\n')
         for e in err:
             if "errorMessages" in e:
                 print ("ERROR: ", e)
             else:
                 print (e)
 
-        err = self.run_cmd(["bash", "./remove_id.sh",
-                            self.G['SOLR_CORE'], self.G['SOLR_PORT']]).split('\n')
-        print (err)
+        err = self.run_cmd(["bash", "../solr/remove_id.sh", core, self.G['SOLR_PORT']]).split('\n')
+        
+        if err != ['']:
+            print (err)
 
     def manageSolr(self, cmd):
         out = self.run_cmd([self.G['SOLR_DIR']+"/bin/solr", cmd, "-p", self.G['SOLR_PORT']])
         print (out)
     
     def changeUniqueKey(self, core_dir):
-        myXML = self.G['SOLR_DATA'] + "/" + core_dir + "/conf/managed-schema"
-        tree = etree.parse(myXML)
-        root = tree.getroot()
-        code = root.xpath('//schema/uniqueKey')
-        if code:
-            code[0].text = 'codice_archivio'
-            etree.ElementTree(root).write(self.G['SOLR_DATA'] + '/' + core_dir + '/conf/managed-schema',
-                                          pretty_print=True)
-
+        try:
+            myXML = self.G['SOLR_DATA'] + "/" + core_dir + "/conf/managed-schema"
+            tree = etree.parse(myXML)
+            root = tree.getroot()
+            code = root.xpath('//schema/uniqueKey')
+            if code:
+                code[0].text = 'codice_archivio'
+                etree.ElementTree(root).write(self.G['SOLR_DATA'] + '/' + core_dir + '/conf/managed-schema',
+                                              pretty_print=True)
+        except:
+            pass
+        
     def findMostRecentFile(self):
-        files = listdir(self.G['BACKUP_DIR'])
-        files.sort(key=path.getmtime, reverse=True)
-        for name in files:
-            if name.startswith('backup'):
-                return name
+        for d, dummy, files in walk(self.G['BACKUP_DIR']):
+            files = [d + f for f in files]
+            files.sort(key=path.getmtime, reverse=True)
+            for name in files:
+                if path.basename(name).startswith('backup'):
+                    return name
         return None
 
     def run_cmd(self, cmd): 
@@ -104,22 +108,33 @@ class ManageCore:
     def restore(self, new_core):
         core = 'core_' + str(date.today())
         print ("Creating temporary core...")
-        self.run_cmd(['bash', './create_core.sh',
-                      self.G['SOLR_CORE'], self.G['SOLR_DIR'], self.G['SOLR_DATA']])
+        self.run_cmd(['bash', '../solr/create_core.sh', core, self.G['SOLR_DIR'], self.G['SOLR_DATA']])
         print ("Modifying schema...")
-        self.changeSchema()
+        self.changeSchema(core)
         print ("Stopping solr...")
         self.manageSolr('stop')
         print ("Changing Unique Key...")
         self.changeUniqueKey(core)
         print ("Restarting solr...")
         self.manageSolr('start')
+
         filename = self.findMostRecentFile()
         if filename is not None:
             print ("Importing latest available backup...")
-            out = self.run_cmd([self.G['SOLR_DIR'] + '/bin/post', '-c',
-                                self.G['SOLR_CORE'], filename, '-p', self.G['SOLR_PORT']])
-            print (out)
+            #out = self.run_cmd([self.G['SOLR_DIR'] + '/bin/post', '-c', core
+            #                    , filename, '-p', self.G['SOLR_PORT']])
+            #print (out)
+            r = POST(self.G, '{}/update/csv?commit=true'.format(core),
+                         (),
+                         {'Content-type':'text/plain', 'charset':'utf-8'},
+                         filename)
+            if r['responseHeader']['status'] == 0:
+                ndocs = len(r['adds'])//2
+                print ("{} documenti aggiornati in {} ms".format(ndocs, r['responseHeader']['QTime']))
+            else:
+                print (r['error']['msg'])
+                sys.exit(r['responseHeader']['status'])
+            
             print ("Renaming core to {}...".format(new_core))
             j = GET2(self.G, "admin/cores",
                      (('action', 'RENAME'), ('core', core),
@@ -196,7 +211,7 @@ class ManageCore:
         open('temp.csv', 'wb').write(r.content)
         df = pd.read_csv('temp.csv', index_col='codice_archivio')
         df = df.drop('_version_', axis=1)
-        filename = self.G['BACKUP_DIR'] + "/backup_{}.csv".format(date.today())
+        filename = self.G['BACKUP_DIR'] + "backup_{}.csv".format(date.today())
         print ('Saving {}'.format(filename))
         df.to_csv(filename)
         remove('temp.csv')
@@ -208,12 +223,12 @@ if __name__ == '__main__':
     parser.add_argument('--action', metavar='action', type=str, help='define action to perform')
     parser.add_argument('-b', help="action just for biblio", action="store_true")
     parser.add_argument('--date', '-d', metavar='date', type=str, help='min date for backup', default='1900-01-01')
-    parser.add_argument('--new-core', '-n', metavar='core', type=str, help='new core name')
+    parser.add_argument('--new-core', '-n', type=str, help='new core name')
     parser.add_argument('--fcsv', metavar='fcsv', type=str, help='csv filename')
     parser.add_argument('--fzip', metavar='fzip', type=str, help='zip filename')
     
     args = parser.parse_args()
-
+    
     if args.action == 'backup':
         if args.b:
             m.backup_biblio(args.date)
@@ -230,8 +245,8 @@ if __name__ == '__main__':
                 print ("Devi specificare un file CSV o uno ZIP.")
                 sys.exit(1)
         else:
-            if args.core:
-                m.restore(args.core)
+            if args.new_core:
+                m.restore(args.new_core)
                 sys.exit(0)
             else:
                 print ("Devi specificare il nome del nuovo core.")

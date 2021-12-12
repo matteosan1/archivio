@@ -16,6 +16,7 @@ require_once("../view/search_output/stampa_output.php");
 require_once("../view/search_output/bozzetto_output.php");
 require_once("../view/search_output/pergamena_output.php");
 require_once("../view/search_output/sonetto_output.php");
+require_once("../view/search_output/documento_output.php");
 require_once("../view/search_output/delibera_output.php");    
      
 if (isset($_GET)) {
@@ -89,6 +90,7 @@ if (isset($_GET)) {
 
     $facetSet = $query->getFacetSet();
     $facetSet->createFacetField('anno')->setField('anno');
+    $facetSet->createFacetField('tipologia')->setField('tipologia');
     
     $query->addSort('codice_archivio', $query::SORT_ASC);
     
@@ -141,6 +143,8 @@ if (isset($_GET)) {
             $output .= pergamenaOutput($document, $highlighting);
         } else if ($document->tipologia == "SONETTO") {
             $output .= sonettoOutput($document, $highlighting);
+        } else if ($document->tipologia == "DOCUMENTO") {
+            $output .= documentoOutput($document, $highlighting);
         } else if ($document->tipologia == "DELIBERA") {
             $output .= deliberaOutput($document, $highlighting);
         } else {
@@ -154,12 +158,24 @@ if (isset($_GET)) {
         $output .= '<div id="pagination">' . $perpageresult . '</div>';
     }
 
-    $facet = $resultset->getFacetSet()->getFacet('anno');
-    $facet_text = "";
-    foreach($facet as $value => $count) {    
-        $facet_text .= $value . ' [' . $count . ']<br/>';
+    $facet = $resultset->getFacetSet()->getFacet('tipologia');
+    $facet_text = "Tipologia<br>";
+    foreach($facet as $value => $count) {
+        if ($count > 0) {
+            $value = str_replace("_", " ", $value);
+            if (strlen($value) > 15) {
+                $value = substr($value, 0, 7)."...".substr($value, -7, 7);
+            }
+            $facet_text .= $value . ' [' . $count . ']<br>';
+        }
     }
-    
+
+    $facet_text .= "<br>Anno<br>";      
+    $facet = $resultset->getFacetSet()->getFacet('anno');
+    foreach($facet as $value => $count) {    
+        $facet_text .= $value . ' [' . $count . ']<br>';
+    }
+
     $response = array("header"=>$query_result, "body"=>$output, "faceting"=>$facet_text);
     //print ($output);
     print_r(json_encode($response));

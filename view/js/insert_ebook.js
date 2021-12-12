@@ -67,6 +67,12 @@ $(document).ready(function() {
                     } 
                 }
             }
+        } else if (tipologia == "DOCUMENTO") {
+            var filenames = document.getElementById('scan[]').files;
+            if (filenames.length == 0) {
+	            alert ("Almeno un documento deve essere selezionato.");
+	            return false;
+            }
         }
 
         if (tipologia == "SONETTO") {
@@ -102,6 +108,8 @@ $(document).ready(function() {
             formData.set("tecnica", selection);
         }
 
+        $('#result1').html("");
+        $('#error1').html("");
         request = $.ajax({
             url: "../class/validate_new_ebook.php",
             type: "post",
@@ -115,11 +123,9 @@ $(document).ready(function() {
 	        console.log(response);
 	        var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
-                $('#result1').html("");
     			$('#error1').html(dict['error']);
 			    return false;
             } else {
-			    $('#error1').html("");
 			    $('#result1').html(dict['result']);
 			    setTimeout(function(){
            		    location.reload();
