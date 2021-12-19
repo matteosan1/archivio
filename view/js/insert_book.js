@@ -285,12 +285,12 @@ $(document).ready(function() {
             console.log(response);
             response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
-                $('#error4').html(response['error']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
+                $('#error4').html(response['error']);
 		        return false;
             } else {
-		        $('#result4').html(response['result']);
                 setInterval(function() {$("#overlay").hide(); }, 500);
+		        $('#result4').html(response['result']);
                 return true;
             }
         });
