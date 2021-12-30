@@ -1,5 +1,5 @@
 <?php
-    $GLOBALS['SOLR_CORE'] = 'archivio2';
+    $GLOBALS['SOLR_CORE'] = 'archivio';
     $GLOBALS['SOLR_PORT'] = '8985';
     $GLOBALS['SOLR_BASE_URL'] = 'https://localhost:'.$GLOBALS['SOLR_PORT'].'/solr';
     $GLOBALS['SOLR_URL'] = $GLOBALS['SOLR_BASE_URL'].'/'.$GLOBALS['SOLR_CORE'].'/';
@@ -14,21 +14,21 @@
 
     $GLOBALS['DATABASENAME'] = "db_archivio.db";
 
-    $GLOBALS['UPLOAD_DIR'] = '/Users/sani/site/Usered/view/myupload/'; 
-    $GLOBALS['BACKUP_DIR'] = '/Users/sani/site/Usered/backup/';
-    $GLOBALS['PHOTO_DIR'] = '/home/biblioteca/photo/';
-    $GLOBALS['SLIDE_DIR'] = '/Users/sani/';      
-    $GLOBALS['VIDEO_DIR'] = '/home/biblioteca/video/';
-    $GLOBALS['COVER_DIR'] = '/Users/sani/site/Usered/covers/';
-    $GLOBALS['EDOC_DIR'] = '/Users/sani/site/Usered/edoc/';
-    $GLOBALS['THUMBNAILS_DIR'] = '/Users/sani/site/Usered/thumb/';
+    $GLOBALS['UPLOAD_DIR'] = '/var/www/myupload/'; 
+    $GLOBALS['BACKUP_DIR'] = '/home/archivio/backup/';
+    $GLOBALS['PHOTO_DIR'] = '/home/archivio/photo/';
+    $GLOBALS['SLIDE_DIR'] = '/home/archivio/photo/';      
+    $GLOBALS['VIDEO_DIR'] = '/home/archivio/video/';
+    $GLOBALS['COVER_DIR'] = '/copertine/';
+    $GLOBALS['EDOC_DIR'] = '/home/archivio/edoc/';
+    $GLOBALS['THUMBNAILS_DIR'] = '/home/archivio/thumbnails/';
 
-    $GLOBALS['OCR_BIN'] = '/usr/local/bin/tesseract';
-    $GLOBALS['TIKA_APP'] = '/Users/sani/site/Usered/class/tika-app-2.1.0.jar';
-    $GLOBALS['MERGE_PDF_BIN'] = '/usr/local/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
-    $GLOBALS['GHOSTVIEW'] = '/usr/local/bin/gs';
-    $GLOBALS['CONVERT_BIN'] = '/usr/local/bin/convert';
-    $GLOBALS['PYTHON_BIN'] = '/Users/sani/opt/anaconda3/bin/python';
+    $GLOBALS['OCR_BIN'] = '/usr/bin/tesseract';
+    $GLOBALS['TIKA_APP'] = '/usr/local/bin//tika-app-2.1.0.jar';
+    $GLOBALS['MERGE_PDF_BIN'] = '/usr/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
+    $GLOBALS['GHOSTVIEW'] = '/usr/bin/gs';
+    $GLOBALS['CONVERT_BIN'] = '/usr/bin/convert';
+    $GLOBALS['PYTHON_BIN'] = '/usr/bin/python';
 
     $GLOBALS['HIGHLIGHT_BEGIN'] = '<u>';
     $GLOBALS['HIGHLIGHT_END'] = '</u>';
