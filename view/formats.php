@@ -80,7 +80,7 @@
     }
 
     function codiceArchivioFormatSon($value, $val, $label) {
-        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
+        $path = $GLOBALS[$label].$val.".JPG";
         $path_no_image = 'this.src="../img/no_image.png"';
         $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
         $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.PDF "><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
@@ -88,7 +88,7 @@
     }
 
     function codiceArchivioFormatBoz($value, $val, $label, $resourceName) {
-        $path = "/thumb/".$val.".JPG"; //$GLOBALS[$label].$val.".JPG";
+        $path = $GLOBALS[$label].$val.".JPG";
         $path_no_image = 'this.src="../img/no_image.png"';
         $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
         $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$resourceName.'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";

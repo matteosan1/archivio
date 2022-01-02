@@ -15,13 +15,13 @@
     $GLOBALS['DATABASENAME'] = "db_archivio.db";
 
     $GLOBALS['UPLOAD_DIR'] = '/var/www/myupload/'; 
-    $GLOBALS['BACKUP_DIR'] = '/home/archivio/backup/';
+    $GLOBALS['BACKUP_DIR'] = '/backup/';
     $GLOBALS['PHOTO_DIR'] = '/home/archivio/photo/';
     $GLOBALS['SLIDE_DIR'] = '/home/archivio/photo/';      
     $GLOBALS['VIDEO_DIR'] = '/home/archivio/video/';
     $GLOBALS['COVER_DIR'] = '/copertine/';
     $GLOBALS['EDOC_DIR'] = '/home/archivio/edoc/';
-    $GLOBALS['THUMBNAILS_DIR'] = '/home/archivio/thumbnails/';
+    $GLOBALS['THUMBNAILS_DIR'] = '/thumbnails/';
 
     $GLOBALS['OCR_BIN'] = '/usr/bin/tesseract';
     $GLOBALS['TIKA_APP'] = '/usr/local/bin//tika-app-2.1.0.jar';

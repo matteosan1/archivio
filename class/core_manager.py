@@ -121,8 +121,8 @@ class ManageCore:
         filename = self.findMostRecentFile()
         if filename is not None:
             print ("Importing latest available backup...")
-            #out = self.run_cmd([self.G['SOLR_DIR'] + '/bin/post', '-c', core
-            #                    , filename, '-p', self.G['SOLR_PORT']])
+            out = self.run_cmd([self.G['SOLR_DIR'] + '/bin/post', '-c', core
+                                , filename, '-p', self.G['SOLR_PORT']])
             #print (out)
             r = POST(self.G, '{}/update/csv?commit=true'.format(core),
                          (),
@@ -139,7 +139,7 @@ class ManageCore:
             j = GET2(self.G, "admin/cores",
                      (('action', 'RENAME'), ('core', core),
                       ('other', new_core)))
-            print (j)
+
         else:
             print ("No backup file found in directory.")
 
@@ -169,7 +169,7 @@ class ManageCore:
                            (('q', types), ('sort', 'codice_archivio asc'),
                             ('wt', 'csv'), ('rows', lim), ('fl', 'codice_archivio,titolo,sottotitolo,prima_responsabilita,anno,altre_responsabilita,luogo,tipologia,descrizione,ente,edizione,serie,soggetto,cdd,note,timestamp,privato'), ('fq', 'timestamp:['+last_upload+' TO NOW]')))
             
-            filename = self.G['BACKUP_DIR'] + "biblio_backup_{}.csv".format(date.today())
+            filename = ".." + self.G['BACKUP_DIR'] + "biblio_backup_{}.csv".format(date.today())
             df = pd.read_csv(StringIO(str(r.content,'utf-8')))
             df['_version_'] = [0] * len(df)
             if len(df) != 0:
@@ -180,7 +180,7 @@ class ManageCore:
                 print ('No document to backup.')
             
             ncovers = 0
-            zipfilename = '{}covers_{}.zip'.format(self.G['BACKUP_DIR'], date.today())
+            zipfilename = '..{}covers_{}.zip'.format(self.G['BACKUP_DIR'], date.today())
             if len(df) != 0:
                 if path.isfile(zipfilename):
                     remove(zipfilename)

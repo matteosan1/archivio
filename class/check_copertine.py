@@ -30,7 +30,7 @@ try:
     r = GET(GLOBALS, command)
     ca = [ v['codice_archivio'] for v in r['response']['docs']]
 
-    dir_copertine = GLOBALS['COVER_DIR']
+    dir_copertine = ".."+GLOBALS['COVER_DIR']
     co = []
     for a, b, c in os.walk(dir_copertine):
         for f in c:

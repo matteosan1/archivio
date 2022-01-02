@@ -18,12 +18,12 @@ function startsWith($haystack, $needle) {
 if (isset($_POST)) {
     $update = $client->createUpdate();
     $doc = $update->createDocument();
- 
+
     foreach ($_POST as $key => $value) {
         if (endsWith($key, "_upd")) {
-       	    $real_key = rtrim($key, "_upd");
+	    $real_key = substr($key, 0, strlen($key)-4);
         } else if (startsWith($key, "upd_")) {
-            $real_key = ltrim($key, "upd_");
+            $real_key = substr($key, 4);
         } else {
             $real_key = $key;
         }
@@ -33,12 +33,12 @@ if (isset($_POST)) {
             $doc->anno = substr($value, 0, 4);
         }
     }
-    
+        
     if (!array_key_exists("privato", $_POST)) {
         $doc->privato = 0;
     }   
     $error = "";
- 
+
     try {
         $update->addDocument($doc);
         $update->addCommit();
