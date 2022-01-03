@@ -23,11 +23,9 @@
             }
 
             if ($key == 'codice_archivio') {
-                // FIXME SINGLE VALUE
-                $out .= codiceArchivioFormatBoz($value, $val, 'THUMBNAILS_DIR', $document->resourceName[0]);
+                $out .= codiceArchivioFormatBoz($value, $val, 'THUMBNAILS_DIR', $document->resourceName);
             } else if  ($key == 'note') {  
                 $highlightedDoc = $highlighting->getResult($document->codice_archivio);
-                //print (gettype($highlightedDoc));
                 $out .= noteFormat($val, $highlightedDoc);  
             } else {
                 $out .= '<tr><th align="right" valign="middle">'.$value.': </th><td valign="middle" align="left">'.$val."</td></tr>";    

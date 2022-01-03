@@ -261,7 +261,7 @@
 
     function newItem($type) {
         $dir = "../view/json_form/";
-        if ($type == 'LIBRO') {
+        if ($type == 'LIBRO'	) {
             $filename = $dir."insert_libro.json";     
         } else if ($type == "VERBALE") {
         } else if ($type == "SONETTO") {
@@ -282,7 +282,9 @@
             $filename = $dir."insert_vestizione.json";
         } else if ($type == "DOCUMENTO") {   
             $filename = $dir."insert_doc.json";
-        }
+        } else if ($type == "----") {
+	    $filename = $dir."empty.json";
+	}
 
         $str = file_get_contents($filename);
         $json = json_decode($str, true);

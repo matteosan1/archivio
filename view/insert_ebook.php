@@ -80,7 +80,7 @@ $categories = $m->getAllCategories("ebook_categories");
       <br>
       <div align="center">
         <form class="form_sel_edoc" id="form_sel_edoc" name="form_sel_edoc" action method="post">
-          <label>Scegli volume:</label>
+          <label>Scegli documento:</label>
           <select id="sel_edoc" name="sel_edoc"> 
           </select>        
         </form> 

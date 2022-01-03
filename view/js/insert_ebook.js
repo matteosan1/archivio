@@ -11,6 +11,10 @@ function openPage(pageName, elmnt) {
         tablinks[i].style.backgroundColor = "";
     }
     document.getElementById(pageName).style.display = "block";
+    if (pageName == 'Insert') {
+	document.getElementById("tipologia").selectedIndex = 0;
+	$('#insert_form').html("");
+    }
 }
 
 $(document).ready(function() {
@@ -22,7 +26,7 @@ $(document).ready(function() {
     
     $("#tipologia").change(function() {
         var tipo = document.getElementById("tipologia").value;
-
+	
         request = $.ajax({
             url: "../class/solr_utilities.php",
             type: "POST",
@@ -37,7 +41,7 @@ $(document).ready(function() {
         });
         return true;
     });
-
+    
     //$(document).on('change','.date', function(){
     //    $("#date").datepicker();
     //});
@@ -120,21 +124,21 @@ $(document).ready(function() {
         });
 		        
        	request.done(function (response) {
-	        console.log(response);
-	        var dict = JSON.parse(response);
+	    //console.log(response);
+	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
-    			$('#error1').html(dict['error']);
-			    return false;
+    		$('#error1').html(dict['error']);
+		return false;
             } else {
-			    $('#result1').html(dict['result']);
-			    setTimeout(function(){
-           		    location.reload();
-      			}, 2000);
+		$('#result1').html(dict['result']);
+		setTimeout(function(){
+           	    location.reload();
+      		}, 2000);
                 return true;
             }
-		});
-	    
-	    return false;
+	});
+	
+	return false;
     });
 
     $(document).on('click','.OCR', function(){
@@ -152,18 +156,18 @@ $(document).ready(function() {
 	            if (ext != 'jpg' && ext != 'jpeg' &&
 		            ext != 'tiff' && ext != 'tif' &&
                     ext != 'png') {
-		            alert ("Non è possibile effetturare OCR su file " + ext);
-  	  	            return false;
-                }
+		        alert ("Non è possibile effetturare OCR su file " + ext);
+  	  	        return false;
+                    }
             }
 	    }
-
+	
         if (request) {
             request.abort();
         }
-
-  	    var formData = new FormData(document.getElementById("insert_form"));
-		request = $.ajax({
+	
+  	var formData = new FormData(document.getElementById("insert_form"));
+	request = $.ajax({
             url: "../class/check_ocr.php",
             type: "post",
             data: formData,
@@ -171,15 +175,15 @@ $(document).ready(function() {
             cache: false,
             processData:false,
             beforeSend: function(){$("#overlay").show();}
-		});
-		
-		request.done(function (response) {
+	});
+	
+	request.done(function (response) {
             setInterval(function() {$("#overlay").hide(); }, 500);
-	        $('#testo_ocr').html(response);
-		    return false;
-		});
-
+	    $('#testo_ocr').html(response);
 	    return false;
+	});
+	
+	return false;
     });
     
     $("#lets_search_for_delete").bind('submit',function() {
@@ -189,7 +193,7 @@ $(document).ready(function() {
         });
         return false;
     });
-
+    
     $('#submit_delete').click(function() {
         var r = confirm("Sicuro di voler rimuovere i volumi selezionati ?");
         if (r == true) {
@@ -197,8 +201,8 @@ $(document).ready(function() {
             if (request) {
                 request.abort();
             }
-	
-	        request = $.ajax({
+	    
+	    request = $.ajax({
                 url: "../class/remove.php",
                 type: "post",
                 data: formData,
@@ -206,31 +210,31 @@ $(document).ready(function() {
                 cache: false,
                 processData:false                       
             });
-	        
+	    
             request.done(function (response) {
-	            response = JSON.parse(response);
+	        response = JSON.parse(response);
                 if(response.hasOwnProperty('error')){
     	            $('#error3').html(response['error']);
-		            return false;
+		    return false;
                 } else {
-		            $('#error3').html("");
-		            $('#result3').html(response['result']);
-		            setTimeout(function(){
-           	            location.reload();
-      		        }, 1000); 
+		    $('#error3').html("");
+		    $('#result3').html(response['result']);
+		    setTimeout(function(){
+           	        location.reload();
+      		    }, 1000); 
                 }
             });
-	        
+	    
             request.fail(function (response){			    
                 console.log(
                     "The following error occurred: " + response
                 );
             });
         }
-	    return false;
+	return false;
     });
-
-
+    
+    
     function addOption(selectbox, text, value) {
         var optn = document.createElement("OPTION");
         optn.text = text;
@@ -252,30 +256,30 @@ $(document).ready(function() {
     
     $("#form_sel_edoc").change(function() {
         var sel = document.getElementById("sel_edoc").value;
-
-	    request = $.ajax({
+	
+	request = $.ajax({
             url: "../class/solr_utilities.php",
             type: "POST",
             data: {'codice_archivio':sel, 'callback':'finditem'},
         });
-	    
-	    request.done(function (response) {
-	        var data = JSON.parse(response);
+	
+	request.done(function (response) {
+	    var data = JSON.parse(response);
             $("#update_form").html("");
             $("#update_form").dform(data);
             return false;
         });
-	    return true;
+	return true;
     });
     
     $("#update_form").submit(function() {
-	    var formData = new FormData(document.getElementById("update_form"));
+	var formData = new FormData(document.getElementById("update_form"));
         var tipologia = document.getElementById('tipologia_upd').value;
         
         if (request) {
             request.abort();
         }
-
+	
         if (tipologia == "SONETTO") {
             var e = document.getElementById("ricorrenza");
             var selection = e.options[e.selectedIndex].text;
@@ -287,12 +291,12 @@ $(document).ready(function() {
             var e = document.getElementById("categoria_upd");
             var selection = e.options[e.selectedIndex].text;
             formData.set("categoria_upd", selection);
-
+	    
             var e = document.getElementById("tecnica_upd");
             var selection = e.options[e.selectedIndex].text;
             formData.set("tecnica_upd", selection);
         }
-
+	
         request = $.ajax({
             url: "../class/validate_new_item.php",
             type: "post",
@@ -303,20 +307,20 @@ $(document).ready(function() {
         });
 	
         request.done(function (response) {
-	        console.log(response);
+	    console.log(response);
       	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
-		        $('#error2').html(dict['error']);
-		        return false;
+		$('#error2').html(dict['error']);
+		return false;
             } else {
-	            $('#error2').html("");
-	            $('#result2').html(dict['result']);
-		        setTimeout(function(){
-           	        location.reload();
-      		    }, 2000); 		
+	        $('#error2').html("");
+	        $('#result2').html(dict['result']);
+		setTimeout(function(){
+           	    location.reload();
+      		}, 2000); 		
             }
         });
-	    
+	
         request.fail(function (response){                           
             console.log(
                 "The following error occurred: " + response
