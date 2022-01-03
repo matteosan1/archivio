@@ -14,7 +14,7 @@
 
     $GLOBALS['DATABASENAME'] = "db_archivio.db";
 
-    $GLOBALS['UPLOAD_DIR'] = '/var/www/myupload/'; 
+    $GLOBALS['UPLOAD_DIR'] = '/var/www/html/upload/'; 
     $GLOBALS['BACKUP_DIR'] = '/backup/';
     $GLOBALS['PHOTO_DIR'] = '/home/archivio/photo/';
     $GLOBALS['SLIDE_DIR'] = '/home/archivio/photo/';      

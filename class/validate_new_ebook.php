@@ -196,18 +196,11 @@ if (isset($_POST)) {
             $doc->note = $_POST['note'];
             $doc->privato = 0;
 
+	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
             if ($ext == "tiff" or $ext == "tif") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-                exec($command, $output, $status);
-            } else if ($ext == "png") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-                exec($command, $output, $status);
-            } else if ($ext == "jpg" or $ext == "jpeg") {
-                $resize = new ResizeImage($tmp_filename);
-                $resize->resizeTo(200, 200, 'maxHeight');
-                $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG");
+	    	 $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
             }
-
+            exec($command, $output, $status);	    	    
             move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$resourceName);
         }
     }
