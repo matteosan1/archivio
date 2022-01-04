@@ -10,7 +10,7 @@ if (isset($_POST)) {
     if ($_POST['tipologia'] == 'DOCUMENTO') {   
         $m = new Member();
         $prefix = $m->getPrefisso($_POST["tipologia"]);
-
+        
         $countfiles = count($_FILES['scan']['name']);
         $doc_text = '';
         for ($i=0; $i<$countfiles; $i++) {
@@ -103,7 +103,7 @@ if (isset($_POST)) {
 
         $update = $client->createUpdate();
         $doc = $update->createDocument();
-    
+        
         $doc->codice_archivio = $codice_archivio;
         $doc->tipologia = $_POST['tipologia'];
 
@@ -120,7 +120,7 @@ if (isset($_POST)) {
                 $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
                 exec($command, $output, $status);
             } 
-
+            
             $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita PDF";
             exec($command, $output, $status);
             $results = rename($GLOBALS['UPLOAD_DIR']."/ocr".$i.".pdf", $GLOBALS['EDOC_DIR'].$codice_archivio.".PDF");
@@ -153,7 +153,7 @@ if (isset($_POST)) {
             $tmp_filename = $_FILES['scan']['tmp_name'];
             $tmp = explode(".", $_FILES['scan']['name']);
             //$duplicate = lookForDuplicates($resourceName);
-
+            
             $ext = strtolower(end($tmp));
 
             $resourceName = $codice_archivio.".".strtoupper($ext);

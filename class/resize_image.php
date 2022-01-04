@@ -42,22 +42,22 @@ class ResizeImage
 		switch($this->ext)
 	    {
 	    	// Image is a JPG
-	        case 'image/jpg':
-	        case 'image/jpeg':
-	        	// create a jpeg extension
-	            $this->image = imagecreatefromjpeg($filename);
-	            break;
+        case 'image/jpg':
+        case 'image/jpeg':
+            // create a jpeg extension
+            $this->image = imagecreatefromjpeg($filename);
+            break;
 	        // Image is a GIF
-	        case 'image/gif':
-	            $this->image = @imagecreatefromgif($filename);
-	            break;
+        case 'image/gif':
+            $this->image = @imagecreatefromgif($filename);
+            break;
 	        // Image is a PNG
-	        case 'image/png':
-	            $this->image = @imagecreatefrompng($filename);
-	            break;
+        case 'image/png':
+            $this->image = @imagecreatefrompng($filename);
+            break;
 	        // Mime type not found
-	        default:
-	            throw new Exception("File is not an image, please use another file type.", 1);
+        default:
+            throw new Exception("File is not an image, please use another file type.", 1);
 	    }
 	    $this->origWidth = imagesx($this->image);
 	    $this->origHeight = imagesy($this->image);
@@ -74,27 +74,28 @@ class ResizeImage
 	{
 	    switch($this->ext)
 	    {
-	        case 'image/jpg':
-	        case 'image/jpeg':
-	        	// Check PHP supports this file type
-	            if (imagetypes() & IMG_JPG) {
-	                imagejpeg($this->newImage, $savePath, $imageQuality);
-	            }
-	            break;
-	        case 'image/gif':
-	        	// Check PHP supports this file type
-	            if (imagetypes() & IMG_GIF) {
-	                imagegif($this->newImage, $savePath);
-	            }
-	            break;
-	        case 'image/png':
-	            $invertScaleQuality = 9 - round(($imageQuality/100) * 9);
-	            // Check PHP supports this file type
-	            if (imagetypes() & IMG_PNG) {
-	                imagepng($this->newImage, $savePath, $invertScaleQuality);
-	            }
-	            break;
+        case 'image/jpg':
+        case 'image/jpeg':
+            // Check PHP supports this file type
+            if (imagetypes() & IMG_JPG) {
+                imagejpeg($this->newImage, $savePath, $imageQuality);
+            }
+            break;
+        case 'image/gif':
+            // Check PHP supports this file type
+            if (imagetypes() & IMG_GIF) {
+                imagegif($this->newImage, $savePath);
+            }
+            break;
+        case 'image/png':
+            $invertScaleQuality = 9 - round(($imageQuality/100) * 9);
+            // Check PHP supports this file type
+            if (imagetypes() & IMG_PNG) {
+                imagepng($this->newImage, $savePath, $invertScaleQuality);
+            }
+            break;
 	    }
+        
 	    if($download)
 	    {
 	    	header('Content-Description: File Transfer');
@@ -104,6 +105,7 @@ class ResizeImage
 	    }
 	    imagedestroy($this->newImage);
 	}
+    
 	/**
 	 * Resize the image to these set dimensions
 	 *
@@ -117,37 +119,38 @@ class ResizeImage
 	{
 		switch(strtolower($resizeOption))
 		{
-			case 'exact':
-				$this->resizeWidth = $width;
-				$this->resizeHeight = $height;
+        case 'exact':
+            $this->resizeWidth = $width;
+            $this->resizeHeight = $height;
 			break;
-			case 'maxwidth':
-				$this->resizeWidth  = $width;
-				$this->resizeHeight = $this->resizeHeightByWidth($width);
+        case 'maxwidth':
+            $this->resizeWidth  = $width;
+            $this->resizeHeight = $this->resizeHeightByWidth($width);
 			break;
-			case 'maxheight':
-				$this->resizeWidth  = $this->resizeWidthByHeight($height);
-				$this->resizeHeight = $height;
+        case 'maxheight':
+            $this->resizeWidth  = $this->resizeWidthByHeight($height);
+            $this->resizeHeight = $height;
 			break;
-			default:
-				if($this->origWidth > $width || $this->origHeight > $height)
-				{
-					if ( $this->origWidth > $this->origHeight ) {
-				    	 $this->resizeHeight = $this->resizeHeightByWidth($width);
-			  			 $this->resizeWidth  = $width;
-					} else if( $this->origWidth < $this->origHeight ) {
-						$this->resizeWidth  = $this->resizeWidthByHeight($height);
-						$this->resizeHeight = $height;
-					}
-				} else {
-		            $this->resizeWidth = $width;
-		            $this->resizeHeight = $height;
-		        }
+        default:
+            if($this->origWidth > $width || $this->origHeight > $height)
+            {
+                if ( $this->origWidth > $this->origHeight ) {
+                    $this->resizeHeight = $this->resizeHeightByWidth($width);
+                    $this->resizeWidth  = $width;
+                } else if( $this->origWidth < $this->origHeight ) {
+                    $this->resizeWidth  = $this->resizeWidthByHeight($height);
+                    $this->resizeHeight = $height;
+                }
+            } else {
+                $this->resizeWidth = $width;
+                $this->resizeHeight = $height;
+            }
 			break;
 		}
 		$this->newImage = imagecreatetruecolor($this->resizeWidth, $this->resizeHeight);
     	imagecopyresampled($this->newImage, $this->image, 0, 0, 0, 0, $this->resizeWidth, $this->resizeHeight, $this->origWidth, $this->origHeight);
 	}
+    
 	/**
 	 * Get the resized height from the width keeping the aspect ratio
 	 *

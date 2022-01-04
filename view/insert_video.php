@@ -13,12 +13,12 @@ require_once "../view/session.php";
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
         <meta charset="UTF-8" />
         <title>Video</title>
-	    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
         <script>
          $(function(){
              $("#footer1").load("/view/footer.html");
              $("#footer2").load("/view/footer.html");
-             $("#footer3").load("/view/footer.html"); 
+             $("#footer3").load("/view/footer.html");
          });
         </script>
         <style>
@@ -28,7 +28,7 @@ require_once "../view/session.php";
     <script type="text/javascript" src="js/autologout.js"></script>
     <script type="text/javascript" src="jquery.dform-1.1.0.js"></script>
     <script type="text/javascript" src="js/insert_video.js"></script>
-    
+
     <body>
         <div id="header"><?php include "../view/header.php"; ?></div>
         <div id="scroll"></div>
@@ -40,7 +40,7 @@ require_once "../view/session.php";
                 <button class="tablink" onclick="openPage('Update', this)">Aggiornamento</button>
                 <button class="tablink" onclick="openPage('Delete', this)">Cancellazione</button>
             </div>
-            
+
             <div id="Insert" class="tabcontent">
                 <div align=center id=result1 style="color:green"></div>
                 <div align=center id=error1 style="color:red"></div>
@@ -49,7 +49,7 @@ require_once "../view/session.php";
                     <form id="insert_form"></form>
                     <div id="footer1" align="center"></div>
                 </div>
-            </div>     
+            </div>
 
             <div id="Update" class="tabcontent">
                 <div align=center id=result2 style="color:green"></div>
@@ -63,9 +63,9 @@ require_once "../view/session.php";
                 <div align="center">
                     <form class="form_sel_video" id="form_sel_video" name="form_sel_video" action method="post">
                         <label>Scegli video:</label>
-                        <select id="sel_video" name="sel_video"> 
-                        </select>        
-                    </form> 
+                        <select id="sel_video" name="sel_video">
+                        </select>
+                    </form>
                 </div>
                 <br>
                 <form id="update_form"></form>
@@ -76,7 +76,7 @@ require_once "../view/session.php";
                 <div align=center id=result3 style="color:green"></div>
                 <div align=center id=error3 style="color:red"></div>
                 <br>
-                
+
                 <form id="lets_search_for_delete" action="" style="width:400px;margin:0 auto;text-align:left;">
                     Filtro codice_archivio:<input type="text" name="str_for_delete" id="str_for_delete">
                     <input type="submit" value="Filtra" name="send" id="send">
@@ -84,12 +84,12 @@ require_once "../view/session.php";
                 <br><br>
                 <div align="center">
                     <form class="delete_video" name="delete_video" id="delete_video" action method="POST">
-                        <div id="search_results_for_delete"></div>                   
+                        <div id="search_results_for_delete"></div>
                         <button type="submit" id="submit_delete"><img src="/view/icons/trash.png">&nbsp;Rimuovi Video Selezionati</button>
                     </form>
                 </div>
                 <div id="footer3" align="center"></div>
-            </div>            
+            </div>
         </div>
-    </body>         
+    </body>
 </html>

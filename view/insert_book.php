@@ -15,16 +15,16 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
         <meta charset="UTF-8" />
         <title>Libri</title>
-	    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
-
-	     $(function(){
-		     $("#footer1").load("/view/footer.html");
-		     $("#footer2").load("/view/footer.html");
-  		     $("#footer3").load("/view/footer.html");
-   		     $("#footer4").load("/view/footer.html");
-   		     $("#footer5").load("/view/footer.html"); 
-	     });
-	    </script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
+	 
+	 $(function(){
+	     $("#footer1").load("/view/footer.html");
+	     $("#footer2").load("/view/footer.html");
+  	     $("#footer3").load("/view/footer.html");
+   	     $("#footer4").load("/view/footer.html");
+   	     $("#footer5").load("/view/footer.html"); 
+	 });
+	</script>
         <style>
          @import url("/view/css/main.css");
         </style>
@@ -35,10 +35,10 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
     <body>
         <div id="header"><?php include "../view/header.php"; ?></div>
         <div id="scroll"></div>
-
+	
         <div id="content">
             <div class="tab">
-  	            <div class="testo" align="center"><h2>Biblioteca</h2></div>
+  	        <div class="testo" align="center"><h2>Biblioteca</h2></div>
                 <button class="tablink_book" onclick="openPage('Insert', this)">Inserimento</button>
                 <button class="tablink_book" onclick="openPage('Update', this)">Aggiornamento</button>
                 <button class="tablink_book" onclick="openPage('Delete', this)">Cancellazione</button>
@@ -46,18 +46,18 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <button class="tablink_book" onclick="openPage('Restore', this)">Ripristino</button>
                 <button class="tablink_book" onclick="openPage('Cover', this)">Copertine</button>    
             </div>
-
+	    
             <div id="Insert" class="tabcontent">
-              <div align=center id=result1 style="color:green"></div>
-              <div align=center id=error1 style="color:red"></div>
-              <br>
-              <div align="center">
-                <form id="insert_form"></form>
-                <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
-                <div id="footer1" align="center"></div>
-              </div>
+		<div align=center id=result1 style="color:green"></div>
+		<div align=center id=error1 style="color:red"></div>
+		<br>
+		<div align="center">
+                    <form id="insert_form"></form>
+                    <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
+                    <div id="footer1" align="center"></div>
+		</div>
             </div>
-        
+            
             <div id="Update" class="tabcontent">
                 <div align=center id=result2 style="color:green"></div>
                 <div align=center id=error2 style="color:red"></div>
@@ -78,7 +78,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <form id="update_form"></form>
                 <div id="footer2" align="center"></div>
             </div>
-
+	    
             <div id="Delete" class="tabcontent">
                 <div align=center id=result3 style="color:green"></div>
                 <div align=center id=error3 style="color:red"></div>
@@ -97,93 +97,93 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 </div>
                 <div id="footer3" align="center"></div>
             </div>
-
+	    
             <div id="Backup" class="tabcontent">
                 <div align=center id=result4 style="color:green"></div>
                 <div align=center id=error4 style="color:red"></div>
                 <br>
-
+		
                 <div align="center">
-                <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
-                    <input type="hidden" name="func" value="backup">
-                    <table>
-                        <tr>
-                            <td><label for="backup_data">Data di backup:</label></td>
-                            <td><input type="date" id="last_upload" name="last_upload"></td>
-                        </tr>
-                        <tr>
-                            <td colspan=2 align=center><br>
-                            <button type="submit" id="submit" name="import" class="btn-info btn-backup">Backup</button>
-                            <br></td>
-                        </tr>
-                </form>
-                    </table>
+                    <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
+			<input type="hidden" name="func" value="backup">
+			<table>
+                            <tr>
+				<td><label for="backup_data">Data di backup:</label></td>
+				<td><input type="date" id="last_upload" name="last_upload"></td>
+                            </tr>
+                            <tr>
+				<td colspan=2 align=center><br>
+				    <button type="submit" id="submit" name="import" class="btn-info btn-backup">Backup</button>
+				    <br></td>
+                            </tr>
+			</table>
+		    </form>
                 </div>
                 <br>
                 <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
                 <div id="footer4" align="center"></div>
             </div>
-
+	    
             <div id="Restore" class="tabcontent">
                 <div align=center id=result5 style="color:green"></div>
                 <div align=center id=error5 style="color:red"></div>
                 <br>
-
+		
                 <div align=center>
-                <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
-                    <table>
-                        <tr>
-                            <td><label class="col-md-4 control-label">File di Catalogo (.CSV)</label></td>
-                            <td><input type="file" name="filecsv" id="filecsv" accept=".csv"></td>
-                        </tr>
-                        <tr>
-                            <td><label class="col-md-4 control-label">File delle copertine (.ZIP)</label></td>
-                            <td><input type="file" name="filezip" id="filezip" accept=".zip"></td>
-                        </tr>
-                        <input type="hidden" name="func" value="restore">
-                    </table>
-                    <br><br>
-                    <button type="submit" id="restore" name="restore" class="btn-info btn-restore"><img src="/view/icons/plus.png">&nbsp;Inserisci Catalogo</button>
-                </form>
+                    <form class="new_catalogue" name="new_catalogue" id="new_catalogue" action method="POST">
+			<table>
+                            <tr>
+				<td><label class="col-md-4 control-label">File di Catalogo (.CSV)</label></td>
+				<td><input type="file" name="filecsv" id="filecsv" accept=".csv"></td>
+                            </tr>
+                            <tr>
+				<td><label class="col-md-4 control-label">File delle copertine (.ZIP)</label></td>
+				<td><input type="file" name="filezip" id="filezip" accept=".zip"></td>
+                            </tr>
+                            <input type="hidden" name="func" value="restore">
+			</table>
+			<br><br>
+			<button type="submit" id="restore" name="restore" class="btn-info btn-restore"><img src="/view/icons/plus.png">&nbsp;Inserisci Catalogo</button>
+                    </form>
                 </div>
                 <br>
                 <div id="overlay"><div><img src="/view/icons/loading.gif" width="64px" height="64px"/></div></div>
                 <div id="footer5" align="center"></div>
             </div>
-
+	    
             <div id="Cover" class="tabcontent">
                 <div align=center id=result6 style="color:green"></div>
                 <div align=center id=error6 style="color:red"></div>
                 <br>
                 <h3><?php echo $output[0];?></h3>
-<?php
-    if (!is_null($output[1])) {
-        $table = array_chunk(json_decode($output[1], true), 10);
-        echo "<table border=1px>";
-        for ($i=0; $i<count($table); $i++) {
-    	    echo "<tr>";
-            for ($j=0; $j<count($table[$i]); $j++) {    
-    	        echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
-	    }
-	    echo "</tr>";
-        }
-        echo "</table>";
-    }
-?>
-<br>
-<h3><?php echo $output[2];?></h3>
-<?php
-    $table = array_chunk(json_decode($output[3], true), 10);
-    echo "<table border=1px>";
-    for ($i=0; $i<count($table); $i++) {
-    	echo "<tr>";
-        for ($j=0; $j<count($table[$i]); $j++) {    
-    	    echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
-	}
-	echo "</tr>";
-    }
-    echo "</table>";
-?>
+		<?php
+		if (!is_null($output[1])) {
+		    $table = array_chunk(json_decode($output[1], true), 10);
+		    echo "<table border=1px>";
+		    for ($i=0; $i<count($table); $i++) {
+    			echo "<tr>";
+			for ($j=0; $j<count($table[$i]); $j++) {    
+    			    echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
+			}
+			echo "</tr>";
+		    }
+		    echo "</table>";
+		}
+		?>
+		<br>
+		<h3><?php echo $output[2];?></h3>
+		<?php
+		$table = array_chunk(json_decode($output[3], true), 10);
+		echo "<table border=1px>";
+		for ($i=0; $i<count($table); $i++) {
+    		    echo "<tr>";
+		    for ($j=0; $j<count($table[$i]); $j++) {    
+    			echo "<td>&nbsp;".$table[$i][$j]."&nbsp;</td>";
+		    }
+		    echo "</tr>";
+		}
+		echo "</table>";
+		?>
                 <div id="footer5" align="center"></div>
             </div>
         </div>

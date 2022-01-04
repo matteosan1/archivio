@@ -7,11 +7,11 @@ require_once "../view/config.php";
 require_once "Member.php";
 
 if (isset($_POST)) {
-   $timestamp = date('Y-m-d H:i:s');
-   
-   $m = new Member();
-   $res = $m->addNote($_POST["sender"], $_POST["recipient"], $_POST["recipientg"], $_POST["note"], $timestamp);
-
-   echo "Messaggio inviato correttamente.";
+    $timestamp = date('Y-m-d H:i:s');
+    
+    $m = new Member();
+    $res = $m->addNote($_POST["sender"], $_POST["recipient"], $_POST["recipientg"], $_POST["note"], $timestamp);
+    
+    echo "Messaggio inviato correttamente.";
 }
 ?>

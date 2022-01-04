@@ -27,13 +27,13 @@ if (isset($_POST)) {
         } else {
             $real_key = $key;
         }
- 
+        
         $doc->$real_key = $value;
         if ($real_key == 'data') {
             $doc->anno = substr($value, 0, 4);
         }
     }
-        
+    
     if (!array_key_exists("privato", $_POST)) {
         $doc->privato = 0;
     }   
@@ -46,7 +46,7 @@ if (isset($_POST)) {
     } catch (Solarium\Exception\HttpException $e) {
         $error = $e->getMessage();
     }
-   
+    
     if (isset($_FILES['copertina'])) {
         if ($_FILES['copertina']['name'] != "") {
      	    $cover_tmp = $_FILES['copertina']['tmp_name'];
@@ -58,7 +58,7 @@ if (isset($_POST)) {
                 $resize = new ResizeImage($cover_tmp);
       	        $resize->resizeTo(200, 200, 'maxHeight');
       	        $resize->saveImage($GLOBALS['UPLOAD_DIR'].$cover_name);
- 
+                
                 $res = rename($GLOBALS['UPLOAD_DIR'].$cover_name, $GLOBALS['COVER_DIR'].strtoupper($cover_name));
                 if ($res != 1) {
                     $error = "Errore nella fase di copia della copertina.";
@@ -66,11 +66,11 @@ if (isset($_POST)) {
             }
         }
     }
- 
+    
     if ($error == "") {
-       echo json_encode(array('result' => "Doc ".$doc->codice_archivio." aggiornato in ".$result->getQueryTime()." ms"));
+        echo json_encode(array('result' => "Doc ".$doc->codice_archivio." aggiornato in ".$result->getQueryTime()." ms"));
     } else {
-       echo json_encode(array("error" => $error));
+        echo json_encode(array("error" => $error));
     }
 }
 ?>

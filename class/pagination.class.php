@@ -12,10 +12,10 @@ class PerPage {
 		$output = '';
 		if (!isset($_GET["page"]))
             $_GET["page"] = 1;
-    
+        
         //if($this->perpage != 0)
 		$this->pages = ceil($count/$this->perpage);
-    
+        
 		if($this->pages>1) {
 			if($_GET["page"] == 1) 
 				$output = $output . '<span class="link first disabled">&#8810;</span><span class="link disabled">&#60;</span>';
@@ -30,7 +30,7 @@ class PerPage {
 					$output = $output . '<a class="link" onclick="getresult(\'' . '1\')" >1</a>';
 			}
 			if(($_GET["page"]-3)>1) {
-					$output = $output . '<span class="dot">...</span>';
+                $output = $output . '<span class="dot">...</span>';
 			}
 			
 			for($i=($_GET["page"]-2); $i<=($_GET["page"]+2); $i++)	{
@@ -56,8 +56,6 @@ class PerPage {
 				$output = $output . '<a  class="link" onclick="getresult(\'' . ($_GET["page"]+1) . '\')" >></a><a  class="link" onclick="getresult(\'' . ($this->pages) . '\')" >&#8811;</a>';
 			else				
 				$output = $output . '<span class="link disabled">></span><span class="link disabled">&#8811;</span>';
-			
-			
 		}
 		return $output;
 	}

@@ -8,13 +8,13 @@ require_once "../class/Member.php";
 $m = new Member();
 
 if ($_POST['id']) {
-   $id = $_POST['id'];
-   $result = $m->getL2Tags($id);
-   foreach ($result as $row) {
-       $id = $row['id'];
-       $data = $row['name'];
-       echo $id."   ".$data;
-       echo '<option value="'.$id.'">'.$data.'</option>';
-   }
+    $id = $_POST['id'];
+    $result = $m->getL2Tags($id);
+    foreach ($result as $row) {
+        $id = $row['id'];
+        $data = $row['name'];
+        echo $id."   ".$data;
+        echo '<option value="'.$id.'">'.$data.'</option>';
+    }
 }      
 ?>

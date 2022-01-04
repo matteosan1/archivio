@@ -38,13 +38,11 @@ class IPTC
 {
     var $meta = [];
     var $file = null;
-
+    
     function __construct($filename)
     {
         $info = null;
-
         $size = getimagesize($filename, $info);
-
         if(isset($info["APP13"])) $this->meta = iptcparse($info["APP13"]);
 
         $this->file = $filename;
@@ -64,11 +62,8 @@ class IPTC
     private function write()
     {
         $mode = 0;
-
         $content = iptcembed($this->binary(), $this->file, $mode);   
-
         $filename = $this->file;
-
         if(file_exists($this->file)) unlink($this->file);
 
         $fp = fopen($this->file, "w");
@@ -79,7 +74,6 @@ class IPTC
     private function binary()
     {
         $data = "";
-
         foreach(array_keys($this->meta) as $key)
         {
             $tag = str_replace("2#", "", $key);
@@ -93,7 +87,7 @@ class IPTC
     {
         $length = strlen($value);
         $retval = chr(0x1C) . chr($rec) . chr($data);
-
+        
         if($length < 0x8000)
         {
             $retval .= chr($length >> 8) .  chr($length & 0xFF);
@@ -101,11 +95,11 @@ class IPTC
         else
         {
             $retval .= chr(0x80) . 
-                       chr(0x04) . 
-                       chr(($length >> 24) & 0xFF) . 
-                       chr(($length >> 16) & 0xFF) . 
-                       chr(($length >> 8) & 0xFF) . 
-                       chr($length & 0xFF);
+                    chr(0x04) . 
+                    chr(($length >> 24) & 0xFF) . 
+                    chr(($length >> 16) & 0xFF) . 
+                    chr(($length >> 8) & 0xFF) . 
+                    chr($length & 0xFF);
         }
 
         return $retval . $value;            
@@ -117,7 +111,7 @@ class IPTC
         print_r($this->meta);
         echo "</pre>";
     }
-
+    
     #requires GD library installed
     function removeAllTags()
     {

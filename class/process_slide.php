@@ -1,5 +1,4 @@
 <?php
-
 require_once "../class/Member.php";
 require_once "../view/config.php";
 require_once "../class/solr_utilities.php";
@@ -27,7 +26,7 @@ if (isset($_POST)) {
 
     $orig_ext = explode(".", $_FILES['userfile']['name']);
     $orig_ext = strtolower(end($orig_ext));
-
+    
     if (isset($_POST['is_lastra'])) {
         $prefix = 'LAST';
     } else {
@@ -39,7 +38,7 @@ if (isset($_POST)) {
     
     $update = $client->createUpdate();
     $doc = $update->createDocument();
-
+    
     $doc->codice_archivio = $ca;
     if (isset($_POST['is_lastra'])) {
         $doc->tipologia = "LASTRA"; 
@@ -54,38 +53,38 @@ if (isset($_POST)) {
     $doc->autore = $_POST['author'];
     $doc->privato = 0;
     
-//    if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
-//        $resize = new ResizeImage($_FILES['userfile']['tmp_name'][$i]);
-//        $resize->resizeTo(200, 200, 'maxHeight');
-//        $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
-//    } else if ($orig_ext == "tif" or $orig_ext == "tiff") {
-//        $command = $GLOBALS['CONVERT_BIN']." ".$_FILES['userfile']['tmp_name'][$i]."[0] -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$ca.".JPG";
-//        $output = shell_exec($command);
-//    }
-// 
-//    $target_directory = $GLOBALS['SLIDE_DIR'].$ca.".".$ext;
-//    if (!move_uploaded_file($tmp_filename, $target_directory)) {
-//	    array_push($arr_result['error'], "Errore nella fase di copia di ".$_FILES['userfile']['name'][$i]);
-//        return;
-//	}
-//    
+    //    if ($orig_ext == "jpg" or $orig_ext == "jpeg") {
+    //        $resize = new ResizeImage($_FILES['userfile']['tmp_name'][$i]);
+    //        $resize->resizeTo(200, 200, 'maxHeight');
+    //        $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$ca.".".strtoupper($orig_ext));
+    //    } else if ($orig_ext == "tif" or $orig_ext == "tiff") {
+    //        $command = $GLOBALS['CONVERT_BIN']." ".$_FILES['userfile']['tmp_name'][$i]."[0] -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$ca.".JPG";
+    //        $output = shell_exec($command);
+    //    }
+    // 
+    //    $target_directory = $GLOBALS['SLIDE_DIR'].$ca.".".$ext;
+    //    if (!move_uploaded_file($tmp_filename, $target_directory)) {
+    //	    array_push($arr_result['error'], "Errore nella fase di copia di ".$_FILES['userfile']['name'][$i]);
+    //        return;
+    //	}
+    //    
     $error = "";
     try {
-       $update->addDocuments(array($doc));
-       $update->addCommit();
-       $result = $client->update($update);
+        $update->addDocuments(array($doc));
+        $update->addCommit();
+        $result = $client->update($update);
     } catch (Exception $e) {
         $error = $e->getMessage();
     }
-
+    
     if ($error != 0) {
         array_push($arr_result['error'], $error);
     }
-   
+    
     if (count($arr_result['error']) != 0) {
         echo json_encode(array("error" => implode("<br>", $arr_result['error'])));
     } else {
-       echo json_encode(array("result"=> "Tutti i documenti sono stati inseriti correttamente.")); 
+        echo json_encode(array("result"=> "Tutti i documenti sono stati inseriti correttamente.")); 
     }
 }
 ?>

@@ -47,21 +47,21 @@ $(document).ready(function() {
     //});
     
     $("#insert_form").submit(function() {
-	    var formData = new FormData(document.getElementById("insert_form"));
+	var formData = new FormData(document.getElementById("insert_form"));
         var tipologia = document.getElementById('tipologia').value;
         formData.set('tipologia', tipologia);
-
-	    if (request) {
+	
+	if (request) {
             request.abort();
         }
-
+	
         if (tipologia == "SONETTO" || tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
             var filenames = document.getElementById('scan').files;
             if (filenames.length == 0) {
-	            alert ("Almeno un documento deve essere selezionato.");
-	            return false;
+	        alert ("Almeno un documento deve essere selezionato.");
+	        return false;
             }
-
+	    
             var is_ocr = !!document.getElementById('testo_ocr');        
             if (is_ocr) {
                 var ocr = document.getElementById('testo_ocr').value;
@@ -74,23 +74,23 @@ $(document).ready(function() {
         } else if (tipologia == "DOCUMENTO") {
             var filenames = document.getElementById('scan[]').files;
             if (filenames.length == 0) {
-	            alert ("Almeno un documento deve essere selezionato.");
-	            return false;
+	        alert ("Almeno un documento deve essere selezionato.");
+	        return false;
             }
         }
-
+	
         if (tipologia == "SONETTO") {
             if (document.getElementById('data').value == "") {
                 alert ("La data e` necessaria.");
                 return false;
             }
         } else if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
-             if (document.getElementById('anno').value == "") {
+            if (document.getElementById('anno').value == "") {
                 alert ("L'anno e` necessario.");
                 return false;
             }
         }
-
+	
         if (tipologia == "SONETTO") {
             var e = document.getElementById("ricorrenza");
             var selection = e.options[e.selectedIndex].text;
@@ -102,7 +102,7 @@ $(document).ready(function() {
             var e = document.getElementById("categoria");
             var selection = e.options[e.selectedIndex].text;
             formData.set("categoria", selection);
-
+	    
             var e = document.getElementById("tecnica");
             var selection = e.options[e.selectedIndex].text;
             formData.set("tecnica", selection);
@@ -111,7 +111,7 @@ $(document).ready(function() {
             var selection = e.options[e.selectedIndex].text;
             formData.set("tecnica", selection);
         }
-
+	
         $('#result1').html("");
         $('#error1').html("");
         request = $.ajax({
@@ -122,7 +122,7 @@ $(document).ready(function() {
             cache: false,
             processData:false                       
         });
-		        
+	
        	request.done(function (response) {
 	    //console.log(response);
 	    var dict = JSON.parse(response);
@@ -140,27 +140,27 @@ $(document).ready(function() {
 	
 	return false;
     });
-
+    
     $(document).on('click','.OCR', function(){
-	    var filenames = document.getElementById('scan[]').files;
+	var filenames = document.getElementById('scan[]').files;
         //console.debug(filenames);
         if (filenames.length == 0) {
-	        alert ("Il documento da analizzare deve essere specificato.");
-	        return false;
-	    } else {
+	    alert ("Il documento da analizzare deve essere specificato.");
+	    return false;
+	} else {
             for (var i = 0; i < filenames.length; i++) {                
-	            var parts = filenames[i]['name'].split('.');
- 	            var ext = parts[parts.length - 1].toLowerCase();
+	        var parts = filenames[i]['name'].split('.');
+ 	        var ext = parts[parts.length - 1].toLowerCase();
                 
-	            // FIXME AGGIUNGERE pdf2image per processare pdf
-	            if (ext != 'jpg' && ext != 'jpeg' &&
-		            ext != 'tiff' && ext != 'tif' &&
+	        // FIXME AGGIUNGERE pdf2image per processare pdf
+	        if (ext != 'jpg' && ext != 'jpeg' &&
+		    ext != 'tiff' && ext != 'tif' &&
                     ext != 'png') {
-		        alert ("Non è possibile effetturare OCR su file " + ext);
-  	  	        return false;
-                    }
+		    alert ("Non è possibile effetturare OCR su file " + ext);
+  	  	    return false;
+                }
             }
-	    }
+	}
 	
         if (request) {
             request.abort();
@@ -233,7 +233,6 @@ $(document).ready(function() {
         }
 	return false;
     });
-    
     
     function addOption(selectbox, text, value) {
         var optn = document.createElement("OPTION");

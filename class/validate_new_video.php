@@ -18,20 +18,20 @@ for ($i=0; $i<$countfiles; $i++) {
     $ret = basicCheckOnFile($i);
 
     if ($ret == 1) {
-       echo '{"error":"Il file '.$_FILES['videos']['name'][$i].' esiste gia`."}';
-       exit;
+        echo '{"error":"Il file '.$_FILES['videos']['name'][$i].' esiste gia`."}';
+        exit;
     }
     
     if (!isset($ret['error'])) {
         $ret = processVideo($i, end($ext));
-
-	if (ret != "") {
-	    echo '{"error":"'.$ret.'"';
-	    exit;
-	}
+        
+        if (ret != "") {
+            echo '{"error":"'.$ret.'"';
+            exit;
+        }
     } else {
       	print_r (array("error"=>$ret['error']));
-	exit;
+        exit;
     }
 }	
 
@@ -40,15 +40,15 @@ exit;
 
 function basicCheckOnFile($i) {
     global $target_directory;
-
+    
     if ($_FILES['videos']['size'][$i] > $GLOBALS['MAX_UPLOAD_BYTE']) {
         echo "Il file ".$_FILE['videos']['name'][$i]." &egrave; troppo grande (>".$GLOBALS['MAX_UPLOAD_BYTE']." Bytes) !";
       	return FALSE;
     }
-
+    
     $resourceName = basename($_FILES['videos']['name'][$i]);
     if (lookForDuplicates($resourceName)) {
-       return FALSE;
+        return FALSE;
     }
     
     return TRUE;
@@ -56,19 +56,19 @@ function basicCheckOnFile($i) {
 
 function processVideo($i, $ext) {
     global $target_directory, $client;
-
+    
     if (! file_exists($target_directory)) {
-	mkdir($target_directory, 0777, TRUE);
+        mkdir($target_directory, 0777, TRUE);
     }
     
     $index = getLastByIndex("VID") + 1;
     $ca = "VID.".str_pad($index, 5, "0", STR_PAD_LEFT);
-
+    
     // FIXME PENSARE AD EVENTUALE THUMBNAIL PER VIDEO
     if (move_uploaded_file($_FILES['videos']['tmp_name'][$i], $target_directory.$ca.".".$ext)) {
-
+        
         $update = $client->createUpdate();
-
+        
         $doc = $update->createDocument();
         $doc->codice_archivio = $ca;
         $doc->tipologia = "VIDEO";
@@ -87,7 +87,7 @@ function processVideo($i, $ext) {
 
         return $error;
     } else {
-       return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
+        return array("error"=>"Problema nello spostamento di ".$_FILES['videos']['name'][$i]);
     }
 }
 ?>

@@ -13,7 +13,7 @@ $(document).ready(function() {
 	    alert ("Manca il codice archivio originale.");
 	    return false;
 	}
-
+	
         if (document.getElementById('new_codice_archivio').value == "") {
 	    alert ("Mance il nuovo codice archivo.");
 	    return false;

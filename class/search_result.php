@@ -21,13 +21,13 @@ require_once("../view/search_output/delibera_output.php");
      
 if (isset($_GET)) {
     $member = new Member();
-  
+    
     $no_of_records_per_page = 10;
     $page = 1;
     if (isset($_GET['page'])) {           
         $page = $_GET['page'];
     }
-
+    
     $searchValue = "";
     if (isset($_GET['q'])) {           
         $searchValue = $_GET['q'];
@@ -35,7 +35,7 @@ if (isset($_GET)) {
     if ($searchValue == "") {
         $searchValue = "*";
     }
-
+    
     $subsearch = 0;
     if(!empty($_GET["sub"])) {
         $subsearch = $_GET["sub"];
@@ -50,7 +50,7 @@ if (isset($_GET)) {
     if ($_SESSION['role'] == 'admin') {
         $localParams .= "privato:[* TO 1]";
     } else {
-       $localParams .= "privato:0";
+        $localParams .= "privato:0";
     }
     
     if ($subsearch != 0) {
@@ -60,7 +60,7 @@ if (isset($_GET)) {
                 if ($firstInsert == 0) {
                     $localParams .= " AND ";
                 }
-
+                
                 if ($i == 0) {                                             
                     $localParams .= "(".$member->curlFlBiblio('book_categories').")";
                 } else if ($i == 1) {
@@ -87,7 +87,7 @@ if (isset($_GET)) {
     $hl->setFields('note Keywords testo argomento_breve');
     $hl->setSimplePrefix($GLOBALS['HIGHLIGHT_BEGIN']);
     $hl->setSimplePostfix($GLOBALS['HIGHLIGHT_END']);
-
+    
     $facetSet = $query->getFacetSet();
     $facetSet->createFacetField('anno')->setField('anno');
     $facetSet->createFacetField('tipologia')->setField('tipologia');
