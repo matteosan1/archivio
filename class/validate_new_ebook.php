@@ -5,7 +5,7 @@ require_once "../class/solr_utilities.php";
 require_once "../view/solr_client.php";
 require_once "../class/resize_image.php";
 require_once "../class/Member.php";
-    
+
 if (isset($_POST)) {
     if ($_POST['tipologia'] == 'DOCUMENTO') {   
         $m = new Member();
@@ -40,7 +40,7 @@ if (isset($_POST)) {
 
         $update = $client->createUpdate();
         $doc = $update->createDocument();
-    
+	
         $doc->codice_archivio = $codice_archivio;
         $doc->tipologia = $_POST['tipologia'];
 
@@ -48,7 +48,7 @@ if (isset($_POST)) {
         $doc->note = $_POST['note'];
         $doc->titolo = $_POST['titolo'];
         $doc->autore = $_POST['autore'];
-    
+	
         foreach ($data as $key => $value) {
             if ($key == "autore" or $key == "testo") {
                 continue;
@@ -64,8 +64,8 @@ if (isset($_POST)) {
                 $command = "gs -dSAFER -dNOPLATFONTS -dNOPAUSE -dBATCH -sOutputFile='".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg' -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseTrimBox -dFirstPage=1 -dLastPage=1 ".$tmp_filename;
                 exec($command, $output, $status);
      	        $resize = new ResizeImage($GLOBALS['UPLOAD_DIR']."outputFileName.jpg");
-          	    $resize->resizeTo(200, 200, 'maxHeight');
-          	    $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$codice_archivio."."."JPG");
+          	$resize->resizeTo(200, 200, 'maxHeight');
+          	$resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$codice_archivio."."."JPG");
             } else if ($ext == "jpg" or $ext == "jpeg") {
                 $resize = new ResizeImage($tmp_filename);
                 $resize->resizeTo(200, 200, 'maxHeight');
@@ -82,11 +82,11 @@ if (isset($_POST)) {
                     $resize->resizeTo(200, 200, 'maxHeight');
                     $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG");
                 }
-        
+		
                 $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita PDF";
                 exec($command, $output, $status);
             }
-  
+	    
             $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['EDOC_DIR'].$ca."PDF";
             for ($i=0; $i<$countfiles; $i++) {
                 $command = $command.$GLOBALS['UPLOAD_DIR']."ocr".$i.".pdf ";
@@ -108,93 +108,97 @@ if (isset($_POST)) {
         $doc->tipologia = $_POST['tipologia'];
 
         if ($_POST['tipologia'] == 'SONETTO') {
-            $doc_testo = $_POST['testo_ocr']."\n";
-            $tmp_filename = $_FILES['scan']['tmp_name'];
-            $tmp = explode(".", $_FILES['scan']['name']);
+	    $doc_testo = $_POST['testo_ocr']."\n";	    
+            $tmp_filename = $_FILES['scan']['tmp_name'][0];
+            $tmp = explode(".", $_FILES['scan']['name'][0]);
             $ext = strtolower(end($tmp));
+	    $i = 0;
 
-            if ($ext == "tiff" or $ext == "tif") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	    if ($ext == "pdf" || $ext == "doc" || $ext == "docx") {
+		$command = "../class/tika.py ".$tmp_filename; //$GLOBALS['UPLOAD_DIR'].$resourceName;
+		exec($command);//, $output, $status);
+		$json = file_get_contents('tika.output');
+		$json_data = json_decode($json,true);
+		//print_r ($json_data);
+		$doc_testo = $json_data['testo'];
+                $command = "gs -dSAFER -dNOPLATFONTS -dNOPAUSE -dBATCH -sOutputFile='".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg' -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseTrimBox -dFirstPage=1 -dLastPage=1 ".$tmp_filename;
                 exec($command, $output, $status);
-            } else if ($ext == "png") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-                exec($command, $output, $status);
-            } 
-            
-            $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita PDF";
-            exec($command, $output, $status);
-            $results = rename($GLOBALS['UPLOAD_DIR']."/ocr".$i.".pdf", $GLOBALS['EDOC_DIR'].$codice_archivio.".PDF");
-    
+		move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$codice_archivio.".".strtoupper($ext));
+		$resourceName = $codice_archivio.".".strtoupper($ext);
+	    } else {	    
+		$command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
+		exec($command, $output, $status);
+		$results = rename($GLOBALS['UPLOAD_DIR']."/ocr".$i.".pdf", $GLOBALS['EDOC_DIR'].$codice_archivio.".PDF");
+		$resourceName = $codice_archivio.".PDF";
+	    }
+
             $doc->testo = $doc_testo;
+	    $doc->resourceName = $resourceName;
             $doc->committente = $_POST['committente']; 
             $doc->ricorrenza = $_POST['ricorrenza']; 	
             $doc->autore = $_POST['autore'];
             $doc->dedica = $_POST['dedica']; 
             $doc->anno = $_POST['anno']; //substr($_POST['data'], 0, 4);
-            $doc->data = $_POST['data'];
+            $doc->data = $_POST['data']."T00:00:00Z";
             $doc->stampato_da = $_POST['stampato_da'];         
             $doc->dimensioni = $_POST['dimensioni']; 
             $doc->note = $_POST['note'];
             $doc->privato = 0;
-
+	    
+	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
             if ($ext == "tiff" or $ext == "tif") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-                exec($command, $output, $status);
-            } else if ($ext == "png") {
-                $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-                exec($command, $output, $status);
-            } else if ($ext == "jpg" or $ext == "jpeg") {
-                $resize = new ResizeImage($_FILES['scan']['tmp_name']);
-                $resize->resizeTo(200, 200, 'maxHeight');
-                $resize->saveImage($GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG");
-            }
+	    	$command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+            } else if ($ext == 'pdf') {
+		$command = $GLOBALS['CONVERT_BIN']." ".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	    }
+	    exec($command, $output, $status);
 
         } else if ($_POST['tipologia'] == "PERGAMENA") {
-            $tmp_filename = $_FILES['scan']['tmp_name'];
-            $tmp = explode(".", $_FILES['scan']['name']);
-            //$duplicate = lookForDuplicates($resourceName);
-            
-            $ext = strtolower(end($tmp));
-
-            $resourceName = $codice_archivio.".".strtoupper($ext);
-            $doc->resourceName = $resourceName;
-            $doc->descrizione = $_POST['descrizione']; 
-            $doc->tecnica = $_POST['tecnica']; 	
-            $doc->autore = $_POST['autore']; 
-            $doc->anno = $_POST['anno']; 
-            $doc->dimensioni = $_POST['dimensioni']; 
-            $doc->note = $_POST['note'];
-            $doc->privato = 0;
+	    $tmp_filename = $_FILES['scan']['tmp_name'];
+	    $tmp = explode(".", $_FILES['scan']['name']);
+	    //$duplicate = lookForDuplicates($resourceName);
+	    
+	    $ext = strtolower(end($tmp));
+	    
+	    $resourceName = $codice_archivio.".".strtoupper($ext);
+	    $doc->resourceName = $resourceName;
+	    $doc->descrizione = $_POST['descrizione']; 
+	    $doc->tecnica = $_POST['tecnica']; 	
+	    $doc->autore = $_POST['autore']; 
+	    $doc->anno = $_POST['anno']; 
+	    $doc->dimensioni = $_POST['dimensioni']; 
+	    $doc->note = $_POST['note'];
+	    $doc->privato = 0;
 
 	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-            if ($ext == "tiff" or $ext == "tif") {
-	    	 $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-            }
-            exec($command, $output, $status);	    	    
-            move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$resourceName);
+	    if ($ext == "tiff" or $ext == "tif") {
+	    	$command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	    }
+	    exec($command, $output, $status);	    	    
+	    move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$resourceName);
         } else if ($_POST['tipologia'] == "BOZZETTO") {
-            $tmp_filename = $_FILES['scan']['tmp_name'];
-            $tmp = explode(".", $_FILES['scan']['name']);
-            //$duplicate = lookForDuplicates($resourceName);
-            $ext = strtolower(end($tmp));
+	    $tmp_filename = $_FILES['scan']['tmp_name'];
+	    $tmp = explode(".", $_FILES['scan']['name']);
+	    //$duplicate = lookForDuplicates($resourceName);
+	    $ext = strtolower(end($tmp));
 
-            $resourceName = $codice_archivio.".".strtoupper($ext);
-            $doc->resourceName = $resourceName;
-            $doc->categoria = $_POST['categoria']; 
-            $doc->descrizione = $_POST['descrizione']; 
-            $doc->tecnica = $_POST['tecnica']; 	
-            $doc->autore = $_POST['autore']; 
-            $doc->anno = $_POST['anno']; 
-            $doc->dimensioni = $_POST['dimensioni']; 
-            $doc->note = $_POST['note'];
-            $doc->privato = 0;
+	    $resourceName = $codice_archivio.".".strtoupper($ext);
+	    $doc->resourceName = $resourceName;
+	    $doc->categoria = $_POST['categoria']; 
+	    $doc->descrizione = $_POST['descrizione']; 
+	    $doc->tecnica = $_POST['tecnica']; 	
+	    $doc->autore = $_POST['autore']; 
+	    $doc->anno = $_POST['anno']; 
+	    $doc->dimensioni = $_POST['dimensioni']; 
+	    $doc->note = $_POST['note'];
+	    $doc->privato = 0;
 
 	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-            if ($ext == "tiff" or $ext == "tif") {
-	    	 $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
-            }
-            exec($command, $output, $status);	    	    
-            move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$resourceName);
+	    if ($ext == "tiff" or $ext == "tif") {
+	    	$command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	    }
+	    exec($command, $output, $status);	    	    
+	    move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$resourceName);
         }
     }
 
@@ -218,7 +222,7 @@ if (isset($_POST)) {
         //    exit;
         //}
 
-        echo json_encode(array('result' => "Volume ".$codice_archivio." inserito correttamente."));
+        echo json_encode(array('result' => "Documento ".$codice_archivio." inserito correttamente."));
         return;
     }
 

@@ -148,9 +148,9 @@
                                     "name": "tecnica_upd",
                                     "id":   "tecnica_upd",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {"html" : "----"}
-	                                }
+	                            "options" : {
+		                        "null" : {"html" : "----"}
+	                            }
                                 }
                             ]
                         }
@@ -279,35 +279,6 @@
                                     "placeholder":"note",
                                     "rows": "10",
                                     "cols": "60"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan",
-                                    "id":"scan",
-                                    "type": "file",
-                                    "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
                                 }
                             ]
                         }

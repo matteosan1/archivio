@@ -29,11 +29,12 @@
                             "html" :
                             [
                                 {
-                                    "name":"scan",
-                                    "id":"scan",
+                                    "name":"scan[]",
+                                    "id":"scan[]",
                                     "type": "file",
                                     "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
+				    "multiple":"multiple",
+                                    "accept": ".jpg,.jpeg,.tiff,.tif,.pdf,.docx,.doc"
                                 }
                             ]
                         },
@@ -175,10 +176,6 @@
                                     "class": "ricorrenza",
                                     "type":"select",
                                     "options" : {
-                                        "null" : {
-                                            "selected" : "selected",
-                                            "html" : "----"
-                                        }
                                     }
                                 }
                             ]

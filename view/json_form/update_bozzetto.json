@@ -316,35 +316,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan_upd",
-                                    "id":"scan_upd",
-                                    "type": "file",
-                                    "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
-                                }
-                            ]
-                        }
-                    ]
                 }
             ]
         }

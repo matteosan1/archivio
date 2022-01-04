@@ -97,7 +97,8 @@ function utf8enc($array, $data, $book=1) {
                 }
             }
         }
-        $helper[utf8_encode($key)] = is_array($value) ? utf8enc($value, $data, $book) : utf8_encode($value);
+        //$helper[utf8_encode($key)] = is_array($value) ? utf8enc($value, $data, $book) : utf8_encode($value);
+	$helper[$key] = is_array($value) ? utf8enc($value, $data, $book) : $value;
     }
     
     return $helper;
@@ -121,10 +122,11 @@ function findItem($cod) {
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            
-            $res[$field]  = $value;
+
+	    //print ($value);
+            $res[$field] = ($value);
         }
-        
+        //exit;
         $dir = "../view/json_form/";
         if ($res['tipologia'] == 'BOZZETTO') {
             $filename = $dir."update_bozzetto.json";        
@@ -216,7 +218,7 @@ function findItem($cod) {
         }            
     } else if ($res['tipologia'] == "SONETTO") {
         $m = new Member();
-        $tech = $m->fillCombo("sonetto_events");
+        $tech = $m->fillCombo("sonetto_events", 'name', 'id');
         $i = 0;
         foreach ($tech as $row) {
             $data = $row['name'];
@@ -283,8 +285,8 @@ function newItem($type) {
     } else if ($type == "DOCUMENTO") {   
         $filename = $dir."insert_doc.json";
     } else if ($type == "----") {
-	    $filename = $dir."empty.json";
-	}
+	$filename = $dir."empty.json";
+    }
     
     $str = file_get_contents($filename);
     $json = json_decode($str, true);
@@ -295,12 +297,12 @@ function newItem($type) {
         $categories = $m->getAllCategories('book_categories');
         foreach ($prefissi as $category) {
             $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$category['prefix']] =
-                                                                                              array("html" => $category['prefix']);
+                array("html" => $category['prefix']);
         }
         
         foreach ($categories as $category) {
             $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$category['category']] =
-                                                                                                array("html" => $category['category']);
+                array("html" => $category['category']);
         }
     } else if ($type == "FOTOGRAFIA") {
         $l1tags = $m->getL1Tags();
@@ -310,7 +312,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$id] =
-                                                                              array("html" => $data);
+                array("html" => $data);
         }            
     }  else if ($type == "STAMPA" or $type == "LASTRA") {
         if ($type == "STAMPA") {
@@ -326,7 +328,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$id] =
-                                                                              array("html" => $data);
+                array("html" => $data);
         }            
     } else if ($type == "BOZZETTO") {
         $cat = $m->fillCombo("bozzetto_categories");
@@ -335,7 +337,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
+                array("html" => $data);
             $i++;
         }
         
@@ -345,7 +347,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
+                array("html" => $data);
             $i++;
         }            
     } else if ($type == "PERGAMENA") {
@@ -355,7 +357,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
+                array("html" => $data);
             $i++;
         }
     } else if ($type == "DELIBERA") {
@@ -365,7 +367,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
+                array("html" => $data);
             $i++;
         }
         
@@ -376,7 +378,7 @@ function newItem($type) {
             $data = $row['name'];
             //           table      tr         td      
             $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
+                array("html" => $data);
             $i++;
         }
     } else if ($type == "VESTIZIONE") {
@@ -385,12 +387,12 @@ function newItem($type) {
         
         foreach ($ricorrenze as $ricorrenza) {
             $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$ricorrenza['ricorrenza']] =
-                                                                                                    array("html" => $ricorrenza['ricorrenza']);
+                array("html" => $ricorrenza['ricorrenza']);
         }
         
         foreach ($ruoli as $ruolo) {
             $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$ruolo['ruolo']] =
-                                                                                          array("html" => $ruolo['ruolo']);
+                array("html" => $ruolo['ruolo']);
         }
     }
     print_r (json_encode($json));

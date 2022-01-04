@@ -24,11 +24,11 @@ $GLOBALS['EDOC_DIR'] = '/home/archivio/edoc/';
 $GLOBALS['THUMBNAILS_DIR'] = '/thumbnails/';
 
 $GLOBALS['OCR_BIN'] = '/usr/bin/tesseract';
-$GLOBALS['TIKA_APP'] = '/usr/local/bin//tika-app-2.1.0.jar';
+$GLOBALS['TIKA_APP'] = '/usr/local/bin/tika-app-2.1.0.jar';
 $GLOBALS['MERGE_PDF_BIN'] = '/usr/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=';
 $GLOBALS['GHOSTVIEW'] = '/usr/bin/gs';
 $GLOBALS['CONVERT_BIN'] = '/usr/bin/convert';
-$GLOBALS['PYTHON_BIN'] = '/usr/bin/python';
+$GLOBALS['PYTHON_BIN'] = '/usr/bin/python3';
 
 $GLOBALS['HIGHLIGHT_BEGIN'] = '<u>';
 $GLOBALS['HIGHLIGHT_END'] = '</u>';

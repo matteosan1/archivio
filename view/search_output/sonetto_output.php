@@ -21,7 +21,7 @@ function sonettoOutput($document, $highlighting) {
         }
         
         if ($key == 'codice_archivio') {
-            $out .= codiceArchivioFormatSon($value, $val, 'THUMBNAILS_DIR');
+            $out .= codiceArchivioFormatSon($value, $val, 'THUMBNAILS_DIR', $document['resourceName']);
         } else if  ($key == 'note') {  
             $highlightedDoc = $highlighting->getResult($document->codice_archivio);
             $out .= noteFormat($val, $highlightedDoc);  

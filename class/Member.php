@@ -300,17 +300,17 @@ class Member
         return true;
     }
     
-    function fillCombo($table_name, $col_name="name")
+    function fillCombo($table_name, $col_name="name", $ord_col="name")
     {
         $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
-        
-	    $paramType = array();
+   
+	$paramType = array();
     	$paramArray = array();
-	    $result = $this->ds->select($query, $paramType, $paramArray);
-        
+	$result = $this->ds->select($query, $paramType, $paramArray);
+
     	return $result;
     }
 }
 
-$m = new Member();
-$m->fillCombo("bozzetto_categories");
+//$m = new Member();
+//$m->fillCombo("sonetto_events", 'name', 'id');
