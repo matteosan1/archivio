@@ -1,5 +1,6 @@
 {
-    "id":"insert_form",
+    "id":"update_form",
+    "class":"update_form",
     "enctype":"multipart/form-data",
     "action":"",
     "method" : "post",
@@ -10,8 +11,8 @@
             "width":"80%",
             "html" :
             [
-                {
-                    "type":"tr",                            
+		{
+                    "type":"tr",
                     "html":
                     [
                         {
@@ -20,7 +21,7 @@
                             [
                                 {
                                     "type":"label",
-                                    "html":"Scansione (JPG, TIF, PDF, DOCX): "
+                                    "html":"Codice Archivio: "
                                 }
                             ]
                         },
@@ -29,22 +30,24 @@
                             "html" :
                             [
                                 {
-                                    "name":"scan[]",
-                                    "id":"scan[]",
-                                    "type": "file",
-                                    "value": "",
-                                    "multiple":"multiple",
-                                    "accept": ".jpg,.jpeg,.pdf,.doc,.docx,.tif,.tiff"
+                                    "name": "codice_archivio_upd",
+                                    "id":   "codice_archivio_upd",
+                                    "value_chg": "codice_archivio",
+                                    "size":"25",
+                                    "type": "text",
+                                    "readonly": "readonly"
                                 }
                             ]
                         },
                         {
                             "type":"td",
+                            "rowspan":"2",
                             "html":
                             [
                                 {
-                                    "value":"Inserisci",
-                                    "id":    "inserisci",
+                                    "value":"Aggiorna",
+                                    "id":    "aggiorna",
+                                    "class": "aggiorna",
                                     "type": "submit"
                                 }
                             ]
@@ -64,20 +67,33 @@
                                     "html":"Autore: "
                                 }
                             ]
-                     },
+			},
                         {
                             "type":"td",
                             "html" :
                             [
                                 {
-                                    "name": "autore",
-                                    "id":   "autore",
-                                    "value": "",
+                                    "name": "autore_upd",
+                                    "id":   "autore:upd",
+                                    "value_chg": "autore",
                                     "size":"50",
                                     "type": "text"
                                 }
                             ]
-                        }
+			},
+			{
+                            "type":"td",
+                            "rowspan":"5",
+                            "html":
+                            [
+                                {
+                                    "type":"img",
+                                    "heigth":"150px",
+                                    "src_chg":"",
+                                    "onerror":"this.src='../img/no_image.png'"   
+                                }
+                            ]
+                        }			
                     ]
                 },
                 {
@@ -99,9 +115,9 @@
                             "html" :
                             [
                                 {
-                                    "name": "titolo",
-                                    "id":   "titolo",
-                                    "value": "",
+                                    "name": "titolo_upd",
+                                    "id":   "titolo_upd",
+                                    "value_chg": "titolo",
                                     "size":"50",
                                     "type": "text"
                                 }
@@ -128,10 +144,10 @@
                             "html" :
                             [
                                 {
-                                    "name":"note",
-                                    "id":"note",
+                                    "name":"note_upd",
+                                    "id":"note:upd",
                                     "type": "textarea",
-                                    "html": "",
+                                    "html_chg": "note",
                                     "placeholder":"note",
                                     "rows": "10",
                                     "cols": "60"

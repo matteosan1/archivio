@@ -204,15 +204,12 @@
                             "html" :
                             [
                                 {
-                                    "name": "ricorrenza",
-                                    "id":   "ricorrenza",
+                                    "name": "ricorrenza_upd",
+                                    "id":   "ricorrenza_upd",
                                     "type":"select",
-                                    "options" : {
-                                        "null" : {
-                                            "html" : "----"
-                                        }
+				    "options" : {
                                     }
-                                }
+				}
                             ]
                         }
                     ]
@@ -265,9 +262,10 @@
                             "html" :
                             [
                                 {
-                                    "name": "data_upd",
-                                    "id":   "data_upd",
+                                    "name": "data",
+                                    "id":   "data",
                                     "value_chg":"data",
+				    "readonly": "readonly",
                                     "type" : "text",
                                     "placeholder":"AAAA-MM-GG",
                                     "size":"12"

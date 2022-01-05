@@ -11,7 +11,7 @@
             "width":"80%",
             "html" :
             [
-                                {
+                {
                     "type":"tr",
                     "html":
                     [
@@ -34,12 +34,8 @@
                                     "id":   "categoria",
                                     "class": "categoria",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {
-			                                "selected" : "selected",
-			                                "html" : "----"
-		                                }
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         }
@@ -111,12 +107,8 @@
                                     "id":   "tecnica",
                                     "class": "tecnica",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {
-			                                "selected" : "selected",
-			                                "html" : "----"
-		                                }
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         }

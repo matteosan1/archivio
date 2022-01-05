@@ -55,29 +55,42 @@ $(document).ready(function() {
             request.abort();
         }
 	
-        if (tipologia == "SONETTO" || tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
+        if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
             var filenames = document.getElementById('scan').files;
             if (filenames.length == 0) {
 	        alert ("Almeno un documento deve essere selezionato.");
 	        return false;
             }
-	    
-            var is_ocr = !!document.getElementById('testo_ocr');        
-            if (is_ocr) {
-                var ocr = document.getElementById('testo_ocr').value;
-                if (ocr == "") {
-                    if (! confirm('Vuoi proseguire senza OCR ?')) {
-                        return false;
-                    } 
-                }
-            }
-        } else if (tipologia == "DOCUMENTO") {
+	}
+
+	if (tipologia == "DOCUMENTO" || tipologia == "SONETTO") {
             var filenames = document.getElementById('scan[]').files;
             if (filenames.length == 0) {
 	        alert ("Almeno un documento deve essere selezionato.");
 	        return false;
             }
+
+	    let ext = filenames.item(0).name.split('.').pop();
+	    for (let i = 0; i < filenames.length; i++) {
+		let file_ext = filenames.item(i).name.split(".").pop();
+		if (file_ext != ext) {
+		    alert ("Nel caricamente multiplo i file devono essere tutti dello stesso tipo.");
+	            return false;
+		}		
+	    }
         }
+
+//if (tipologia == "SONETTO") {		    
+//    var is_ocr = !!document.getElementById('testo_ocr');        
+//    if (is_ocr) {
+//        var ocr = document.getElementById('testo_ocr').value;
+//        if (ocr == "") {
+//            if (! confirm('Vuoi proseguire senza OCR ?')) {
+//                return false;
+//            } 
+//        }
+//    }
+//}
 	
         if (tipologia == "SONETTO") {
             if (document.getElementById('data').value == "") {
@@ -124,7 +137,7 @@ $(document).ready(function() {
         });
 	
        	request.done(function (response) {
-	    //console.log(response);
+	    console.log(response);
 	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
     		$('#error1').html(dict['error']);
@@ -154,8 +167,8 @@ $(document).ready(function() {
                 
 	        // FIXME AGGIUNGERE pdf2image per processare pdf
 	        if (ext != 'jpg' && ext != 'jpeg' &&
-		    ext != 'tiff' && ext != 'tif' &&
-                    ext != 'png') {
+		    ext != 'tiff' && ext != 'tif') {// &&
+			//ext != 'png') {
 		    alert ("Non è possibile effetturare OCR su file " + ext);
   	  	    return false;
                 }
@@ -280,10 +293,10 @@ $(document).ready(function() {
         }
 	
         if (tipologia == "SONETTO") {
-            var e = document.getElementById("ricorrenza");
+            var e = document.getElementById("ricorrenza_upd");
             var selection = e.options[e.selectedIndex].text;
-            formData.set("ricorrenza", selection);
-            
+            formData.set("ricorrenza_upd", selection);
+
             var d = document.getElementById('data').value;
             formData.set('anno', d.substring(0, 4));
         } else if (tipologia == "BOZZETTO") {
@@ -306,7 +319,6 @@ $(document).ready(function() {
         });
 	
         request.done(function (response) {
-	    console.log(response);
       	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
 		$('#error2').html(dict['error']);

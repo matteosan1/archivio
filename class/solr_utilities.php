@@ -97,7 +97,8 @@ function utf8enc($array, $data, $book=1) {
                 }
             }
         }
-        $helper[utf8_encode($key)] = is_array($value) ? utf8enc($value, $data, $book) : utf8_encode($value);
+        //$helper[utf8_encode($key)] = is_array($value) ? utf8enc($value, $data, $book) : utf8_encode($value);
+	$helper[$key] = is_array($value) ? utf8enc($value, $data, $book) : $value;
     }
     
     return $helper;
@@ -121,10 +122,11 @@ function findItem($cod) {
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            
-            $res[$field]  = $value;
+
+	    //print ($value);
+            $res[$field] = ($value);
         }
-        
+        //exit;
         $dir = "../view/json_form/";
         if ($res['tipologia'] == 'BOZZETTO') {
             $filename = $dir."update_bozzetto.json";        
@@ -216,7 +218,7 @@ function findItem($cod) {
         }            
     } else if ($res['tipologia'] == "SONETTO") {
         $m = new Member();
-        $tech = $m->fillCombo("sonetto_events");
+        $tech = $m->fillCombo("sonetto_events", 'name', 'id');
         $i = 0;
         foreach ($tech as $row) {
             $data = $row['name'];
@@ -259,6 +261,30 @@ function findItem($cod) {
     print_r (json_encode($json));
 }
 
+// SI PUO' SEMPLIFICARE ANCORA CON SELECT * IN MEMBER.PHP
+// E POI RIUSARLO PER L'UPDATE
+function addOptions($m, $db, $field, $ord, $json,
+                    $i2, $i3, $i4, custom_idx="") {
+    $cat = $m->fillCombo($db, $field, $ord);
+    $i = 0;
+    foreach ($cat as $row) {
+        $data = $row[$field];
+        if ($i == 0) {
+            $val = array("html" => $data, "selected" => "selected");
+        } else {
+            $val = array("html" => $data);
+        }
+        //           table      tr         td
+        if (custom_idx == "") {
+            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$i] = $val;
+        } else {
+            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[custom_idx]] = $val;
+        }
+        $i++;
+    }
+    return $json;
+}
+
 function newItem($type) {
     $dir = "../view/json_form/";
     if ($type == 'LIBRO'	) {
@@ -283,116 +309,40 @@ function newItem($type) {
     } else if ($type == "DOCUMENTO") {   
         $filename = $dir."insert_doc.json";
     } else if ($type == "----") {
-	    $filename = $dir."empty.json";
-	}
+        $filename = $dir."empty.json";
+    }
     
     $str = file_get_contents($filename);
     $json = json_decode($str, true);
     
     $m = new Member();
     if ($type == "LIBRO") {
-        $prefissi = $m->getAllPrefissi();
-        $categories = $m->getAllCategories('book_categories');
-        foreach ($prefissi as $category) {
-            $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$category['prefix']] =
-                                                                                              array("html" => $category['prefix']);
-        }
-        
-        foreach ($categories as $category) {
-            $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$category['category']] =
-                                                                                                array("html" => $category['category']);
-        }
+        $query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
+        $json = addOptions($m, "codice_archivio", 'prefix', 'prefix', $json, 0, 1, 0, 'prefix');
+        $json = addOptions($m, "categories", 'category', 'category', $json, 1, 1, 0, 'category');
     } else if ($type == "FOTOGRAFIA") {
-        $l1tags = $m->getL1Tags();
-        
-        foreach ($l1tags as $row) {
-            $id = $row['id'];
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$id] =
-                                                                              array("html" => $data);
-        }            
+        $json = addOptions($m, "tags", '', '', $json, 1, 1, 0);
     }  else if ($type == "STAMPA" or $type == "LASTRA") {
         if ($type == "STAMPA") {
             $json['html'][0]['html'][0]['html'][0]['html'] = "Stampa (JPG o TIFF): ";
         } else {
             $json['html'][0]['html'][0]['html'][0]['html'] = "Lastra (JPG o TIFF): ";
         }
-        
-        $l1tags = $m->getL1Tags();
-        
-        foreach ($l1tags as $row) {
-            $id = $row['id'];
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$id] =
-                                                                              array("html" => $data);
-        }            
+        $json = addOptions($m, "tags", '', '', $json, 3, 1, 0);
     } else if ($type == "BOZZETTO") {
-        $cat = $m->fillCombo("bozzetto_categories");
-        $i = 0;
-        foreach ($cat as $row) {
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
-            $i++;
-        }
-        
-        $tech = $m->fillCombo("bozzetto_techniques");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
-            $i++;
-        }            
+        $json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 0, 1, 0);
+        $json = addOptions($m, "bozzetto_techniques", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "PERGAMENA") {
-        $tech = $m->fillCombo("pergamena_techniques");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
-            $i++;
-        }
+        $json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 1, 1, 0);
     } else if ($type == "DELIBERA") {
-        $tech = $m->fillCombo("delibera_categories");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
-            $i++;
-        }
-        
+        $json = addOptions($m, "delibera_categories", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "SONETTO") {
-        $tech = $m->fillCombo("sonetto_events");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            //           table      tr         td      
-            $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] =
-                                                                             array("html" => $data);
-            $i++;
-        }
+        $json = addOptions($m, "sonetto_events", 'name', 'id', $json, 4, 1, 0);
     } else if ($type == "VESTIZIONE") {
-        $ruoli = $m->getAllRuoli();
-        $ricorrenze = $m->getRicorrenze();
-        
-        foreach ($ricorrenze as $ricorrenza) {
-            $json['html'][0]['html'][0]['html'][1]['html'][0]['options'][$ricorrenza['ricorrenza']] =
-                                                                                                    array("html" => $ricorrenza['ricorrenza']);
-        }
-        
-        foreach ($ruoli as $ruolo) {
-            $json['html'][0]['html'][1]['html'][1]['html'][0]['options'][$ruolo['ruolo']] =
-                                                                                          array("html" => $ruolo['ruolo']);
-        }
+        $json = addOptions($m, "ricorrenze", 'ricorrenza', 'ricorrenza', $json, 0, 1, 0, 'ricorrenza');
+        $json = addOptions($m, "ruoli_monturati", 'ruolo', 'ruolo', $json, 1, 1, 0, 'ruolo');
     }
+
     print_r (json_encode($json));
 }
 

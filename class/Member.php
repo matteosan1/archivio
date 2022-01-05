@@ -13,13 +13,6 @@ class Member
         $this->ds = new DataSource();
     }
     
-    function getL1Tags() {
-    	$query = "SELECT id, name FROM tags WHERE parent_id=-1;";
- 	    $result = $this->ds->select($query, array(), array());
-        
-	    return $result;
-    }
-    
     function getTagNameById($id) {
         $query = "SELECT name FROM tags WHERE id=?;";
 	    $paramType = array(SQLITE3_INTEGER);
@@ -28,16 +21,7 @@ class Member
         
 	    return $result[0]['name'];
     }
-    
-    function getL2Tags($tagl1) {
-    	$query = "SELECT * FROM tags WHERE parent_id=?;";
-	    $paramType = array(SQLITE3_INTEGER);
-    	$paramArray = array($tagl1);
-	    $result = $this->ds->select($query, $paramType, $paramArray);
-        
-     	return $result;
-    }
-    
+
     function getAllCategories($table_name="book_categories", $only_names=false)
     {
 	    $group = 1;
@@ -300,17 +284,37 @@ class Member
         return true;
     }
     
-    function fillCombo($table_name, $col_name="name")
+    function fillCombo($table_name, $col_name="name", $ord_col="name")
     {
-        $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
+        if ($table_name == "tags") {
+            return getL1Tags();
+        }
         
-	    $paramType = array();
+        $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
+   
+        $paramType = array();
     	$paramArray = array();
+        $result = $this->ds->select($query, $paramType, $paramArray);
+
+    	return $result;
+    }
+
+    function getL1Tags() {
+    	$query = "SELECT id, name FROM tags WHERE parent_id=-1;";
+ 	    $result = $this->ds->select($query, array(), array());
+        
+	    return $result;
+    }
+    
+    function getL2Tags($tagl1) {
+    	$query = "SELECT * FROM tags WHERE parent_id=?;";
+	    $paramType = array(SQLITE3_INTEGER);
+    	$paramArray = array($tagl1);
 	    $result = $this->ds->select($query, $paramType, $paramArray);
         
-    	return $result;
+     	return $result;
     }
 }
 
-$m = new Member();
-$m->fillCombo("bozzetto_categories");
+//$m = new Member();
+//$m->fillCombo("sonetto_events", 'name', 'id');

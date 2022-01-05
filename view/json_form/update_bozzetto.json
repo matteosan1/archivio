@@ -107,9 +107,8 @@
                                     "id":   "categoria_upd",
                                     "class": "categoria",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {"html" : "----"}
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         },
@@ -181,9 +180,8 @@
                                     "id":   "tecnica_upd",
                                     "class": "tecnica",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {"html" : "----"}
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         }
@@ -312,35 +310,6 @@
                                     "placeholder":"note",
                                     "rows": "10",
                                     "cols": "60"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Scansione (JPG, TIFF, PNG): "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"scan_upd",
-                                    "id":"scan_upd",
-                                    "type": "file",
-                                    "value": "",
-                                    "accept": ".jpg,.jpeg,.tiff,.tif,.png"
                                 }
                             ]
                         }

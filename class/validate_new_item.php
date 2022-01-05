@@ -31,9 +31,10 @@ if (isset($_POST)) {
         $doc->$real_key = $value;
         if ($real_key == 'data') {
             $doc->anno = substr($value, 0, 4);
+	    $doc->data .= "T00:00:00Z"; 
         }
     }
-    
+
     if (!array_key_exists("privato", $_POST)) {
         $doc->privato = 0;
     }   
