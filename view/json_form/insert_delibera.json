@@ -106,11 +106,7 @@
                                 {
                                     "id":   "tipo_delibera",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {
-			                                "selected" : "----",
-			                                "html" : "----"
-		                                }
+	                            "options" : {
                                     }
                                 }
                             ]
@@ -223,7 +219,7 @@
                                 {
                                     "name": "favorevoli",
                                     "id":   "favorevoli",
-                                    "value": "",
+                                    "value": "0",
                                     "placeholder":"0",
                                     "size":"4",
                                     "type": "number"
@@ -253,7 +249,7 @@
                                 {
                                     "name": "contrari",
                                     "id":   "contrari",
-                                    "value": "",
+                                    "value": "0",
                                     "placeholder":"0",
                                     "size":"4",
                                     "type": "number"
@@ -283,7 +279,7 @@
                                 {
                                     "name": "astenuti",
                                     "id":   "astenuti",
-                                    "value": "",
+                                    "value": "0",
                                     "placeholder":"0",
                                     "size":"4",
                                     "type": "number"
@@ -372,7 +368,7 @@
                                 {
                                     "name": "pagina",
                                     "id":   "pagina",
-                                    "value": "",
+                                    "value": "0",
                                     "placeholder":"0",
                                     "size":"4",
                                     "type": "number"

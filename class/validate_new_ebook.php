@@ -35,6 +35,7 @@ function computeCodiceArchivio($doc, $anno=NULL) {
     } else {
         $codice_archivio = $prefix.".".$anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
     }
+
     $doc->codice_archivio = $codice_archivio;
     $doc->tipologia = $_POST['tipologia'];
     $doc->anno = $anno;
@@ -57,6 +58,7 @@ function createThumbnailAndStore($tmp_filename, $codice_archivio, $ext) {
     } else if ($ext == "doc" || $ext == "docx") {
         return;
     } else {
+	print ("PUPPAMELO ".$tmp_filename);
         $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
         if ($ext == "tiff" or $ext == "tif") {
             $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
@@ -67,7 +69,7 @@ function createThumbnailAndStore($tmp_filename, $codice_archivio, $ext) {
 
 function addPergamena() {
     list($doc, $update) = createDocument();
-         
+    
     $tmp_filename = $_FILES['scan']['tmp_name'];
     $ext = getExt($_FILES['scan']['name']);
     
@@ -78,7 +80,7 @@ function addPergamena() {
     $doc->note = $_POST['note'];
     $doc->privato = 0;
     
-    $doc = computeCodiceArchivio($doc);
+    computeCodiceArchivio($doc);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
@@ -88,7 +90,7 @@ function addPergamena() {
 
 function addBozzetto() {
     list($doc, $update) = createDocument();
-                        
+    
     $tmp_filename = $_FILES['scan']['tmp_name'];
     $ext = getExt($_FILES['scan']['name']);
 
@@ -100,11 +102,10 @@ function addBozzetto() {
     $doc->note = $_POST['note'];
     $doc->privato = 0;
 
-    $doc = computeCodiceArchivio($doc);
+    computeCodiceArchivio($doc);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
-    $doc->resourceName = $codice_archivio.".".strtoupper($ext);
+    $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
-
 
     saveDocument($doc, $update);
 }
@@ -112,36 +113,44 @@ function addBozzetto() {
 function multiFileMerge() {
     $countfiles = count($_FILES['scan']['name']);
     $ext = getExt($_FILES['scan']['name'][0]);
+
     if ($ext != "docx" && $ext != "doc") {
         $files = array();
         for ($i=0; $i<$countfiles; $i++) {
+
             $tmp_filename = $_FILES['scan']['tmp_name'][$i];
             if ($ext == "jpg" || $ext == "jpeg" || $ext == "tif" || $ext == "tiff") {       
                 $command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
                 exec($command, $output, $status);
+
             } else if ($ext == "pdf") {
                 rename($tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i.".pdf");
             }
             $files[$i] = $GLOBALS['UPLOAD_DIR']."/ocr".$i.".pdf";
         }
-            
+        
         if ($countfiles > 1) {
             $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."/ocr.pdf' ".implode(" ", $files);
             exec($command, $output, $status);
         } else {
-            rename($tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr.pdf");
+            $res = rename($GLOBALS['UPLOAD_DIR']."/ocr0.pdf", $GLOBALS['UPLOAD_DIR']."/ocr.pdf");
         }
         $tmp_filename = $GLOBALS['UPLOAD_DIR']."/ocr.pdf";
-        $resourceExt = "PDF";
+        $resourceExt = "pdf";
     } else {
         $resourceExt = strtoupper($ext);
     }
 
-    $command = "../class/tika.py ".$tmp_filename; 
-    exec($command, $output, $status);
-    $json = file_get_contents('tika.output');
+    $command = "python3 tika.py ".$tmp_filename." 2>&1"; 
+    $res = exec($command, $output, $status);
+    if ($status != 0) {
+	$error = file_get_contents('../upload/tika.error');
+	errorMessage("TIKA: ".$error);	
+    }
+
+    $json = file_get_contents('../upload/tika.output');
     $json_data = json_decode($json,true);
-    
+
     return array($tmp_filename, $resourceExt, $json_data);
 }
 
@@ -156,8 +165,7 @@ function addDocumento() {
     $doc->titolo = $_POST['titolo'];
     $doc->autore = $_POST['autore'];    
     $doc->privato = 0;
-
-    $doc = computeCodiceArchivio($doc, $anno);
+    computeCodiceArchivio($doc, $anno);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);    
     $results = rename($GLOBALS['UPLOAD_DIR']."/".$tmp_files, $GLOBALS['EDOC_DIR'].$doc->resourceName);
@@ -182,11 +190,12 @@ function addSonetto() {
     $doc->note = $_POST['note'];
     $doc->privato = 0;
 
-    $doc = computeCodiceArchivio($doc, $anno);
+    computeCodiceArchivio($doc, $anno);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
-    $results = rename($GLOBALS['UPLOAD_DIR']."/".$tmp_files, $GLOBALS['EDOC_DIR'].$doc->resourceName);
-
+    $results = rename($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
+    chmod($GLOBALS['EDOC_DIR'].$doc->resourceName, 0644);
+    
     saveDocument($doc, $update);                            
 }
 
@@ -213,7 +222,7 @@ function addDelibera() {
         $doc->privato = 0;
     }
 
-    $doc = computeCodiceArchivio($doc, $anno);
+    computeCodiceArchivio($doc, $anno);
     saveDocument($doc, $update);                        
 }
 
@@ -234,7 +243,7 @@ function addMonturato() {
         if ("nome" == $columns[0] && "comparsa" == $columns[1]) {
             for ($i=1; $i<count($monturati); $i++) {
                 list($doc, $update) = createDocument();
-                $doc = computeCodiceArchivio($doc, $anno);                
+                computeCodiceArchivio($doc, $anno);                
                 $doc->nome_cognome = $monturati[$i][0];
                 $doc->ruolo = $monturati[$i][1];                   
                 $doc->evento = $_POST['evento'];
@@ -247,7 +256,7 @@ function addMonturato() {
         }
     } else {
         list($doc, $update) = createDocument();
-        $doc = computeCodiceArchivio($doc, $anno);
+        computeCodiceArchivio($doc, $anno);
         $doc->nome_cognome = $_POST['nome_cognome'];
         $doc->ruolo = $_POST['ruolo'];
         $doc->evento = $_POST['evento'];
@@ -281,7 +290,7 @@ function addStampa() {
     $doc->autore = $_POST['author'];
     $doc->privato = 0;
 
-    $doc = computeCodiceArchivio($doc);
+    computeCodiceArchivio($doc);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
     move_uploaded_file($tmp_filename, $GLOBALS['PHOTO_DIR'].$doc->codice_archivio.".".strtoupper($ext));
     $doc->resourceName = $codice_archivio.".".strtoupper($ext);
@@ -305,7 +314,7 @@ function addLibro() {
     $doc->soggetto = $_POST['soggetto'];
     $doc->note = $_POST['note'];
     $doc->privato = 0;
-    $doc = computeCodiceArchivio($doc);
+    computeCodiceArchivio($doc);
 
     if ($_FILES['copertina']['name'] != "") {
         $cover_tmp = $_FILES['copertina']['tmp_name'];
@@ -339,7 +348,7 @@ function addVideo() {
 
         $doc->note = $_POST['note'];
         $doc->privato = 0;        
-        $doc = computeCodiceArchivio($doc);
+        computeCodiceArchivio($doc);
         $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
         
         if (! file_exists($GLOBALS['VIDEO_DIR'])) {
@@ -353,6 +362,7 @@ function addVideo() {
 }
 
 function createDocument() {
+    global $client;
     $update = $client->createUpdate();
     $doc = $update->createDocument();
     
@@ -360,6 +370,7 @@ function createDocument() {
 }
 
 function saveDocument($doc, $update, $msg=NULL) {
+    global $client;
     try {
         $update->addDocuments(array($doc));
         $update->addCommit();
@@ -376,13 +387,15 @@ function saveDocument($doc, $update, $msg=NULL) {
 
 if (isset($_POST)) {    
     if ($_POST['tipologia'] == "PERGAMENA") {
-         addPergamena();
+        addPergamena();
     } else if ($_POST['tipologia'] == "BOZZETTO") {
-         addBozzetto();        
+        addBozzetto();        
     } else if ($_POST['tipologia'] == 'DOCUMENTO') {
-         addDocumento();
+        addDocumento();
     } else if ($_POST['tipologia'] == 'SONETTO') {
         addSonetto();
+    } else if ($_POST['tipologia'] == 'DELIBERA') {
+        addDelibera();	
     } else {
         errorMessage("Tipologia sconosciuta.");
     }

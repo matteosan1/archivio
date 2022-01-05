@@ -43,16 +43,6 @@ $(document).ready(function() {
             request.abort();
         }
 
-        if (document.getElementById('tipo_delibera').value == "null") {
-            alert ("Hai dimenticato l'Organo deliberante.");
-	        return false;
-        }
-
-        if (document.getElementById('tipo_delibera').value == 4 && role != 'admin') {
-            alert ("Non hai i permessi per fare questo inserimento.");
-	        return false;
-        }
-
         if (document.getElementById('argomento_breve').value == "") {
             alert ("Hai dimenticato l'argomento della delibera.");
 	        return false;
@@ -68,6 +58,16 @@ $(document).ready(function() {
 	        return false;
         }
 
+        if (document.getElementById('tipo_delibera').value == 0) {
+            alert ("Hai dimenticato l'Organo deliberante.");
+	        return false;
+        }
+
+        if (document.getElementById('tipo_delibera').value == 4 && role != 'admin') {
+            alert ("Non hai i permessi per fare questo inserimento.");
+	        return false;
+        }
+
         if ($("#straordinaria").is(':checked')) {
             formData.set("straordinaria", 1);
         } else {
@@ -79,13 +79,14 @@ $(document).ready(function() {
         } else {
             formData.set("unanimita", 0);
         }
-        
-        var e = document.getElementById("tipo_delibera");
+
+	var e = document.getElementById("tipo_delibera");
         var selection = e.options[e.selectedIndex].text;
         formData.set("tipo_delibera", selection);
+	formData.set("tipologia", "DELIBERA");
 
         request = $.ajax({            
-            url: "../class/validate_new_delibera.php",
+            url: "../class/validate_new_ebook.php",
             type: "post",
             data: formData,
             contentType: false,
@@ -93,27 +94,27 @@ $(document).ready(function() {
             processData:false                       
         });
 	    
-	    request.done(function (response) {
-            //console.debug(response);
-	        var dict = JSON.parse(response);
-            if(dict.hasOwnProperty('error')){
-    		    $('#error1').html(dict['error']);
-		        return false;
-            } else {
-		        $('#error1').html("");
-		        $('#result1').html(dict['result']);
-		        setTimeout(function(){
-           	        location.reload();
-      		    }, 2500);
+	request.done(function (response) {
+	    //console.debug(response);
+	    var dict = JSON.parse(response);
+	    if(dict.hasOwnProperty('error')){
+    		$('#error1').html(dict['error']);
+		return false;
+	    } else {
+		$('#error1').html("");
+		$('#result1').html(dict['result']);
+		setTimeout(function(){
+           	    location.reload();
+      		}, 2500);
             }
         });
-	    
+	
         request.fail(function (response){			    
             console.log(
                 "The following error occurred: " + response
             );
         });
-	    return false;
+	return false;
     });
 
     $("#lets_search_for_delete").bind('submit',function() {
@@ -219,7 +220,7 @@ $(document).ready(function() {
         } else {
             formData.set("unanimita_upd", 0);
         }
-        
+
         if (request) {
             request.abort();
         }

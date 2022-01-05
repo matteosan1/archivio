@@ -53,48 +53,6 @@
                     ]
                 },
                 {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Testo: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"testo_ocr",
-                                    "id":"testo_ocr",
-                                    "type": "textarea",
-                                    "html": "",
-                                    "rows": "10",
-                                    "cols": "60"
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html":
-                            [
-                                {
-                                    "value":"OCR",
-                                    "id":    "OCR",
-                                    "class": "OCR",
-                                    "type": "submit"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
                     "type":"tr",
                     "html":
                     [                     

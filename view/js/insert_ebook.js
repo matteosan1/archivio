@@ -34,6 +34,7 @@ $(document).ready(function() {
         });
         
         request.done(function (response) {
+	    console.debug(response);
             var data = JSON.parse(response);
             $('#insert_form').html("");
             $("#insert_form").dform(data);
@@ -133,16 +134,19 @@ $(document).ready(function() {
             data: formData,
             contentType: false,
             cache: false,
-            processData:false                       
+            processData:false//,
+//            beforeSend: function(){$("#overlay").show();}
         });
 	
        	request.done(function (response) {
 	    console.log(response);
 	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
+		setInterval(function() {$("#overlay").hide(); }, 500);
     		$('#error1').html(dict['error']);
 		return false;
             } else {
+		setInterval(function() {$("#overlay").hide(); }, 500);
 		$('#result1').html(dict['result']);
 		setTimeout(function(){
            	    location.reload();

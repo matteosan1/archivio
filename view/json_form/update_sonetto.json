@@ -151,6 +151,13 @@
                                     "value_chg": "autore",
                                     "cols":"60",
                                     "type": "text"
+                                },
+				{
+                                    "name": "resourceName_upd",
+                                    "id":   "resourceName_upd",
+                                    "value_chg": "resourceName",
+                                    "cols":"60",
+                                    "type": "hidden"
                                 }
                             ]
                         }

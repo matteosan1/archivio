@@ -1,4 +1,5 @@
 <?php
+
 require_once "../view/config.php";
 require_once "../view/solr_client.php";
 require_once "../class/Member.php";
@@ -195,8 +196,7 @@ function findItem($cod) {
             $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
             $i++;
         }
-        // FIXME CAMBIARE IN PINT
-        if ($res['unanimita'] === "0") {
+        if ($res['unanimita'] === 0) {
             unset($json['html'][0]['html'][7]['html'][1]['html'][0]['checked']);
         }
         if ($res['straordinaria'] == 0) {
@@ -261,10 +261,8 @@ function findItem($cod) {
     print_r (json_encode($json));
 }
 
-// SI PUO' SEMPLIFICARE ANCORA CON SELECT * IN MEMBER.PHP
-// E POI RIUSARLO PER L'UPDATE
-function addOptions($m, $db, $field, $ord, $json,
-                    $i2, $i3, $i4, custom_idx="") {
+
+function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="") {
     $cat = $m->fillCombo($db, $field, $ord);
     $i = 0;
     foreach ($cat as $row) {
@@ -275,10 +273,10 @@ function addOptions($m, $db, $field, $ord, $json,
             $val = array("html" => $data);
         }
         //           table      tr         td
-        if (custom_idx == "") {
+        if ($custom_idx == "") {
             $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$i] = $val;
         } else {
-            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[custom_idx]] = $val;
+            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[$custom_idx]] = $val;
         }
         $i++;
     }
@@ -330,14 +328,14 @@ function newItem($type) {
         }
         $json = addOptions($m, "tags", '', '', $json, 3, 1, 0);
     } else if ($type == "BOZZETTO") {
-        $json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 0, 1, 0);
-        $json = addOptions($m, "bozzetto_techniques", 'name', 'id', $json, 2, 1, 0);
+        $json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 1, 1, 0);
+	$json = addOptions($m, "bozzetto_techniques", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "PERGAMENA") {
-        $json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 1, 1, 0);
+        $json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "DELIBERA") {
         $json = addOptions($m, "delibera_categories", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "SONETTO") {
-        $json = addOptions($m, "sonetto_events", 'name', 'id', $json, 4, 1, 0);
+        $json = addOptions($m, "sonetto_events", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "VESTIZIONE") {
         $json = addOptions($m, "ricorrenze", 'ricorrenza', 'ricorrenza', $json, 0, 1, 0, 'ricorrenza');
         $json = addOptions($m, "ruoli_monturati", 'ruolo', 'ruolo', $json, 1, 1, 0, 'ruolo');

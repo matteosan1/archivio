@@ -165,6 +165,7 @@
                             "html" :
                             [
                                 {
+				    "name": "tipo_delibera_upd",
                                     "id":   "tipo_delibera_upd",
                                     "value_chg": "tipo_delibera",
                                     "type": "text",
