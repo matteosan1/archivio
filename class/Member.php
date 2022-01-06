@@ -15,18 +15,18 @@ class Member
     
     function getTagNameById($id) {
         $query = "SELECT name FROM tags WHERE id=?;";
-	    $paramType = array(SQLITE3_INTEGER);
+	$paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($id);
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
         
-	    return $result[0]['name'];
+	return $result[0]['name'];
     }
 
     function getAllCategories($table_name="book_categories", $only_names=false)
     {
-	    $group = 1;
-	    if ($table_name == 'ebook_categories') {
-	        $group = 2;
+	$group = 1;
+	if ($table_name == 'ebook_categories') {
+	    $group = 2;
         } else if ($table_name == 'photo_categories') {
             $group = 3;
         } else if ($table_name == 'old_photo') {
@@ -39,20 +39,20 @@ class Member
             $group = 4;
         }
         
-	    if ($table_name == 'all') {
+	if ($table_name == 'all') {
             $query = "SELECT * FROM categories";
-	    } else {
+	} else {
             $query = "SELECT * FROM categories WHERE cgroup=?;";
-	    };
-	    $paramType = array(SQLITE3_INTEGER);
+	};
+	$paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($group);
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
         
         if ($only_names) {
             $res = array();
-	        for ($i=0; $i<count($result); $i++) {
-	            $res[$i] = $result[$i][0];
-	        }
+	    for ($i=0; $i<count($result); $i++) {
+	        $res[$i] = $result[$i][0];
+	    }
             return $res;
         }
         
@@ -61,37 +61,47 @@ class Member
     
     function getAllPrefissi()
     {
-	    $query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
-	    $paramType = array();
+	$query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
+	$paramType = array();
     	$paramArray = array();
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
     	return $result;
     }
     
     function getAllRuoli()
     {
-	    $query = "SELECT ruolo FROM ruoli_monturati ORDER BY ruolo";
-	    $paramType = array();
+	$query = "SELECT ruolo FROM ruoli_monturati ORDER BY ruolo";
+	$paramType = array();
     	$paramArray = array();
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
     	return $result;
     }
-    
+
+    function checkRuolo($ruolo) {
+	$ruoli = $this->getAllRuoli();
+	foreach ($ruoli as $r) {
+	    if (ucwords($ruolo) == $r['ruolo']) {
+		return TRUE;
+	    }
+	}
+	return FALSE;
+    }
+
     function getRicorrenze()
     {
         $query = "SELECT ricorrenza FROM ricorrenze ORDER BY ricorrenza";
-	    $paramType = array();
+	$paramType = array();
     	$paramArray = array();
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
     	return $result;
     }
     
     function getPrefisso($tipologia)
     {
-	    $query = "SELECT category, prefix FROM categories";
-	    $paramType = array();
+	$query = "SELECT category, prefix FROM categories";
+	$paramType = array();
     	$paramArray = array();
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
         foreach ($result as $r) {
             if ($r['category'] == $tipologia) 
     	        return $r['prefix'];
@@ -105,23 +115,23 @@ class Member
             $cats = array(array("VIDEO"));
         } else if ($category == "ebook_categories") {
             $cats = array(array("BOZZETTO"), array("PERGAMENA"), array('SONETTO'), array('DOCUMENTO'));
-	    } else if ($category == "monturato") {
+	} else if ($category == "monturato") {
             $cats = array(array("MONTURATO"));
-	    } else {
+	} else {
             $cats = $this->getAllCategories($category);
-	    }
+	}
         
-	    $res = array();
-	    for ($i=0; $i<count($cats); $i++) {
-	        $res[$i] = "tipologia:".$cats[$i][0];
-	    }
+	$res = array();
+	for ($i=0; $i<count($cats); $i++) {
+	    $res[$i] = "tipologia:".$cats[$i][0];
+	}
         
         return implode(" OR ", $res);
     }
     
     function findTypeGroup($tipologia) {
     	$query = "SELECT cgroup FROM category WHERE category=\"".$tipologia."\";";
-	    $result = $this->ds->select($query, array(), array());
+	$result = $this->ds->select($query, array(), array());
         
     	return $result;
     }
@@ -138,7 +148,7 @@ class Member
     
     function getAllRoles()
     {
-	    $query = "SELECT * FROM roles;";
+	$query = "SELECT * FROM roles;";
     	$paramType = array();
     	$paramArray = array();
     	$result = $this->ds->select($query, $paramType, $paramArray);
@@ -291,7 +301,7 @@ class Member
         }
         
         $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
-   
+	
         $paramType = array();
     	$paramArray = array();
         $result = $this->ds->select($query, $paramType, $paramArray);
@@ -301,16 +311,16 @@ class Member
 
     function getL1Tags() {
     	$query = "SELECT id, name FROM tags WHERE parent_id=-1;";
- 	    $result = $this->ds->select($query, array(), array());
+ 	$result = $this->ds->select($query, array(), array());
         
-	    return $result;
+	return $result;
     }
     
     function getL2Tags($tagl1) {
     	$query = "SELECT * FROM tags WHERE parent_id=?;";
-	    $paramType = array(SQLITE3_INTEGER);
+	$paramType = array(SQLITE3_INTEGER);
     	$paramArray = array($tagl1);
-	    $result = $this->ds->select($query, $paramType, $paramArray);
+	$result = $this->ds->select($query, $paramType, $paramArray);
         
      	return $result;
     }

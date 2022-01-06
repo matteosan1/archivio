@@ -109,6 +109,36 @@
                         }
                     ]
                 },
+		{
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Anno: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "anno",
+                                    "id":   "anno",
+                                    "value": "",
+				    "placeholder": "2020",
+                                    "size": "4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     "type":"tr",                            
                     "html":

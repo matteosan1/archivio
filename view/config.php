@@ -1,4 +1,5 @@
 <?php
+$GLOBALS['VERSION'] = 'v2.0.1';
 $GLOBALS['SOLR_CORE'] = 'archivio';
 $GLOBALS['SOLR_PORT'] = '8985';
 $GLOBALS['SOLR_BASE_URL'] = 'https://localhost:'.$GLOBALS['SOLR_PORT'].'/solr';

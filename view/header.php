@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__FILE__)."/../class/Member.php";
+require_once "config.php";
 
 $displayName = $_SESSION["name"];
 $role = $_SESSION["role"];
@@ -22,10 +23,11 @@ if ($new_notes != 0) {
 } else {
     echo "<a href=\"/view/view_notes.php\" class=\"button\"><img src=\"/view/icons/message.png\"></a>";
 }    
-echo "</td><td align=\"right\">";           
+echo "</td><td align=\"right\">";
 echo "<img src=\"/img/titolo2.png\"/>";
 echo "</td><td valign=\"bottom\">";           
 echo "<span style=\"float:right;\">";
+echo $GLOBALS['VERSION'];
 echo "<img src=\"/view/icons/username.png\" hspace=\"10\">".$displayName;
 if ($role == "admin") {
     echo "<a href=\"/view/management.php\" class=\"logout-button\"><img src=\"/view/icons/site_admin.png\" hspace=\"10\"></a>";

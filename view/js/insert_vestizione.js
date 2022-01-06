@@ -39,60 +39,63 @@ $(document).ready(function() {
     }, 'slow');
 
     $("#insert_form").submit(function() {
-	    var formData = new FormData(document.getElementById("new_vestizione"));
+	var formData = new FormData(document.getElementById("new_vestizione"));
         if (request) {
             request.abort();
         }
-
+	
         d = document.getElementById('data').value;
         if (d == "") {
             alert ("Hai dimenticato la data della vestizione.");
-                return false;
+            return false;
         }
-
-        if (document.getElementById('evento').value == "null") {
+	
+        if (document.getElementById('evento').value == 0) {
             alert ("Hai dimenticato la ricorrenza.");
-                return false;
+            return false;
         }
-
+	
         if(document.getElementById("comparsa").files.length == 0) {
             if (document.getElementById('ruolo').value == "null") {
                 alert ("Hai dimenticato il ruolo.");
                 return false;
             }
-
+	    
             if (document.getElementById('nome_cognome').value == "") {
-	            alert ("Nome e cognome ?");
-	            return false;
-	        }
+	        alert ("Nome e cognome ?");
+	        return false;
+	    }
         }
         
         formData.set('tipologia', 'MONTURATO');
-        formData.set('anno', d.substring(0, 4));
+        //formData.set('anno', d.substring(0, 4));
         request = $.ajax({            
-            url: "../class/validate_new_vestizione.php",
+            url: "../class/validate_new_ebook.php",
             type: "post",
             data: formData,
             contentType: false,
             cache: false,
             processData:false                       
         });
-	    
-	    request.done(function (response) {
+	
+	request.done(function (response) {
             console.debug(response);
-	        var dict = JSON.parse(response);
+	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
-    		    $('#error1').html(dict['error']);
-		        return false;
+		$('#error1').html("");
+		$('#result1').html("");
+    		$('#error1').html(dict['error']);
+		$('#result1').html(dict['result']);
+		return false;
             } else {
-		        $('#error1').html("");
-		        $('#result1').html(dict['result']);
-		        setTimeout(function(){
-           	        location.reload();
-      		    }, 2500);
+		$('#error1').html("");
+		$('#result1').html(dict['result']);
+		setTimeout(function(){
+           	    location.reload();
+      		}, 2500);
             }
         });
-	    
+	
         request.fail(function (response){			    
             console.log(
                 "The following error occurred: " + response

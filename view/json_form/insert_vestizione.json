@@ -32,12 +32,8 @@
                                     "name": "evento",
                                     "id":   "evento",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {
-			                                 "selected" : "selected",
-			                                 "html" : "----"
-		                                }
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         },
@@ -78,12 +74,8 @@
                                     "name": "ruolo",
                                     "id":   "ruolo",
                                     "type":"select",
-	                                "options" : {
-		                                "null" : {
-			                                "selected" : "selected",
-			                                "html" : "----"
-		                                }
-	                                }
+	                            "options" : {
+				    }
                                 }
                             ]
                         }

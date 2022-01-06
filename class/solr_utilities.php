@@ -144,6 +144,8 @@ function findItem($cod) {
             $filename = $dir."update_video.json";
         } else if ($res['tipologia'] == 'MONTURATO') {
             $filename = $dir."update_vestizione.json";
+	} else if ($res['tipologia'] == 'DOCUMENTO') {
+	    $filename = $dir."update_doc.json";
         }
     } else {
         $res = array('error'=>"ERRORE CI SONO TROPPI DOCUMENTI");
@@ -152,7 +154,9 @@ function findItem($cod) {
     if (array_key_exists('data', $res)) {
         $res['data'] = substr($res['data'], 0, 10);
     }
+
     $str = file_get_contents($filename);
+    //print_r (json_decode($str, true));
     $json = utf8enc(json_decode($str, true), $res, $book);
     
     if ($res['tipologia'] == "BOZZETTO") {

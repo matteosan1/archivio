@@ -3,161 +3,286 @@
     "class":"update_form",
     "enctype":"multipart/form-data",
     "action":"",
-    "method" : "post",
-    "html":
-    [        
-        {
+    "method":"post",
+    "html":[
+	{
             "type":"table",
             "width":"80%",
-            "html" :
-            [
+            "html":[
 		{
-                    "type":"tr",
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Codice Archivio: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "codice_archivio_upd",
-                                    "id":   "codice_archivio_upd",
-                                    "value_chg": "codice_archivio",
-                                    "size":"25",
-                                    "type": "text",
-                                    "readonly": "readonly"
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "rowspan":"2",
-                            "html":
-                            [
-                                {
-                                    "value":"Aggiorna",
-                                    "id":    "aggiorna",
-                                    "class": "aggiorna",
-                                    "type": "submit"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",
-                    "html":
-                    [                     
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Autore: "
-                                }
-                            ]
-			},
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "autore_upd",
-                                    "id":   "autore:upd",
-                                    "value_chg": "autore",
-                                    "size":"50",
-                                    "type": "text"
-                                }
-                            ]
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Codice Archivio: "
+				}
+			    ]
 			},
 			{
-                            "type":"td",
-                            "rowspan":"5",
-                            "html":
-                            [
-                                {
-                                    "type":"img",
-                                    "heigth":"150px",
-                                    "src_chg":"",
-                                    "onerror":"this.src='../img/no_image.png'"   
-                                }
-                            ]
-                        }			
-                    ]
-                },
-                {
-                    "type":"tr",
-                    "html":
-                    [                     
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Titolo: "
-                                }
-                            ]
-                     },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name": "titolo_upd",
-                                    "id":   "titolo_upd",
-                                    "value_chg": "titolo",
-                                    "size":"50",
-                                    "type": "text"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type":"tr",                            
-                    "html":
-                    [
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "type":"label",
-                                    "html":"Note: "
-                                }
-                            ]
-                        },
-                        {
-                            "type":"td",
-                            "html" :
-                            [
-                                {
-                                    "name":"note_upd",
-                                    "id":"note:upd",
-                                    "type": "textarea",
-                                    "html_chg": "note",
-                                    "placeholder":"note",
-                                    "rows": "10",
-                                    "cols": "60"
-                                }
-                            ]
-                        }
-                    ]
-                }
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"codice_archivio_upd",
+				    "id":"codice_archivio_upd",
+				    "value_chg":"codice_archivio",
+				    "size":"25",
+				    "type":"text",
+				    "readonly":"readonly"
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "rowspan":"2",
+			    "html":[
+				{
+				    "value":"Aggiorna",
+				    "id":"aggiorna",
+				    "class":"aggiorna",
+				    "type":"submit"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Tipologia: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"tipologia_upd",
+				    "id":"tipologia_upd",
+				    "value_chg":"tipologia",
+				    "size":"50",
+				    "type":"text",
+				    "readonly":"readonly"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Autore: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"autore_upd",
+				    "id":"autore_upd",
+				    "value_chg":"autore",
+				    "size":"50",
+				    "type":"text"
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "rowspan":"5",
+			    "html":[
+				{
+				    "type":"img",
+				    "heigth":"150px",
+				    "src_chg":"",
+				    "onerror":"this.src='../img/no_image.png'"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Titolo: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"titolo_upd",
+				    "id":"titolo_upd",
+				    "value_chg":"titolo",
+				    "size":"50",
+				    "type":"text"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":
+		    [
+			{
+			    "type":"td",
+			    "html":
+			    [				
+				{
+				    "type":"label",
+				    "html":"Anno: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"anno_upd",
+				    "id":"anno_upd",
+				    "type":"text",
+				    "value_chg":"anno",
+				    "readonly":"readonly",
+				    "size":"4"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Testo: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "name":"testo_upd",
+				    "id":"testo_upd",
+				    "type":"textarea",
+				    "html_chg":"testo",
+				    "placeholder":"testo",
+				    "rows":"10",
+				    "cols":"60"
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":[
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Dimensioni: "
+				}
+			    ]
+			}
+		    ]
+		},
+		{
+		    "type":"tr",
+		    "html":
+		    [
+			{
+			    "type":"td",
+			    "html":[
+				{
+				    "type":"label",
+				    "html":"Note: "
+				}
+			    ]
+			},
+			{
+			    "type":"td",
+			    "html":
+			    [
+				{
+				    "name":"note_upd",
+				    "id":"note_upd",
+				    "type":"textarea",
+				    "html_chg":"note",
+				    "placeholder":"note",
+				    "rows":"10",
+				    "cols":"60"
+				},			 
+				{
+				    "name":"size_upd",
+				    "id":"size_upd",
+				    "type":"hidden",
+				    "value_chg":"size"
+				},
+				{
+				    "name":"type_upd",
+				    "id":"type_upd",
+				    "type":"hidden",
+				    "value_chg":"type"
+				},
+				{
+				    "name":"mdate_upd",
+				    "id":"mdate_upd",
+				    "type":"hidden",
+				    "value_chg":"mdate"
+				},
+				{
+				    "name":"data_upd",
+				    "id":"data_upd",
+				    "type":"hidden",
+				    "value_chg":"data"
+				},
+				{
+				    "name":"pagine_upd",
+				    "id":"pagine_upd",
+				    "type":"hidden",
+				    "value_chg":"pagine"
+				},
+				{
+				    "name":"parole_upd",
+				    "id":"parole_upd",
+				    "type":"hidden",
+				    "value_chg":"parole"
+				},
+				{
+				    "name":"resourceName_upd",
+				    "id":"resourceName_upd",
+				    "type":"hidden",
+				    "value_chg":"resourceName"
+				}			    
+			    ]
+			}
+		    ]
+		}
             ]
-        }
+	}
     ]
 }
-

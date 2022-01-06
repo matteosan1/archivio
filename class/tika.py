@@ -35,6 +35,8 @@ try:
         for k, v in keys.items():
             if k in d:
                 payload[v] = d[k].strip(' \n')
+            else:
+                payload[v] = ""
         payload['note'] = ''
         payload['titolo'] = ''
         payload['autore'] = ''
@@ -42,10 +44,11 @@ try:
         keys = {'Author':'autore', 'Content-Length':'size', 'Content-Type':'type', 'Creation-Date':'cdate', 'Last-Modified':'mdate', 'Page-Count':'pagine', 'Word-Count':'parole', 'X-TIKA:content':'testo', 'resourceName':'resourceName'}
         for k, v in keys.items():
             if k in d:
-                payload[v] = d[k]
+                payload[v] = d[k].strip(' \n')
+            else:
+                payload[v] = ""
         payload['note'] = ''
         payload['titolo'] = ''
-        #print (payload['testo'])
     elif "jpeg" in d['Content-Type']:
         keys = {'Content-Length':'size', 'Content-Type':'type', 'File Modified Date':'cdate', 'X-TIKA:content':'testo', 'resourceName':'resourceName'}
         for k, v in keys.items():

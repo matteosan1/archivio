@@ -98,7 +98,7 @@ $(document).ready(function() {
                 alert ("La data e` necessaria.");
                 return false;
             }
-        } else if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
+        } else if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA" || tipologia == 'DOCUMENTO') {
             if (document.getElementById('anno').value == "") {
                 alert ("L'anno e` necessario.");
                 return false;
@@ -301,8 +301,8 @@ $(document).ready(function() {
             var selection = e.options[e.selectedIndex].text;
             formData.set("ricorrenza_upd", selection);
 
-            var d = document.getElementById('data').value;
-            formData.set('anno', d.substring(0, 4));
+            //var d = document.getElementById('data').value;
+            //formData.set('anno', d.substring(0, 4));
         } else if (tipologia == "BOZZETTO") {
             var e = document.getElementById("categoria_upd");
             var selection = e.options[e.selectedIndex].text;
@@ -323,6 +323,7 @@ $(document).ready(function() {
         });
 	
         request.done(function (response) {
+	    console.debug(response);
       	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
 		$('#error2').html(dict['error']);

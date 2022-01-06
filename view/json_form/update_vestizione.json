@@ -200,7 +200,8 @@
                                     "id":   "data_upd",
                                     "type" : "text",
                                     "value_chg": "data",
-                                    "size":"12"
+                                    "size":"12",
+				    "readonly":"readonly"
                                 }
                             ]
                         }  
