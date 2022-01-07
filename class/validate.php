@@ -8,7 +8,7 @@ require_once "../class/solr_utilities.php";
 require_once "../view/solr_client.php";
 require_once "../class/Member.php";
 
-function errorMessage($error, $result) {
+function errorMessage($error, $result=NULL) {
     if (is_null($result)) {
 	echo json_encode(array('error' => $error));
     } else {
@@ -21,12 +21,15 @@ function convertDate($date) {
     return $date."T00:00:00Z";
 }
 
+
 function computeCodiceArchivio($doc, $anno=NULL) {
+
     if (is_null($anno)) {
 	$anno = $_POST['anno'];
     }
 
     if (isset($_POST['prefissi'])) {
+	$prefix = $_POST['prefissi'];
 	if ($_POST['prefissi'] == "") {
 	    $id = getLastByIndex($_POST['anno']) + 1;
 	} else {
@@ -45,7 +48,11 @@ function computeCodiceArchivio($doc, $anno=NULL) {
     } else if ($_POST['tipologia'] == "VIDEO") {
 	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 5, "0", STR_PAD_LEFT);
     } else {
-	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
+	if ($prefix == "") {
+	    $codice_archivio = $anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
+	} else {
+	    $codice_archivio = $prefix.".".$anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
+	}
     }
 
     $doc->codice_archivio = $codice_archivio;
@@ -141,7 +148,7 @@ function multiFileMerge() {
 	}
 
 	if ($countfiles > 1) {
-	    $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."/ocr.pdf' ".implode(" ", $files);
+	    $command = $GLOBALS['MERGE_PDF_BIN'].$GLOBALS['UPLOAD_DIR']."/ocr.pdf ".implode(" ", $files);
 	    exec($command, $output, $status);
 	} else {
 	    $res = rename($GLOBALS['UPLOAD_DIR']."/ocr0.pdf", $GLOBALS['UPLOAD_DIR']."/ocr.pdf");
@@ -304,7 +311,7 @@ function addMonturato() {
 		$doc->evento = $_POST['evento'];
 		$doc->data = convertDate($_POST['data']);
 		$doc->privato = 0;
-		
+
 		$msgs = saveDocument($doc, $update, NULL, $msgs);
 	    }
 	    echo json_encode(array('result' => implode('<br>', $msgs)));
@@ -376,7 +383,7 @@ function addLibro() {
 
     if ($_FILES['copertina']['name'] != "") {
 	$cover_tmp = $_FILES['copertina']['tmp_name'];
-	$command = $GLOBALS['CONVERT_BIN']." ". $cover_tmp." -resize x200 ..".$GLOBALS['COVER_DIR'].$codice_archivio.".JPG";
+	$command = $GLOBALS['CONVERT_BIN']." ". $cover_tmp." -resize x200 ..".$GLOBALS['COVER_DIR'].$doc->codice_archivio.".JPG";
 	exec($command, $output, $status);
     }
 
@@ -427,16 +434,16 @@ function createDocument() {
     return array($doc, $update);
 }
 
-function saveDocument($doc, $update, $msg=NULL, $multi=FALSE) {
+function saveDocument($doc, $update, $msg=NULL, $multi=NULL) {
     global $client;
-/*    try {
+    try {
 	$update->addDocuments(array($doc));
 	$update->addCommit();
 	$result = $client->update($update);
     } catch (Solarium\Exception\HttpException $e) {
 	errorMessage($e->getMessage(), $multi);
     }
-*/
+    
     if (is_null($msg)) {
 	$msg = "Documento ".$doc->codice_archivio." inserito correttamente.";
     }
@@ -462,6 +469,8 @@ if (isset($_POST)) {
 	addDelibera();
     } else if ($_POST['tipologia'] == 'MONTURATO') {
 	addMonturato();
+    } else if ($_POST['tipologia'] == 'LIBRO') {
+	addLibro();
     } else {
 	errorMessage("Tipologia sconosciuta.");
     }

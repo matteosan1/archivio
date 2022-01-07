@@ -186,7 +186,7 @@ class ManageCore:
                     remove(zipfilename)
                 zipObj = ZipFile(zipfilename, 'w')
                 for ca in df['codice_archivio']:
-                    filename = self.G['COVER_DIR'] + ca + '.JPG'
+                    filename = self.G['FULL_COVER_DIR'] + ca + '.JPG'
                     if path.isfile(filename):
                         zipObj.write(filename)
                         ncovers += 1

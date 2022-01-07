@@ -203,8 +203,8 @@ function addOptionsUpd($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx=
     return $json;
 }
 
-function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="") {
-    $cat = $m->fillCombo($db, $field, $ord);
+function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="", $cgroup=NULL) {
+    $cat = $m->fillCombo($db, $field, $ord, $cgroup);
     $i = 0;
     foreach ($cat as $row) {
 	$data = $row[$field];
@@ -228,7 +228,6 @@ function newItem($type) {
     $dir = "../view/json_form/";
     if ($type == 'LIBRO'	) {
 	$filename = $dir."insert_libro.json";     
-    } else if ($type == "VERBALE") {
     } else if ($type == "SONETTO") {
 	$filename = $dir."insert_sonetto.json";
     } else if ($type == "BOZZETTO") {
@@ -256,9 +255,8 @@ function newItem($type) {
     
     $m = new Member();
     if ($type == "LIBRO") {
-	$query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
 	$json = addOptions($m, "codice_archivio", 'prefix', 'prefix', $json, 0, 1, 0, 'prefix');
-	$json = addOptions($m, "categories", 'category', 'category', $json, 1, 1, 0, 'category');
+	$json = addOptions($m, "categories", 'category', 'id', $json, 1, 1, 0, 'category', 1);
     } else if ($type == "FOTOGRAFIA") {
 	$json = addOptions($m, "tags", '', '', $json, 1, 1, 0);
     }  else if ($type == "STAMPA" or $type == "LASTRA") {

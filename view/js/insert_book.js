@@ -20,9 +20,8 @@ function openPage(pageName, elmnt) {
         });
         
         request.done(function (response) {
-            console.debug(response);
+            //console.debug(response);
             var data = JSON.parse(response);
-            //console.debug(data);
             $("#insert_form").dform(data);
             return false;
         });
@@ -42,6 +41,11 @@ $(document).ready(function() {
         if (request) {
             request.abort();
         }
+
+	//if (document.getElementById('tipologia').value == 0) {
+	//    alert ("La tipologia del documento e` obbligatoria.");
+	//    return false;
+	//}
 	
         if (document.getElementById('titolo').value == "") {
 	    alert ("Volume senza titolo ? uhm...");
@@ -54,7 +58,7 @@ $(document).ready(function() {
 	}
 	
         request = $.ajax({            
-            url: "../class/validate_new_book.php",
+            url: "../class/validate.php",
             type: "post",
             data: formData,
             contentType: false,
@@ -66,6 +70,7 @@ $(document).ready(function() {
             //console.debug(response);
 	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
+		$('#result1').html("");
     		$('#error1').html(dict['error']);
 		return false;
             } else {
@@ -167,7 +172,6 @@ $(document).ready(function() {
         request.done(function (response) {
             //console.debug(response);
             var data = JSON.parse(response);
-            //console.debug(data);
             document.getElementById("update_form").innerHTML = "";
             $("#update_form").dform(data);
             return false;
@@ -176,7 +180,6 @@ $(document).ready(function() {
     });
     
     $("#update_form").submit(function() {
-        //console.debug(response);
         var formData = new FormData(document.getElementById("update_form"));
         
         if (request) {
@@ -186,7 +189,7 @@ $(document).ready(function() {
         var tipo = document.getElementById("tipologia_upd").value;
         formData.set("tipologia_upd", tipo);
         request = $.ajax({
-            url: "../class/validate_new_item.php",
+            url: "../class/validate_upd.php",
             type: "post",
             data: formData,
             contentType: false,
@@ -198,6 +201,7 @@ $(document).ready(function() {
             //console.log(response);
             var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
+		$('#result2').html("");
                 $('#error2').html(dict['error']);
                 return false;
             } else {
@@ -275,13 +279,13 @@ $(document).ready(function() {
         $('#error4').html("");        
         request = $.ajax({
             url: "../class/solr_utilities.php",
-            type: "POST",
+            type: "post",
             data: {'last_upload':mydate, 'callback':'backup'},
             beforeSend: function(){$("#overlay").show();}
         });
 	
         request.done(function (response) {
-            console.log(response);
+            //console.log(response);
             response = JSON.parse(response);
             if(response.hasOwnProperty('error')){
                 setInterval(function() {$("#overlay").hide(); }, 500);

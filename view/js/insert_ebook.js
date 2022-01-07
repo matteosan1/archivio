@@ -134,8 +134,8 @@ $(document).ready(function() {
             data: formData,
             contentType: false,
             cache: false,
-            processData:false//,
-//            beforeSend: function(){$("#overlay").show();}
+            processData:false,
+            beforeSend: function(){$("#overlay").show();}
         });
 	
        	request.done(function (response) {

@@ -294,10 +294,14 @@ class Member
         return true;
     }
     
-    function fillCombo($table_name, $col_name="name", $ord_col="name")
+    function fillCombo($table_name, $col_name="name", $ord_col="name", $cgroup=NULL)
     {
+	if (! is_null($cgroup)) {
+	   return $this->getAllCategories();
+	}
+
         if ($table_name == "tags") {
-            return getL1Tags();
+            return $this->getL1Tags();
         }
         
         $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;

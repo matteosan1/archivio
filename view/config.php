@@ -20,6 +20,7 @@ $GLOBALS['BACKUP_DIR'] = '/backup/';
 $GLOBALS['PHOTO_DIR'] = '/home/archivio/photo/';
 $GLOBALS['SLIDE_DIR'] = '/home/archivio/photo/';      
 $GLOBALS['VIDEO_DIR'] = '/home/archivio/video/';
+$GLOBALS['FULL_COVER_DIR'] = '/home/archivio/copertine/';
 $GLOBALS['COVER_DIR'] = '/copertine/';
 $GLOBALS['EDOC_DIR'] = '/home/archivio/edoc/';
 $GLOBALS['THUMBNAILS_DIR'] = '/thumbnails/';

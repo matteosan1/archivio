@@ -158,7 +158,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                 <h3><?php echo $output[0];?></h3>
 		<?php
 		if (!is_null($output[1])) {
-		    $table = array_chunk(json_decode($output[1], true), 10);
+		    $table = array_chunk(json_decode($output[1], true), 6);
 		    echo "<table border=1px>";
 		    for ($i=0; $i<count($table); $i++) {
     			echo "<tr>";
@@ -173,7 +173,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 		<br>
 		<h3><?php echo $output[2];?></h3>
 		<?php
-		$table = array_chunk(json_decode($output[3], true), 10);
+		$table = array_chunk(json_decode($output[3], true), 6);
 		echo "<table border=1px>";
 		for ($i=0; $i<count($table); $i++) {
     		    echo "<tr>";
