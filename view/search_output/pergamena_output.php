@@ -23,7 +23,7 @@ function pergamenaOutput($document, $highlighting) {
         }
         
         if ($key == 'codice_archivio') {
-            $out .= codiceArchivioFormatBoz($value, $val, 'THUMBNAILS_DIR', $document->resourceName);
+            $out .= codiceArchivioFormatEdoc($value, $val, $document->resourceName);
         } else if  ($key == 'note') {  
             $highlightedDoc = $highlighting->getResult($document->codice_archivio);
             $out .= noteFormat($val, $highlightedDoc);  

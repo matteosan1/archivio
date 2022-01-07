@@ -129,7 +129,7 @@ $(document).ready(function() {
         $('#result1').html("");
         $('#error1').html("");
         request = $.ajax({
-            url: "../class/validate_new_ebook.php",
+            url: "../class/validate.php",
             type: "post",
             data: formData,
             contentType: false,

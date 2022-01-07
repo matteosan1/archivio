@@ -160,46 +160,11 @@ function findItem($cod) {
     $json = utf8enc(json_decode($str, true), $res, $book);
     
     if ($res['tipologia'] == "BOZZETTO") {
-        $m = new Member();
-        $cat = $m->fillCombo("bozzetto_categories");
-        $i = 0;
-        foreach ($cat as $row) {
-            $data = $row['name'];
-            //           table      tr         td
-            if (strtolower($res['categoria']) == strtolower($data))
-                $val = array("html" => $data, "selected" => "selected");
-            else
-                $val = array("html" => $data);
-            $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
-        
-        $tech = $m->fillCombo("bozzetto_techniques");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            if (strtolower($res['tecnica']) == strtolower($data))
-                $val = array("html" => $data, "selected" => "selected");
-            else
-                $val = array("html" => $data);
-            //           table      tr         td      
-            $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
+	$json = addOptionsUpd($m, 'bozzetto_categories', 'name', 'id', $json, 2, 1, 0);		
+        $json = addOptionsUpd($m, 'bozzetto_techniques', 'name', 'id', $json, 4, 1, 0);
     } else if ($res['tipologia'] == "DELIBERA") {
-        $m = new Member();
-        $cat = $m->fillCombo("delibera_categories");
-        $i = 0;
-        foreach ($cat as $row) {
-            $data = $row['name'];
-            //           table      tr         td
-            if (strtolower($res['tipo_delibera']) == strtolower($data))
-                $val = array("html" => $data, "selected" => "selected");
-            else
-                $val = array("html" => $data);
-            $json['html'][0]['html'][4]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
+	$json = addOptionsUpd($m, 'delibera_categories', 'name', 'id', $json, 4, 1, 0);	
+
         if ($res['unanimita'] === 0) {
             unset($json['html'][0]['html'][7]['html'][1]['html'][0]['checked']);
         }
@@ -207,82 +172,54 @@ function findItem($cod) {
             unset($json['html'][0]['html'][6]['html'][1]['html'][0]['checked']);
         }
     } else if ($res['tipologia'] == "PERGAMENA") {
-        $m = new Member();
-        $tech = $m->fillCombo("pergamena_techniques");
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            if (strtolower($res['tecnica']) == strtolower($data))
-                $val = array("html" => $data, "selected" =>  "selected");
-            else
-                $val = array("html" => $data);
-            //           table      tr         td      
-            $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }            
+	$json = addOptionsUpd($m, 'pergamene_techniques', 'name', 'id', $json, 3, 1, 0);
     } else if ($res['tipologia'] == "SONETTO") {
-        $m = new Member();
-        $tech = $m->fillCombo("sonetto_events", 'name', 'id');
-        $i = 0;
-        foreach ($tech as $row) {
-            $data = $row['name'];
-            if ($res['ricorrenza'] == $data)
-                $val = array("html" => $data, "selected" =>  "selected");
-            else
-                $val = array("html" => $data);    
-            //           table      tr         td      
-            $json['html'][0]['html'][5]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
+	$json = addOptionsUpd($m, 'sonetto_events', 'name', 'id', $json, 5, 1, 0);
     } else if ($res['tipologia'] == "MONTURATO") {
-        $m = new Member();
-        $ricorrenze = $m->fillCombo("ricorrenze", "ricorrenza");
-        $ruoli = $m->fillCombo("ruoli_monturati", "ruolo");
-        $i = 0;
-        foreach ($ricorrenze as $row) {
-            $data = $row['ricorrenza'];
-            //           table      tr         td
-            if (strtolower($res['evento']) == strtolower($data))
-                $val = array("html" => $data, "selected" => "selected");
-            else
-                $val = array("html" => $data);
-            $json['html'][0]['html'][2]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
-        
-        $i = 0;
-        foreach ($ruoli as $row) {
-            $data = $row['ruolo'];
-            //           table      tr         td
-            if (strtolower($res['ruolo']) == strtolower($data))
-                $val = array("html" => $data, "selected" => "selected");
-            else
-                $val = array("html" => $data);
-            $json['html'][0]['html'][3]['html'][1]['html'][0]['options'][$i] = $val;
-            $i++;
-        }
+	$json = addOptionsUpd($m, 'ricorrenze', 'ricorrenza', 'ricorrenza', $json, 2, 1, 0);
+	$json = addOptionsUpd($m, 'ruoli', 'ruolo', 'ruolo', $json, 3, 1, 0);
     }
     print_r (json_encode($json));
 }
 
+function addOptionsUpd($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="") {
+    $cat = $m->fillCombo($db, $field, $ord);
+    $i = 0;
+    foreach ($cat as $row) {
+	$data = $row[$field];
+	if (strtolower($res['evento']) == strtolower($data)) {
+	    $val = array("html" => $data, "selected" => "selected");
+	} else {
+	    $val = array("html" => $data);
+	}
+	//           table      tr         td
+	if ($custom_idx == "") {
+	    $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$i] = $val;
+	} else {
+	    $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[$custom_idx]] = $val;
+	}
+	$i++;
+    }
+    return $json;
+}
 
 function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="") {
     $cat = $m->fillCombo($db, $field, $ord);
     $i = 0;
     foreach ($cat as $row) {
-        $data = $row[$field];
-        if ($i == 0) {
-            $val = array("html" => $data, "selected" => "selected");
-        } else {
-            $val = array("html" => $data);
-        }
-        //           table      tr         td
-        if ($custom_idx == "") {
-            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$i] = $val;
-        } else {
-            $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[$custom_idx]] = $val;
-        }
-        $i++;
+	$data = $row[$field];
+	if ($i == 0) {
+	    $val = array("html" => $data, "selected" => "selected");
+	} else {
+	    $val = array("html" => $data);
+	}
+	//           table      tr         td
+	if ($custom_idx == "") {
+	    $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$i] = $val;
+	} else {
+	    $json['html'][0]['html'][$i2]['html'][$i3]['html'][$i4]['options'][$row[$custom_idx]] = $val;
+	}
+	$i++;
     }
     return $json;
 }
@@ -290,28 +227,28 @@ function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="")
 function newItem($type) {
     $dir = "../view/json_form/";
     if ($type == 'LIBRO'	) {
-        $filename = $dir."insert_libro.json";     
+	$filename = $dir."insert_libro.json";     
     } else if ($type == "VERBALE") {
     } else if ($type == "SONETTO") {
-        $filename = $dir."insert_sonetto.json";
+	$filename = $dir."insert_sonetto.json";
     } else if ($type == "BOZZETTO") {
-        $filename = $dir."insert_bozzetto.json";   
+	$filename = $dir."insert_bozzetto.json";   
     } else if ($type == "PERGAMENA") {
-        $filename = $dir."insert_pergamena.json"; 
+	$filename = $dir."insert_pergamena.json"; 
     } else if ($type == "FOTOGRAFIA") {
-        $filename = $dir."insert_photo.json";
+	$filename = $dir."insert_photo.json";
     } else if ($type == "STAMPA" or $type == "LASTRA") {
-        $filename = $dir."insert_stampa.json";
+	$filename = $dir."insert_stampa.json";
     } else if ($type == "VIDEO") {
-        $filename = $dir."insert_video.json";
+	$filename = $dir."insert_video.json";
     } else if ($type == "DELIBERA") {
-        $filename = $dir."insert_delibera.json";
+	$filename = $dir."insert_delibera.json";
     } else if ($type == "VESTIZIONE") {   
-        $filename = $dir."insert_vestizione.json";
+	$filename = $dir."insert_vestizione.json";
     } else if ($type == "DOCUMENTO") {   
-        $filename = $dir."insert_doc.json";
+	$filename = $dir."insert_doc.json";
     } else if ($type == "----") {
-        $filename = $dir."empty.json";
+	$filename = $dir."empty.json";
     }
     
     $str = file_get_contents($filename);
@@ -319,30 +256,30 @@ function newItem($type) {
     
     $m = new Member();
     if ($type == "LIBRO") {
-        $query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
-        $json = addOptions($m, "codice_archivio", 'prefix', 'prefix', $json, 0, 1, 0, 'prefix');
-        $json = addOptions($m, "categories", 'category', 'category', $json, 1, 1, 0, 'category');
+	$query = "SELECT prefix FROM codice_archivio ORDER BY prefix";
+	$json = addOptions($m, "codice_archivio", 'prefix', 'prefix', $json, 0, 1, 0, 'prefix');
+	$json = addOptions($m, "categories", 'category', 'category', $json, 1, 1, 0, 'category');
     } else if ($type == "FOTOGRAFIA") {
-        $json = addOptions($m, "tags", '', '', $json, 1, 1, 0);
+	$json = addOptions($m, "tags", '', '', $json, 1, 1, 0);
     }  else if ($type == "STAMPA" or $type == "LASTRA") {
-        if ($type == "STAMPA") {
-            $json['html'][0]['html'][0]['html'][0]['html'] = "Stampa (JPG o TIFF): ";
-        } else {
-            $json['html'][0]['html'][0]['html'][0]['html'] = "Lastra (JPG o TIFF): ";
-        }
-        $json = addOptions($m, "tags", '', '', $json, 3, 1, 0);
+	if ($type == "STAMPA") {
+	    $json['html'][0]['html'][0]['html'][0]['html'] = "Stampa (JPG o TIFF): ";
+	} else {
+	    $json['html'][0]['html'][0]['html'][0]['html'] = "Lastra (JPG o TIFF): ";
+	}
+	$json = addOptions($m, "tags", '', '', $json, 3, 1, 0);
     } else if ($type == "BOZZETTO") {
-        $json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 1, 1, 0);
+	$json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 1, 1, 0);
 	$json = addOptions($m, "bozzetto_techniques", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "PERGAMENA") {
-        $json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 2, 1, 0);
+	$json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "DELIBERA") {
-        $json = addOptions($m, "delibera_categories", 'name', 'id', $json, 2, 1, 0);
+	$json = addOptions($m, "delibera_categories", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "SONETTO") {
-        $json = addOptions($m, "sonetto_events", 'name', 'id', $json, 3, 1, 0);
+	$json = addOptions($m, "sonetto_events", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "VESTIZIONE") {
-        $json = addOptions($m, "ricorrenze", 'ricorrenza', 'ricorrenza', $json, 0, 1, 0, 'ricorrenza');
-        $json = addOptions($m, "ruoli_monturati", 'ruolo', 'ruolo', $json, 1, 1, 0, 'ruolo');
+	$json = addOptions($m, "ricorrenze", 'ricorrenza', 'ricorrenza', $json, 0, 1, 0, 'ricorrenza');
+	$json = addOptions($m, "ruoli_monturati", 'ruolo', 'ruolo', $json, 1, 1, 0, 'ruolo');
     }
 
     print_r (json_encode($json));
@@ -350,7 +287,7 @@ function newItem($type) {
 
 if (isset($_POST['func'])) {
     if ($_POST['func'] == 'find') {
-        echo json_encode(findBook($_POST['sel']));
+	echo json_encode(findBook($_POST['sel']));
     } 
 }
 
@@ -372,18 +309,18 @@ function curlOperationPOST($file) {
 function restore($file_csv, $file_zip) {
     $params = "-b --action restore ";
     if (!empty($file_csv)) {
-        $params .= " --fcsv ".$file_csv;
+	$params .= " --fcsv ".$file_csv;
     }
     
     if (!empty($file_zip)) {
-        $params .= " --fzip ".$file_zip;
+	$params .= " --fzip ".$file_zip;
     }
 
     exec("../class/core_manager.py ".$params." ", $output, $status);
     if ($status == 0) {
-        print_r(json_encode(array('result'=>implode('<br>', $output))));    
+	print_r(json_encode(array('result'=>implode('<br>', $output))));    
     } else {
-        print_r(json_encode(array('error'=>implode('<br>', $output))));
+	print_r(json_encode(array('error'=>implode('<br>', $output))));
     }        
     //        if ($isCsv) {
     //            if ($file['size'] > 0) {
@@ -431,21 +368,21 @@ function backup($upload_time) {
     exec("../class/core_manager.py ".$params." ", $output, $status);
     
     if ($status == 0) {
-        print_r(json_encode(array('result'=>implode('<br>', $output))));
+	print_r(json_encode(array('result'=>implode('<br>', $output))));
     } else {
-        print_r(json_encode(array('error'=>implode('<br>', $output))));
+	print_r(json_encode(array('error'=>implode('<br>', $output))));
     }        
 }
 
 if (isset($_POST['callback'])) {
     if ($_POST['callback'] == 'finditem') {
-        findItem($_POST['codice_archivio']);
+	findItem($_POST['codice_archivio']);
     } else if ($_POST['callback'] == 'newitem') {
-        newItem($_POST['type']);
+	newItem($_POST['type']);
     } else if ($_POST['callback'] == 'backup') {
-        backup($_POST['last_upload']);
+	backup($_POST['last_upload']);
     } else if ($_POST['callback'] == 'restore') {
-        restore($_POST['filecsv'], $_POST['filezip']);   
+	restore($_POST['filecsv'], $_POST['filezip']);   
     }
 }
 ?>

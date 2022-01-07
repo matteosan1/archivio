@@ -70,7 +70,7 @@ $(document).ready(function() {
         formData.set('tipologia', 'MONTURATO');
         //formData.set('anno', d.substring(0, 4));
         request = $.ajax({            
-            url: "../class/validate_new_ebook.php",
+            url: "../class/validate.php",
             type: "post",
             data: formData,
             contentType: false,
