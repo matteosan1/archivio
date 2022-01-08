@@ -78,13 +78,16 @@ class Member
     }
 
     function checkRuolo($ruolo) {
+    	$match = FALSE;
 	$ruoli = $this->getAllRuoli();
 	foreach ($ruoli as $r) {
 	    if (ucwords($ruolo) == $r['ruolo']) {
-		return TRUE;
+	    	$match = TRUE;
+		break;
 	    }
 	}
-	return FALSE;
+
+	return $match;
     }
 
     function getRicorrenze()

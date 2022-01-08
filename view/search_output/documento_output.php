@@ -30,11 +30,10 @@ function documentoOutput($document, $highlighting) {
         }
         
         if ($key == 'codice_archivio') {
-            // FIXME
-            $out .= codiceArchivioFormatEdoc($value, $val, $document->resourceName[0], 'THUMBNAILS_DIR');
+            $out .= codiceArchivioFormatEdoc($value, $val, $document->resourceName, 'THUMBNAILS_DIR');
         } else if ($key == 'tipologia') {
             // FIXME SINGLE VALUE
-            $out .= tipologiaEdoc($value, $val, $document->type[0]);
+            $out .= tipologiaEdoc($value, $val, $document->type);
         } else if ($key == 'note') {  
             $highlightedDoc = $highlighting->getResult($document->codice_archivio);
             $out .= noteFormat($val, $highlightedDoc);  

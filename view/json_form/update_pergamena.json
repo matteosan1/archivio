@@ -149,7 +149,6 @@
                                     "id":   "tecnica_upd",
                                     "type":"select",
 	                            "options" : {
-		                        "null" : {"html" : "----"}
 	                            }
                                 }
                             ]

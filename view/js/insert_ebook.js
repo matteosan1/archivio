@@ -17,7 +17,107 @@ function openPage(pageName, elmnt) {
     }
 }
 
+function sanityChecksEdoc(tipologia, formData) {
+    if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
+        var filenames = document.getElementById('scan').files;
+        if (filenames.length == 0) {
+	    alert ("Almeno un documento deve essere selezionato.");
+	    return false;
+        }
+    }
+    
+    if (tipologia == "DOCUMENTO" || tipologia == "SONETTO") {
+        var filenames = document.getElementById('scan[]').files;
+        if (filenames.length == 0) {
+	    alert ("Almeno un documento deve essere selezionato.");
+	    return false;
+        }
+	
+	let ext = filenames.item(0).name.split('.').pop();
+	for (let i = 0; i < filenames.length; i++) {
+	    let file_ext = filenames.item(i).name.split(".").pop();
+	    if (file_ext != ext) {
+		alert ("Nel caricamente multiplo i file devono essere tutti dello stesso tipo.");
+	        return false;
+	    }		
+	}
+    }
+    
+    //if (tipologia == "SONETTO") {		    
+    //    var is_ocr = !!document.getElementById('testo_ocr');        
+    //    if (is_ocr) {
+    //        var ocr = document.getElementById('testo_ocr').value;
+    //        if (ocr == "") {
+    //            if (! confirm('Vuoi proseguire senza OCR ?')) {
+    //                return false;
+    //            } 
+    //        }
+    //    }
+    //}
+    
+    if (tipologia == "SONETTO") {
+        if (document.getElementById('data').value == "") {
+            alert ("La data e` necessaria.");
+            return false;
+        }
+    } else if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA" || tipologia == 'DOCUMENTO') {
+        if (document.getElementById('anno').value == "") {
+            alert ("L'anno e` necessario.");
+            return false;
+        }
+    }
+    
+    if (tipologia == "SONETTO") {
+        var e = document.getElementById("ricorrenza");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("ricorrenza", selection);
+        
+        var d = document.getElementById('data').value;
+        formData.set('anno', d.substring(0, 4));
+    } else if (tipologia == "BOZZETTO") {
+        var e = document.getElementById("categoria");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("categoria", selection);
+	
+        var e = document.getElementById("tecnica");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("tecnica", selection);
+    }  else if (tipologia == "PERGAMENA") {
+        var e = document.getElementById("tecnica");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("tecnica", selection);
+    }
+    
+    return true;
+}
+
+function sanityChecksEdocUpdate(tipologia, formData) {
+    if (tipologia == "SONETTO") {
+        var e = document.getElementById("ricorrenza_upd");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("ricorrenza_upd", selection);
+	
+        //var d = document.getElementById('data').value;
+        //formData.set('anno', d.substring(0, 4));
+    } else if (tipologia == "BOZZETTO") {
+        var e = document.getElementById("categoria_upd");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("categoria_upd", selection);
+	
+        var e = document.getElementById("tecnica_upd");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("tecnica_upd", selection);
+    } else if (tipologia == "PERGAMENA") {
+	var e = document.getElementById("tecnica_upd");
+        var selection = e.options[e.selectedIndex].text;
+        formData.set("tecnica_upd", selection);
+    }
+
+    return true;
+}
+
 $(document).ready(function() {
+
     setInterval(checkForWarning, 1000 * 60);
     $('html, body').animate({
         //scrollTop: $('#scroll').offset().top
@@ -43,10 +143,6 @@ $(document).ready(function() {
         return true;
     });
     
-    //$(document).on('change','.date', function(){
-    //    $("#date").datepicker();
-    //});
-    
     $("#insert_form").submit(function() {
 	var formData = new FormData(document.getElementById("insert_form"));
         var tipologia = document.getElementById('tipologia').value;
@@ -56,75 +152,8 @@ $(document).ready(function() {
             request.abort();
         }
 	
-        if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA") {
-            var filenames = document.getElementById('scan').files;
-            if (filenames.length == 0) {
-	        alert ("Almeno un documento deve essere selezionato.");
-	        return false;
-            }
-	}
-
-	if (tipologia == "DOCUMENTO" || tipologia == "SONETTO") {
-            var filenames = document.getElementById('scan[]').files;
-            if (filenames.length == 0) {
-	        alert ("Almeno un documento deve essere selezionato.");
-	        return false;
-            }
-
-	    let ext = filenames.item(0).name.split('.').pop();
-	    for (let i = 0; i < filenames.length; i++) {
-		let file_ext = filenames.item(i).name.split(".").pop();
-		if (file_ext != ext) {
-		    alert ("Nel caricamente multiplo i file devono essere tutti dello stesso tipo.");
-	            return false;
-		}		
-	    }
-        }
-
-//if (tipologia == "SONETTO") {		    
-//    var is_ocr = !!document.getElementById('testo_ocr');        
-//    if (is_ocr) {
-//        var ocr = document.getElementById('testo_ocr').value;
-//        if (ocr == "") {
-//            if (! confirm('Vuoi proseguire senza OCR ?')) {
-//                return false;
-//            } 
-//        }
-//    }
-//}
-	
-        if (tipologia == "SONETTO") {
-            if (document.getElementById('data').value == "") {
-                alert ("La data e` necessaria.");
-                return false;
-            }
-        } else if (tipologia == "BOZZETTO" || tipologia == "PERGAMENA" || tipologia == 'DOCUMENTO') {
-            if (document.getElementById('anno').value == "") {
-                alert ("L'anno e` necessario.");
-                return false;
-            }
-        }
-	
-        if (tipologia == "SONETTO") {
-            var e = document.getElementById("ricorrenza");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("ricorrenza", selection);
-            
-            var d = document.getElementById('data').value;
-            formData.set('anno', d.substring(0, 4));
-        } else if (tipologia == "BOZZETTO") {
-            var e = document.getElementById("categoria");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("categoria", selection);
-	    
-            var e = document.getElementById("tecnica");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("tecnica", selection);
-        }  else if (tipologia == "BOZZETTO") {
-            var e = document.getElementById("tecnica");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("tecnica", selection);
-        }
+	if (!sanityChecksEdoc(tipologia, formData))
+	    return false;
 	
         $('#result1').html("");
         $('#error1').html("");
@@ -280,6 +309,7 @@ $(document).ready(function() {
         });
 	
 	request.done(function (response) {
+	    console.debug(response);
 	    var data = JSON.parse(response);
             $("#update_form").html("");
             $("#update_form").dform(data);
@@ -295,26 +325,12 @@ $(document).ready(function() {
         if (request) {
             request.abort();
         }
-	
-        if (tipologia == "SONETTO") {
-            var e = document.getElementById("ricorrenza_upd");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("ricorrenza_upd", selection);
 
-            //var d = document.getElementById('data').value;
-            //formData.set('anno', d.substring(0, 4));
-        } else if (tipologia == "BOZZETTO") {
-            var e = document.getElementById("categoria_upd");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("categoria_upd", selection);
-	    
-            var e = document.getElementById("tecnica_upd");
-            var selection = e.options[e.selectedIndex].text;
-            formData.set("tecnica_upd", selection);
-        }
+	if (!sanityChecksEdocUpdate(tipologia, formData))
+	    return false;
 	
         request = $.ajax({
-            url: "../class/validate_new_item.php",
+            url: "../class/validate_upd.php",
             type: "post",
             data: formData,
             contentType: false,

@@ -33,12 +33,8 @@
                                     "id":   "prefissi",
                                     "class": "prefissi",
                                     "type":"select",
-	                                "options" : {
-		                                "" : {
-			                                "selected" : "selected",
-			                                "html" : ""
-		                                }
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         },
@@ -80,12 +76,8 @@
                                     "id":   "tipologia",
                                     "class": "tipologia",
                                     "type":"select",
-	                                "options" : {
-		                                "" : {
-			                                "selected" : "selected",
-			                                "html" : "----"
-		                                }
-	                                }
+	                            "options" : {
+	                            }
                                 }
                             ]
                         }

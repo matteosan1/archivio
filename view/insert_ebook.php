@@ -1,11 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
-ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
-
 require_once "../view/session.php";
 require_once "../class/Member.php";
-//require_once "../class/solr_utilities.php";
 
 $m = new Member();
 $categories = $m->getAllCategories("ebook_categories");
@@ -33,7 +28,7 @@ $categories = $m->getAllCategories("ebook_categories");
     <script type="text/javascript" src="js/autologout.js"></script>
     <script type="text/javascript" src="js/jquery.dform-1.1.0.js"></script>
     <script type="text/javascript" src="js/insert_ebook.js"></script>
-
+    
     <body>
 	<div id="header"><?php include "../view/header.php"; ?></div>
 	<div id="scroll"></div>
@@ -54,7 +49,7 @@ $categories = $m->getAllCategories("ebook_categories");
 		    <form class="sel_tipologia" name="sel_tipologia" id="sel_tipologia" action method="POST">
 			<label>Tipologia:</label>
 			<select name="tipologia" class="tipologia" id="tipologia">
-      			    <option selected="selected">----</option>
+      			    <option selected="selected"></option>
 			    <?php
   	                    foreach ($categories as $category) {
    	    			echo '<option>'.$category['category'].'</option>';

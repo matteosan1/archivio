@@ -79,7 +79,7 @@ $(document).ready(function() {
         });
 	
 	request.done(function (response) {
-            console.debug(response);
+            //console.debug(response);
 	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
 		$('#error1').html("");

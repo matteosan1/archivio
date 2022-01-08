@@ -24,44 +24,43 @@ $(document).ready(function() {
             subsearch += 16;
         if (delibera.checked)
             subsearch += 32;
-
-        //console.debug(subsearch);
+	
         request = $.ajax({
-	        url: "../class/search_result.php",
-	        type: 'GET',
-	        data: "q="+query+"&sub="+subsearch,
+	    url: "../class/search_result.php",
+	    type: 'GET',
+	    data: "q="+query+"&sub="+subsearch,
             //formData, 
-	        contentType: false,
-	        cache: false,
-	        processData:false
-	    });
-	    
-	    request.done(function (response) {
-   	        console.debug(response);
+	    contentType: false,
+	    cache: false,
+	    processData:false
+	});
+	
+	request.done(function (response) {
+   	    //console.debug(response);
             response = JSON.parse(response);
             $("#query-result").html(response['header']);
             $("#pagination-result").html(response['body']);
             $("#facet-result").html(response['faceting']);
             
-	        
+	    
             //if(response.hasOwnProperty('error')){
-    		//    $('#error1').html(response['error']);
-		    //    return false;
+    	    //    $('#error1').html(response['error']);
+	    //    return false;
             //} else {
-		    //    $('#error1').html("");
-		    //    $('#result1').html(response['result']);
-		    //   setTimeout(function(){
-           	//        location.reload();
-      		//    }, 2000);
+	    //    $('#error1').html("");
+	    //    $('#result1').html(response['result']);
+	    //   setTimeout(function(){
+            //        location.reload();
+      	    //    }, 2000);
             //}
         });
-	    
+	
         request.fail(function (response){			    
             console.log(
                 "The following error occurred: " + response
             );
         });
-	    return false;
+	return false;
     });
 });    
 
@@ -87,34 +86,34 @@ function getresult(page) {
         subsearch += 16;
     if (delibera.checked) 
         subsearch += 32;
-
+    
     request = $.ajax({
-	    url: "../class/search_result.php",
-	    type: 'GET',
-	    data: "q="+query+"&page="+page+"&sub="+subsearch,
-	    contentType: false,
-	    cache: false,
-	    processData:false
-	});
-	
-	request.done(function (response) {
+	url: "../class/search_result.php",
+	type: 'GET',
+	data: "q="+query+"&page="+page+"&sub="+subsearch,
+	contentType: false,
+	cache: false,
+	processData:false
+    });
+    
+    request.done(function (response) {
         response = JSON.parse(response);
         //console.debug(response);
-
+	
         $("#query-result").html(response['header']);
         $("#pagination-result").html(response['body']);
         $('html, body, #content').animate({
             scrollTop: $('#scroll').offset().top
         }, 10);
-
-	    //response = JSON.parse(response);
+	
+	//response = JSON.parse(response);
         //if(response.hasOwnProperty('error')){
     	//    $('#error1').html(response['error']);
-		//    return false;
+	//    return false;
         //} else {
-		//    $('#error1').html("");
-		//    $('#result1').html(response['result']);
-		//   setTimeout(function(){
+	//    $('#error1').html("");
+	//    $('#result1').html(response['result']);
+	//   setTimeout(function(){
         //        location.reload();
       	//    }, 2000);
         //}

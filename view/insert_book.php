@@ -1,14 +1,11 @@
 <?php
-//error_reporting(E_ALL);
-ini_set('display_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
-ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
-
 require_once "../view/session.php";
 require_once "../view/config.php";
 
 exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -28,10 +25,11 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
         <style>
          @import url("/view/css/main.css");
         </style>
-        <script type="text/javascript" src="js/autologout.js"></script>
-        <script type="text/javascript" src="js/jquery.dform-1.1.0.js"></script>
-        <script type="text/javascript" src="js/insert_book.js"></script>
     </head>
+    <script type="text/javascript" src="js/autologout.js"></script>
+    <script type="text/javascript" src="js/jquery.dform-1.1.0.js"></script>
+    <script type="text/javascript" src="js/insert_book.js"></script>
+
     <body>
         <div id="header"><?php include "../view/header.php"; ?></div>
         <div id="scroll"></div>
@@ -53,7 +51,6 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 		<br>
 		<div align="center">
                     <form id="insert_form"></form>
-                    <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
                     <div id="footer1" align="center"></div>
 		</div>
             </div>
@@ -105,6 +102,7 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 		
                 <div align="center">
                     <form class="fm_backup" id="fm_backup" name="fm_backup" action method="POST">
+			<div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
 			<input type="hidden" name="func" value="backup">
 			<table>
                             <tr>
@@ -120,7 +118,6 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
 		    </form>
                 </div>
                 <br>
-                <div id="overlay"><div><img src="icons/loading.gif" width="64px" height="64px"/></div></div>
                 <div id="footer4" align="center"></div>
             </div>
 	    
@@ -147,7 +144,6 @@ exec($GLOBALS['PYTHON_BIN'].' ../class/check_copertine.py', $output, $status);
                     </form>
                 </div>
                 <br>
-                <div id="overlay"><div><img src="/view/icons/loading.gif" width="64px" height="64px"/></div></div>
                 <div id="footer5" align="center"></div>
             </div>
 	    

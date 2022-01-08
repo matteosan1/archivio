@@ -61,10 +61,17 @@ function keywordsFormat($value, $val, $highlightedDoc) {
     return $out;
 }
 
+
+function codiceArchivioFormatNoImage($value, $val) {
+    $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val." (modifica)</td>";   
+    $out .= '<td></td></tr>';
+    return $out;
+}
+
 function codiceArchivioFormat($value, $val, $label) {
     $path = $GLOBALS[$label].$val.".JPG";
     $path_no_image = 'this.src="../img/no_image.png"';
-    $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
+    $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val." (modifica)</td>";   
     $out .= '<td width=200px rowspan="15" valign="top" align="center"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></td></tr>";
     return $out;
 }
@@ -74,7 +81,7 @@ function codiceArchivioFormatEdoc($value, $val, $resourceName, $label="THUMBNAIL
     $ext = strtolower(end($tmp));
     $path = $GLOBALS[$label].$val.".JPG";
     $path_no_image = 'this.src="../img/no_image.png"';
-    $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val."</td>";   
+    $out = '<tr><th align="right" valign="middle">'.$value.':</th><td valign="middle" align="left">'.$val." (modifica)</td>";   
     $out .= '<td width=200px rowspan="15" valign="top" align="center"><a href="'.'/edoc/'.$val.'.'.strtoupper($ext).'"><img style="padding: 15px 5px 10px 20px;" heigth=150px src="'.$path."\" onerror='".$path_no_image."'></a></td></tr>";
     return $out;
 }

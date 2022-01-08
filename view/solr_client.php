@@ -5,8 +5,6 @@ require __DIR__.'/../vendor/autoload.php';
 function summary() {
     global $client;
 
-    //curl 'http://localhost:8985/solr/archivio2/select?q=tipologia:*&rows=0&facet=on&facet.field=tipologia'
-
     $member = new Member();
   
     $searchValue = "tipologia:*";
@@ -24,16 +22,18 @@ function summary() {
     $facet_text = "";
     echo "<table>";
     foreach($facet as $value => $count) {
-        $value = str_replace("_", " ", $value);
-//        if (strlen($value) > 20) {
-//            $l = strlen($value) - 17;
-//            $offset = (strlen($value) - $l)/2;
-//            $value = substr($value, 0, 10)."...".substr($value, -10, 10); //substr_replace($value, '...', $offset, $l);
-//       }
-        echo "<tr>";
-        echo "<td>".$value."</td>"."<td>".$count."</td>";
-        echo "</tr>";
+	if ($count > 0) {
+            $value = str_replace("_", " ", $value);
+	    //        if (strlen($value) > 20) {
+	    //            $l = strlen($value) - 17;
+	    //            $offset = (strlen($value) - $l)/2;
+	    //            $value = substr($value, 0, 10)."...".substr($value, -10, 10); //substr_replace($value, '...', $offset, $l);
+	    //       }
+            echo "<tr>";
+            echo "<td>".$value."</td>"."<td>".$count."</td>";
+            echo "</tr>";
             //        $facet_text .= $value . ' [' . $count . ']<br/>';
+	}
     }
     echo "</table>"; 
     //print ($facet_text);  

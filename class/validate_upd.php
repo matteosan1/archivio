@@ -5,7 +5,6 @@ ini_set('display_startup_errors', 1); // SET IT TO 0 ON A LIVE SERVER !!!
 
 require_once "../view/config.php";
 require_once "../view/solr_client.php";
-require_once "../class/resize_image.php";
 
 function endsWith($haystack, $needle) {
     return substr_compare($haystack, $needle, -strlen($needle)) === 0;

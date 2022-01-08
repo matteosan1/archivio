@@ -21,7 +21,7 @@ require_once "../view/session.php";
 	</style>
     </head>
     <script type="text/javascript" src="js/autologout.js"></script>
-
+    
     <script type="text/javascript" src="js/search.js"></script>
     <script>
      $(function(){
@@ -50,11 +50,11 @@ require_once "../view/session.php";
 		    </div>
 		</div>
 		<div id="right" class="right" align="center">
-		    <table>
+		    <form enctype="multipart/form-data" action method="POST" id="new_search" name="new_search" class="new_search">		    <table>
 			<tr>
 			    <td>
-				<form enctype="multipart/form-data" action method="POST" id="new_search" name="new_search" class="new_search">
-				    <input type="text" size="50" id="query" name="query">
+				
+				<input type="text" size="50" id="query" name="query">
 			    </td>
 			    <td>
 				&nbsp;<button id="search" class="btn btn-sm btn-info btn-search-doc"><img src="/view/icons/plus.png">&nbsp;Cerca</button>
@@ -80,11 +80,11 @@ require_once "../view/session.php";
 			    </td>
 			</tr>
 		    </table>
-				</form>
-
-				<div id="query-result"></div>
-				<br>
-				<div id="pagination-result"></div>
+		    </form>
+		    
+		    <div id="query-result"></div>
+		    <br>
+		    <div id="pagination-result"></div>
 		</div>
 		<br><br>
 		<div id="footer" align="center"></div>

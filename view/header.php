@@ -13,6 +13,9 @@ echo "<table width=100%>";
 echo "<column width=20%>";
 echo "<column width=60%>";
 echo "<column width=20%>";
+echo "<tr><td colspan=3 align=\"center\">";
+echo "<img src=\"/img/titolo2.png\">";
+echo "</td></tr>";
 echo "<tr>";
 echo "<td valign=\"bottom\">";
 echo "<p style=\"text-valign:bottom; text-align:left;\">";
@@ -23,11 +26,8 @@ if ($new_notes != 0) {
 } else {
     echo "<a href=\"/view/view_notes.php\" class=\"button\"><img src=\"/view/icons/message.png\"></a>";
 }    
-echo "</td><td align=\"right\">";
-echo "<img src=\"/img/titolo2.png\"/>";
-echo "</td><td valign=\"bottom\">";           
-echo "<span style=\"float:right;\">";
-echo $GLOBALS['VERSION'];
+echo "</td><td></td>";
+echo "<td align=\"right\" valign=\"bottom\">".$GLOBALS['VERSION'];
 echo "<img src=\"/view/icons/username.png\" hspace=\"10\">".$displayName;
 if ($role == "admin") {
     echo "<a href=\"/view/management.php\" class=\"logout-button\"><img src=\"/view/icons/site_admin.png\" hspace=\"10\"></a>";

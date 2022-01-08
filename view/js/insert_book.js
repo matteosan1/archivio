@@ -28,6 +28,23 @@ function openPage(pageName, elmnt) {
     }
 }
 
+function sanityCheckLibro() {
+    //if (document.getElementById('tipologia').value == 0) {
+    //    alert ("La tipologia del documento e` obbligatoria.");
+    //    return false;
+    //}
+    
+    if (document.getElementById('titolo').value == "") {
+	alert ("Volume senza titolo ? uhm...");
+	return false;
+    }
+    
+    if (document.getElementById('anno').value == "") {
+	alert ("Devi specificare l'anno di pubblicazione per definire il codice_archivio.");
+	return false;
+    }
+}
+
 $(document).ready(function() {
     //$('#aggiorna').prop('disabled', true);
     setInterval(checkForWarning, 1000 * 60)
@@ -42,20 +59,7 @@ $(document).ready(function() {
             request.abort();
         }
 
-	//if (document.getElementById('tipologia').value == 0) {
-	//    alert ("La tipologia del documento e` obbligatoria.");
-	//    return false;
-	//}
-	
-        if (document.getElementById('titolo').value == "") {
-	    alert ("Volume senza titolo ? uhm...");
-	    return false;
-	}
-        
-        if (document.getElementById('anno').value == "") {
-	    alert ("Devi specificare l'anno di pubblicazione per definire il codice_archivio.");
-	    return false;
-	}
+	sanityCheckLibro();
 	
         request = $.ajax({            
             url: "../class/validate.php",

@@ -23,6 +23,7 @@ function convertDate($date) {
 
 
 function computeCodiceArchivio($doc, $anno=NULL) {
+    $m = new Member();
 
     if (is_null($anno)) {
 	$anno = $_POST['anno'];
@@ -36,25 +37,23 @@ function computeCodiceArchivio($doc, $anno=NULL) {
 	    $id = getLastByIndex($_POST['prefissi'].".".$_POST['anno']) + 1;
 	}
     } else {
-	$m = new Member();
 	$prefix = $m->getPrefisso($_POST["tipologia"]);
 	$id = getLastByIndex($prefix.".".$anno) + 1;
     }
 
-    if ($_POST['tipologia'] == "DELIBERA") {
-	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 3, "0", STR_PAD_LEFT);
-    } else if ($_POST['tipologia'] == "MONTURATO") {
+    $categories = $m->getAllCategories('book_categories', TRUE);
+    if ($_POST['tipologia'] == "VIDEO") {
 	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
-    } else if ($_POST['tipologia'] == "VIDEO") {
-	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 5, "0", STR_PAD_LEFT);
-    } else {
+    } elseif (in_array($_POST['tipologia'], $categories)) {
 	if ($prefix == "") {
 	    $codice_archivio = $anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
 	} else {
 	    $codice_archivio = $prefix.".".$anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
-	}
+	}	
+    } else {
+	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
     }
-
+    
     $doc->codice_archivio = $codice_archivio;
     $doc->tipologia = $_POST['tipologia'];
     $doc->anno = $anno;
@@ -103,7 +102,7 @@ function addPergamena() {
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
 
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Pergamena ".$doc->codice_archivio." inserita correttamente.");
 }
 
 function addBozzetto() {
@@ -125,7 +124,7 @@ function addBozzetto() {
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
 
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Bozzetto ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function multiFileMerge() {
@@ -227,7 +226,7 @@ function addDocumento() {
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     $results = rename($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
 
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Documento ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function addSonetto() {
@@ -252,8 +251,8 @@ function addSonetto() {
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     $results = rename($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
     chmod($GLOBALS['EDOC_DIR'].$doc->resourceName, 0644);
-
-    saveDocument($doc, $update);
+    
+    saveDocument($doc, $update, "Sonetto ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function addDelibera() {
@@ -280,7 +279,7 @@ function addDelibera() {
     }
 
     computeCodiceArchivio($doc, $anno);
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Delibera ".$doc->codice_archivio." inserita correttamente.");
 }
 
 function addMonturato() {
@@ -303,16 +302,16 @@ function addMonturato() {
 	    for ($i=1; $i<count($monturati); $i++) {
 		list($doc, $update) = createDocument();
 		computeCodiceArchivio($doc, $anno);
-		$doc->nome_cognome = $monturati[$i][0];
-		if (! $m->checkRuolo($monturati[$i][1])) {
-		    errorMessage("Ruolo ".ucwords($monturati[$i][1])." non riconosciuto.", $msgs);
+		$doc->nome_cognome = rtrim($monturati[$i][0]);
+		if (! $m->checkRuolo(rtrim($monturati[$i][1]))) {
+		    errorMessage("Ruolo ".ucwords(rtrim($monturati[$i][1]))." non riconosciuto.", $msgs);
 		}
-		$doc->ruolo = ucwords($monturati[$i][1]);
+		$doc->ruolo = ucwords(rtrim($monturati[$i][1]));
 		$doc->evento = $_POST['evento'];
 		$doc->data = convertDate($_POST['data']);
 		$doc->privato = 0;
 
-		$msgs = saveDocument($doc, $update, NULL, $msgs);
+		$msgs = saveDocument($doc, $update, "Monturato ".$doc->codice_archivio." inserito correttamente.", $msgs);
 	    }
 	    echo json_encode(array('result' => implode('<br>', $msgs)));
 
@@ -327,7 +326,7 @@ function addMonturato() {
 	$doc->evento = $_POST['evento'];
 	$doc->data = convertDate($_POST['data']);
 	$doc->privato = 0;
-	saveDocument($doc, $update);
+	saveDocument($doc, $update, "Monturato ".$doc->codice_archivio." inserito correttamente.");
     }
 }
 
@@ -360,7 +359,7 @@ function addStampa() {
     move_uploaded_file($tmp_filename, $GLOBALS['PHOTO_DIR'].$doc->codice_archivio.".".strtoupper($ext));
     $doc->resourceName = $codice_archivio.".".strtoupper($ext);
 
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Fotografia ".$doc->codice_archivio." inserita correttamente.");
 }
 
 function addLibro() {
@@ -387,7 +386,7 @@ function addLibro() {
 	exec($command, $output, $status);
     }
 
-    saveDocument($doc, $update);
+    saveDocument($doc, $update, "Libro ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function videoFileCheck($i) {
@@ -422,7 +421,7 @@ function addVideo() {
 
 	// FIXME PENSARE AD EVENTUALE THUMBNAIL PER VIDEO
 	move_uploaded_file($_FILES['videos']['tmp_name'][$i], $GLOBALS['VIDEO_DIR'].$doc->resourceName);
-	saveDocument($doc, $update);
+	saveDocument($doc, $update, "Video ".$doc->codice_archivio." inserito correttamente.");
     }
 }
 
