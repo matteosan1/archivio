@@ -2,7 +2,7 @@
 require_once '../view/formats.php';
 
 function deliberaOutput($document, $highlighting) {
-    $out = '<table class="result_table" width=90%>';
+    $out = '<table class="result_table" width=100%>';
     $field_conversion = array("codice_archivio"=>"Codice Archivio", "tipologia"=>"Tipologia",
                               "tipo_delibera"=>"Organo deliberante", "data"=>"Data", "argomento_breve"=>"Argomento",
                               "testo"=>"Testo", "straordinaria"=>"Straordinaria", "unanimita"=>"Unanimit&agrave");

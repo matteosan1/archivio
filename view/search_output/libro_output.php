@@ -2,7 +2,7 @@
 require_once '../view/formats.php';
 
 function libroOutput($document, $highlighting) {
-    $out = '<table class="result_table" width=90%>';
+    $out = '<table class="result_table" width=100%>';
     // FIXME mancano campi di sicuro
     $field_conversion = array("codice_archivio"=>"Codice Archivio", "titolo"=>"Titolo",
                               "sottotitolo"=>"Sottititolo", "prima_responsabilita"=>"Autore",

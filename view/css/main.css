@@ -23,6 +23,10 @@ body, html {
     border-bottom: 1px solid #888;
 }
 
+#footer {
+    color: blue;
+}
+
 #container {
     height: 100%;
     max-height: 100%;
@@ -62,11 +66,17 @@ body, html {
     position: relative;
 }
 
-.result_table {  
-    background-color:#f2f8fc;
+.result_table {
+    border: 1px solid black;
+    
+}
+
+.result_table tr {  
+    background-color:#CCFFCC;
 }
 
 .result_table th {
+    background-color:#CCFFCC;
     text-valign: middle;
     text-align: Right;
     padding: 5px;

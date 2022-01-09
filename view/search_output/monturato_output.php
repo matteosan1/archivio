@@ -2,7 +2,7 @@
 require_once '../view/formats.php';
 
 function monturatoOutput($document) {
-    $out = '<table class="result_table" width=90%>';
+    $out = '<table class="result_table" width=100%>';
     //$out .= "<column width=50px><column width=200px>";
     $field_conversion = array("codice_archivio"=>"Codice Archivio", "tipologia"=>"Tipologia", "data"=>"Data", "nome_cognome"=>"Nome", "ruolo"=>"Ruolo", "evento"=>"Evento");
     foreach ($field_conversion as $key => $value) {

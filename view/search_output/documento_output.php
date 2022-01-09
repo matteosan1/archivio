@@ -2,7 +2,7 @@
 require_once '../view/formats.php';
 
 function documentoOutput($document, $highlighting) {
-    $out = '<table class="result_table" width=90%>';
+    $out = '<table class="result_table" width=100%>';
     
     $field_conversion = array("codice_archivio"=>"Codice Archivio", "tipologia"=>"Tipologia", "titolo"=>"Titolo",
                               "autore"=>"Autore", "anno"=>"Anno", "size"=>"Dimensione",
