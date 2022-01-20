@@ -80,7 +80,7 @@ if (isset($_GET)) {
 	}
 	$localParams .= " AND (".implode(" OR ", $subarray).")";
     } else {
-      $localParams = "";
+	$localParams .= "";
     }
     #print ($localParams);
     $hl = $query->getHighlighting();

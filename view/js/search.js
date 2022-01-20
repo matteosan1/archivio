@@ -1,7 +1,7 @@
 var request;
 
 function openNewWindow(param) {
-    var myWindow = window.open(param, "", "scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+    var myWindow = window.open(param, "", "scrollbars=yes,resizable=yes,top=400,left=500,width=500,height=500");
 }
 
 $(document).ready(function() {
@@ -77,7 +77,7 @@ function getresult(page) {
     var edoc = document.getElementById("search_edoc");
     var mont = document.getElementById("search_mont");
     var delibera = document.getElementById("search_delibera");
-    
+
     var subsearch = 0;
     if (libri.checked) 
         subsearch += 1;

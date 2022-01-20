@@ -67,16 +67,16 @@ body, html {
 }
 
 .result_table {
-    border: 1px solid black;
+    border: 1px solid lightgrey;
     
 }
 
 .result_table tr {  
-    background-color:#CCFFCC;
+    background-color: #F2F8FC; //#CCFFCC;
 }
 
 .result_table th {
-    background-color:#CCFFCC;
+    background-color: #F2F8FC; //#CCFFCC;
     text-valign: middle;
     text-align: Right;
     padding: 5px;

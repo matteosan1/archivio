@@ -27,12 +27,12 @@ require_once "../view/session.php";
      $(function(){
          $("#footer").load("/view/footer.html");
      });
-     window.addEventListener('load', () => {
-         const button = document.querySelector('#clear');
-         button.addEventListener('click', () => {
-             document.querySelector('#enter').value = "";
-         });
-     });
+     //window.addEventListener('load', () => {
+         //const button = document.querySelector('#clear');
+     //    button.addEventListener('click', () => {
+     //        document.querySelector('#enter').value = "";
+     //    });
+     //});
     </script>
     <body>
 	<div id="scroll"></div>
@@ -70,11 +70,7 @@ require_once "../view/session.php";
 					<td><input type="checkbox" id="search_video" name="search_video"><label for="search_video">&nbsp;Video</label></td>
 					<td><input type="checkbox" id="search_edoc" name="search_edoc"><label for="search_edoc">&nbsp;eDoc</label></td>
 					<td><input type="checkbox" id="search_mont" name="search_mont"><label for="search_mont">&nbsp;Monturati</label></td>
-					<?php
-					if ($_SESSION['role'] == 'admin') {
-					    echo '<td><input type="checkbox" id="search_delibera" name="search_delibera"><label for="search_delibera">&nbsp;Delibere</label></td>';
-					}
-					?>
+					<td><input type="checkbox" id="search_delibera" name="search_delibera"><label for="search_delibera">&nbsp;Delibere</label></td>
 				    </tr>
 				</table>
 			    </td>
