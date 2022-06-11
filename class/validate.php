@@ -468,7 +468,16 @@ if (isset($_POST)) {
 	addDelibera();
     } else if ($_POST['tipologia'] == 'MONTURATO') {
 	addMonturato();
-    } else if ($_POST['tipologia'] == 'LIBRO') {
+    } else if (($_POST['tipologia'] == 'LIBRO') or
+    ($_POST['tipologia'] == 'PUBBLICAZIONE_DI_CONTRADA') or
+    ($_POST['tipologia'] == 'LIBRI_DELLA_LITURGIA') or
+    ($_POST['tipologia'] == 'MANOSCRITTO') or
+    ($_POST['tipologia'] == 'OPUSCOLO') or
+        ($_POST['tipologia'] == 'RIVISTA') or
+    ($_POST['tipologia'] == 'NUMERO_UNICO') or
+    ($_POST['tipologia'] == 'TESI') or
+    
+    ($_POST['tipologia'] == 'PERIODICO')) {
 	addLibro();
     } else {
 	errorMessage("Tipologia sconosciuta.");
