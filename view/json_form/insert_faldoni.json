@@ -1,0 +1,179 @@
+{
+    "id":"insert_form",
+    "class":"insert_form",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method" : "post",
+    "html":
+    [        
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+		{
+		    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Argomento: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "argomento_breve",
+                                    "id":   "argomento_breve",
+                                    "class":"argomento_breve",
+                                    "type":"select",
+	                            "options" : {
+	                            }
+                                }
+                            ]
+                        }
+		    ]
+		},
+		{
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Scansione (JPG, TIF): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"scan",
+                                    "id":"scan",
+                                    "type": "file",
+                                    "value": "",
+                                    "multiple":"multiple",
+                                    "accept": ".jpg,.jpeg,.tif,.tiff"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":    "inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Titolo: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "titolo",
+                                    "id":   "titolo",
+                                    "value": "",
+                                    "size":"50",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+		{
+                    "type":"tr",
+                    "html":
+                    [                     
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Anno: "
+                                }
+                            ]
+                     },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "anno",
+                                    "id":   "anno",
+                                    "value": "",
+				    "placeholder": "2020",
+                                    "size": "4",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Note: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"note",
+                                    "id":"note",
+                                    "type": "textarea",
+                                    "html": "",
+                                    "placeholder":"note",
+                                    "rows": "10",
+                                    "cols": "60"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

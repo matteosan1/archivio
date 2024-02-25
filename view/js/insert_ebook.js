@@ -134,7 +134,7 @@ $(document).ready(function() {
         });
         
         request.done(function (response) {
-	    console.debug(response);
+	    //console.debug(response);
             var data = JSON.parse(response);
             $('#insert_form').html("");
             $("#insert_form").dform(data);
@@ -168,7 +168,7 @@ $(document).ready(function() {
         });
 	
        	request.done(function (response) {
-	    console.log(response);
+	    //console.log(response);
 	    var dict = JSON.parse(response);
             if(dict.hasOwnProperty('error')){
 		setInterval(function() {$("#overlay").hide(); }, 500);

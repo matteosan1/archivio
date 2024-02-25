@@ -4,7 +4,8 @@ CORE=$1
 PORT=$2
 SOLR_DIR=$3
 
-OPTIONS="-s -k -u solr:SolrRocks -cacert /opt/solr/server/etc/solr-ssl.pem -X POST -H "Content-type:application/json" https://localhost:${PORT}/solr/${CORE}/schema --data-binary"
+#OPTIONS="-s -k -u solr:SolrRocks -cacert /opt/solr/server/etc/solr-ssl.pem -X POST -H "Content-type:application/json" http://localhost:${PORT}/solr/${CORE}/schema --data-binary"
+OPTIONS="-k -X POST -H "Content-type:application/json" http://localhost:${PORT}/solr/${CORE}/schema --data-binary"
 
 curl ${OPTIONS} '{"add-field":{"name":"privato","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}' 
 
@@ -25,6 +26,7 @@ curl ${OPTIONS} '{"add-field":{"name":"tecnica","type":"text_general","multiValu
 
 curl ${OPTIONS} '{"add-field":{"name":"data","type":"pdate","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"tipo_delibera","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
+curl ${OPTIONS} '{"add-field":{"name":"tipo_verbale","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"argomento_breve","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"testo","type":"text_general","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"unanimita","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
@@ -68,6 +70,7 @@ curl ${OPTIONS} '{"add-field":{"name":"size","type":"pint","multiValued":false,"
 curl ${OPTIONS} '{"add-field":{"name":"type","type":"text_general","docValues":false,"multiValued":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"pagine","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
 curl ${OPTIONS} '{"add-field":{"name":"parole","type":"pint","multiValued":false,"docValues":false,"indexed":true,"stored":true}}'
+
 #creator  By-line dc_creator dc_description
 
-${SOLR_DIR}/bin/solr config -c ${CORE} -p ${PORT} -action set-user-property -property update.autoCreateFields -value false
+#${SOLR_DIR}/bin/solr config -c ${CORE} -p ${PORT} -action set-user-property -property update.autoCreateFields -value false

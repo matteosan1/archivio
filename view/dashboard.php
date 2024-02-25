@@ -38,7 +38,7 @@ numberRows();
                     </td>
                 </tr>
                 <tr width=80%>
-                    <td colspan=2>
+                    <td colspan=3>
 			<?php
                         echo '<div align="center">';
 			printf ('<button onclick="location.href = %s;" id="myButton1" class="float-left submit-button" style="height:80px;width:150px"><img src="/view/icons/search.png">Ricerca</button>', "'/view/search.php'");
@@ -52,6 +52,15 @@ numberRows();
 			if ($role != "photo" and $role != "economato") {
 			    echo '<div align="center">';
 			    printf('<button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/insert_book2.png">Libri</button>', "'/view/insert_book.php'");       
+			    echo '</div>';
+			}
+			?>
+		    </td>
+			<td>
+			<?php		    
+			if ($role != "photo" and $role != "economato") {
+			    echo '<div align="center">';
+			    printf('<button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/faldoni.png">Faldoni</button>', "'/view/insert_faldoni.php'");
 			    echo '</div>';
 			}
 			?>
@@ -77,6 +86,8 @@ numberRows();
 			?>
 		    </td>
 		    <td>
+		    </td>
+		    <td>
 			<?php
 			if ($role != "economato") {
 			    echo '<div align="center">';
@@ -97,12 +108,12 @@ numberRows();
 			?>
 		    </td>
 		    <td>
+		    </td>
+		    <td>
 			<?php
-			if ($role == "admin") {
 			    echo '<div align="center">';
-			    printf('<button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/delibera.png">Delibere</button>', "'/view/insert_delibere.php'");
+			    printf('<button onclick="location.href = %s;" id="myButton1" class="btn-default" style="height:80px;width:150px"><img src="/view/icons/delibera.png">Delibere,&nbspVerbali</button>', "'/view/insert_verbali.php'");
 			    echo '</div>';
-			}
 			?>
 		    </td>
 		</tr>

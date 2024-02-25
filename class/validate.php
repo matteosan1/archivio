@@ -21,8 +21,7 @@ function convertDate($date) {
     return $date."T00:00:00Z";
 }
 
-
-function computeCodiceArchivio($doc, $anno=NULL) {
+function computeCodiceArchivio($doc, $anno=NULL, $table_name="book_categories") {
     $m = new Member();
 
     if (is_null($anno)) {
@@ -41,9 +40,9 @@ function computeCodiceArchivio($doc, $anno=NULL) {
 	$id = getLastByIndex($prefix.".".$anno) + 1;
     }
 
-    $categories = $m->getAllCategories('book_categories', TRUE);
+    $categories = $m->getAllCategories($table_name, TRUE);
     if ($_POST['tipologia'] == "VIDEO") {
-	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
+    	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
     } elseif (in_array($_POST['tipologia'], $categories)) {
 	if ($prefix == "") {
 	    $codice_archivio = $anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
@@ -51,9 +50,9 @@ function computeCodiceArchivio($doc, $anno=NULL) {
 	    $codice_archivio = $prefix.".".$anno.".".str_pad($id, 2, "0", STR_PAD_LEFT);
 	}	
     } else {
-	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
+    	$codice_archivio = $prefix.".".$anno.".".str_pad($id, 4, "0", STR_PAD_LEFT);
     }
-    
+
     $doc->codice_archivio = $codice_archivio;
     $doc->tipologia = $_POST['tipologia'];
     $doc->anno = $anno;
@@ -67,21 +66,45 @@ function getExt($filename) {
 }
 
 function createThumbnailAndStore($tmp_filename, $codice_archivio, $ext) {
-    //$tmp_filename = $_FILES['scan']['tmp_name'];
+    //$tmp_filename = $_FILES['scan']['tmp_name'][0]; // UHM MOLTO STRANO AVERCI DOVUTO METTERE [0]
     if ($ext == "pdf") {
-	$command = "gs -dSAFER -dNOPLATFONTS -dNOPAUSE -dBATCH -sOutputFile='".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg' -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseTrimBox -dFirstPage=1 -dLastPage=1 ".$tmp_filename;
+	$command = "gs -dSAFER -dNOPLATFONTS -dNOPAUSE -dBATCH -sOutputFile='".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg' -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -dUseTrimBox -dFirstPage=1 -dLastPage=1 ".$tmp_filename." 2>&1";
 	exec($command, $output, $status);
-	$command = $GLOBALS['CONVERT_BIN']." ".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	$command = $GLOBALS['CONVERT_BIN']." ".$GLOBALS['UPLOAD_DIR']."outputFileName.jpg -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG 2>&1";
 	exec($command, $output, $status);
     } else if ($ext == "doc" || $ext == "docx") {
 	return;
     } else {
-	$command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename." -resize x200 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	$command = $GLOBALS['CONVERT_BIN']." ".$tmp_filename." -resize x200 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
 	if ($ext == "tiff" or $ext == "tif") {
-	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ..".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
+	    $command = $GLOBALS['CONVERT_BIN']." ". $tmp_filename."[0] -resize x200 -colorspace sRGB -quality 80 ".$GLOBALS['THUMBNAILS_DIR'].$codice_archivio.".JPG";
 	}
 	exec($command, $output, $status);
     }
+}
+
+function addFaldone() {
+    list($doc, $update) = createDocument();
+
+    $tmp_filename = $_FILES['scan']['tmp_name'];
+    $ext = getExt($_FILES['scan']['name']);
+
+    $doc->argomento_breve = $_POST['argomento_breve'];
+    $doc->titolo = $_POST['titolo'];
+    $doc->note = $_POST['note'];
+    // FIXME MIGLIORARE LA SCELTA ANCHE SE NON SAPREI BENE COME
+    if ($_POST['tipologia'] == "LIBRI_VERBALI_E_DELIBERAZIONI") {
+        $doc->privato = 1;
+    } else {
+      	$doc->privato = 0;
+    }
+    
+    computeCodiceArchivio($doc);
+    //createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
+    $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
+    move_uploaded_file($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
+
+    saveDocument($doc, $update, "Documento faldone ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function addPergamena() {
@@ -127,15 +150,31 @@ function addBozzetto() {
     saveDocument($doc, $update, "Bozzetto ".$doc->codice_archivio." inserito correttamente.");
 }
 
+//if (!function_exists('is_countable')) {
+//    function is_countable($var) {
+//        return (is_array($var) || $var instanceof Countable);
+//    }
+//}
+
 function multiFileMerge() {
-    $countfiles = count($_FILES['scan']['name']);
-    $ext = getExt($_FILES['scan']['name'][0]);
+    if (is_countable($_FILES['scan']['name'])) {
+        $countfiles = count($_FILES['scan']['name']);
+    	$ext = getExt($_FILES['scan']['name'][0]);
+    } else {
+        $countfiles = 1;
+    	$ext = getExt($_FILES['scan']['name']);
+    }
 
     if ($ext != "docx" && $ext != "doc") {
 	$files = array();
 	for ($i=0; $i<$countfiles; $i++) {
 
-	    $tmp_filename = $_FILES['scan']['tmp_name'][$i];
+            if (is_countable($_FILES['scan']['tmp_name'])) {	
+	        $tmp_filename = $_FILES['scan']['tmp_name'][$i];
+	    } else {
+	        $tmp_filename = $_FILES['scan']['tmp_name'];
+	    }
+
 	    if ($ext == "jpg" || $ext == "jpeg" || $ext == "tif" || $ext == "tiff") {
 		$command = $GLOBALS['OCR_BIN']." ".$tmp_filename." ".$GLOBALS['UPLOAD_DIR']."/ocr".$i." -l ita pdf";
 		exec($command, $output, $status);
@@ -155,8 +194,12 @@ function multiFileMerge() {
 	$tmp_filename = $GLOBALS['UPLOAD_DIR']."/ocr.pdf";
 	$resourceExt = "pdf";
     } else {
-	$tmp_filename = $_FILES['scan']['tmp_name'][0];
-	$resourceExt = $ext;
+        if (is_countable($_FILES['scan']['tmp_name'])) {	
+      	   $tmp_filename = $_FILES['scan']['tmp_name'][$i];
+        } else {
+           $tmp_filename = $_FILES['scan']['tmp_name'];
+        }
+        $resourceExt = $ext;
     }
 
     $command = "python3 tika.py ".$tmp_filename." 2>&1";
@@ -178,54 +221,54 @@ function addDocumento() {
     list($tmp_filename, $ext, $json_data) = multiFileMerge();
 
     if (isset($data['cdate'])) {
-	$anno = substr($data['cdate'], 0, 4);
-	$doc->data = convertDate(substr($data['cdate'], 0, 4));
+    	$anno = substr($data['cdate'], 0, 4);
+    	$doc->data = convertDate(substr($data['cdate'], 0, 4));
     } else {
-	$anno = $_POST['anno'];
-	$doc->data = convertDate("1000-01-01");
+    	$anno = $_POST['anno'];
+    	$doc->data = convertDate("1000-01-01");
     }
-
+    
     $doc->anno = $anno;
     $doc->note = $_POST['note'];
     $doc->titolo = $_POST['titolo'];
     $doc->autore = $_POST['autore'];
     $doc->privato = 0;
-
+    
     $keys = NULL;
     if ($ext == "pdf") {
-	$keys = array('size', 'type', 'mdate', 'testo', 'pagine');
+    	$keys = array('size', 'type', 'mdate', 'testo', 'pagine');
     } elseif ($ext == "doc" || $ext == "docx") {
-	$keys = array('size', 'type', 'mdate', 'pagine', 'parole', 'testo');
+    	$keys = array('size', 'type', 'mdate', 'pagine', 'parole', 'testo');
     }
     //    $keys = array(''pagine');
     //} elseif ($ext == "doc" || $ext == "docx") {
     //    keys = array('pagine', 'parole');
-
+    
     if (!is_null($keys)) {
-	foreach ($keys as $key) {
-	    if ($key == 'pagine' || $key == 'parole' || $key == 'size') {
-		if ($json_data[$key] != "") {
-		    $doc->$key = (int)$json_data[$key];
-		} else {
-		    $doc->$key = 0;
-		}
-	    } elseif ($key == 'mdate') {
-		if ($json_data[$key] != "") {
-		    $doc->$key = convertDate($json_data[$key]);
-		} else {
-		    $doc->$key = convertDate("1000-01-01");
-		}
-	    } else {
-		$doc->$key = $json_data[$key];
-	    }
-	}
+    	foreach ($keys as $key) {
+    	    if ($key == 'pagine' || $key == 'parole' || $key == 'size') {
+    		if ($json_data[$key] != "") {
+    		    $doc->$key = (int)$json_data[$key];
+    		} else {
+    		    $doc->$key = 0;
+    		}
+    	    } elseif ($key == 'mdate') {
+    		if ($json_data[$key] != "") {
+    		    $doc->$key = convertDate($json_data[$key]);
+    		} else {
+    		    $doc->$key = convertDate("1000-01-01");
+    		}
+    	    } else {
+    		$doc->$key = $json_data[$key];
+    	    }
+    	}
     }
-
+    
     computeCodiceArchivio($doc, $anno);
     createThumbnailAndStore($tmp_filename, $doc->codice_archivio, $ext);
     $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
     $results = rename($tmp_filename, $GLOBALS['EDOC_DIR'].$doc->resourceName);
-
+    
     saveDocument($doc, $update, "Documento ".$doc->codice_archivio." inserito correttamente.");
 }
 
@@ -280,6 +323,58 @@ function addDelibera() {
 
     computeCodiceArchivio($doc, $anno);
     saveDocument($doc, $update, "Delibera ".$doc->codice_archivio." inserita correttamente.");
+}
+
+function addVerbale() {
+    list($doc, $update) = createDocument();
+
+    list($tmp_filename, $ext, $json_data) = multiFileMerge();
+
+    $anno = substr($_POST['data'], 0, 4);
+    $doc->data = convertDate($_POST['data']);
+
+    $keys = NULL;
+    if ($ext == "pdf") {
+    	$keys = array('size', 'type', 'mdate', 'testo', 'pagine');
+    } elseif ($ext == "doc" || $ext == "docx") {
+    	$keys = array('size', 'type', 'mdate', 'pagine', 'parole', 'testo');
+    }
+    //    $keys = array(''pagine');
+    //} elseif ($ext == "doc" || $ext == "docx") {
+    //    keys = array('pagine', 'parole');
+
+    if (!is_null($keys)) {
+    	foreach ($keys as $key) {
+    	    if ($key == 'pagine' || $key == 'parole' || $key == 'size') {
+    		if ($json_data[$key] != "") {
+    		    $doc->$key = (int)$json_data[$key];
+    		} else {
+    		    $doc->$key = 0;
+    		}
+    	    } elseif ($key == 'mdate') {
+    		if ($json_data[$key] != "") {
+    		    $doc->$key = convertDate($json_data[$key]);
+    		} else {
+    		    $doc->$key = convertDate("1000-01-01");
+    		}
+    	    } else {
+    		$doc->$key = $json_data[$key];
+    	    }
+    	}
+    }
+
+    $doc->tipo_verbale = $_POST['tipo_verbale'];
+    $doc->num_contestuale = $_POST['num_contestuale'];
+    
+    if ($_POST['tipo_verbale'] == "Seggio") {
+	$doc->privato = 1;
+    } else {
+	$doc->privato = 0;
+    }
+
+    computeCodiceArchivio($doc, $anno);
+    $doc->resourceName = $doc->codice_archivio.".".strtoupper($ext);
+    saveDocument($doc, $update, "Delibera ".$doc->codice_archivio." inserito correttamente.");
 }
 
 function addMonturato() {
@@ -455,6 +550,15 @@ function saveDocument($doc, $update, $msg=NULL, $multi=NULL) {
     echo json_encode(array('result' => $msg));
 }
 
+// FIXME
+$faldone_cats = array('STATUTI_E_REGOLAMENTI','LIBRI_VERBALI_E_DELIBERAZIONI','ELEZIONI',
+	              'ORATORIO_E_AFFARI_DI_CULTO','AFFARI_INTERNI','PROTETTORATO','BENI_IMMOBILI',
+		      'PATRIMONIO_ARTISTICO_MUSEO_ARCHIVIO','COSTUMI','ECONOMATO','PROTOCOLLI_CORRISPONDENZA',
+		      'CARRIERE_E_PUBBLICI_SPETTACOLI','CELEBRAZIONI_RICORRENZE_ATTIVITA_CULTURALI',
+		      'TERRITORIO','CONTABILITA_GENERALE','MISCELLANEA','PRESIDENTI_SOCIETA',
+		      'SOC_PUBBLICHE_RAPPRESENTANZE','SOC_IL_RISORGIMENTO','SOC_UNIONE',
+		      'SOC_AVANGUARDISTA','SOC_IL_LEONE','CIRCOLO_IL_LEONE');
+
 if (isset($_POST)) {
     if ($_POST['tipologia'] == "PERGAMENA") {
 	addPergamena();
@@ -466,18 +570,21 @@ if (isset($_POST)) {
 	addSonetto();
     } else if ($_POST['tipologia'] == 'DELIBERA') {
 	addDelibera();
+    } else if ($_POST['tipologia'] == 'VERBALE') {
+        addVerbale();
     } else if ($_POST['tipologia'] == 'MONTURATO') {
 	addMonturato();
+    } else if (in_array($_POST['tipologia'], $faldone_cats)) {
+        addFaldone();
     } else if (($_POST['tipologia'] == 'LIBRO') or
-    ($_POST['tipologia'] == 'PUBBLICAZIONE_DI_CONTRADA') or
-    ($_POST['tipologia'] == 'LIBRI_DELLA_LITURGIA') or
-    ($_POST['tipologia'] == 'MANOSCRITTO') or
-    ($_POST['tipologia'] == 'OPUSCOLO') or
-        ($_POST['tipologia'] == 'RIVISTA') or
-    ($_POST['tipologia'] == 'NUMERO_UNICO') or
-    ($_POST['tipologia'] == 'TESI') or
-    
-    ($_POST['tipologia'] == 'PERIODICO')) {
+      ($_POST['tipologia'] == 'PUBBLICAZIONE_DI_CONTRADA') or
+      ($_POST['tipologia'] == 'LIBRI_DELLA_LITURGIA') or
+      ($_POST['tipologia'] == 'MANOSCRITTO') or
+      ($_POST['tipologia'] == 'OPUSCOLO') or
+      ($_POST['tipologia'] == 'RIVISTA') or
+      ($_POST['tipologia'] == 'NUMERO_UNICO') or
+      ($_POST['tipologia'] == 'TESI') or
+      ($_POST['tipologia'] == 'PERIODICO')) {
 	addLibro();
     } else {
 	errorMessage("Tipologia sconosciuta.");

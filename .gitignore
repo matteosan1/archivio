@@ -1,3 +1,7 @@
-covers
-thumb
-vendor
+*~
+edoc
+thumbnails
+copertine
+archivio
+backup
+*.pyc

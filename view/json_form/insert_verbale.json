@@ -1,0 +1,145 @@
+{
+    "id":"insert_form",
+    "class":"insert_form",
+    "enctype":"multipart/form-data",
+    "action":"",
+    "method":"post",
+    "html":
+    [
+        {
+            "type":"table",
+            "width":"80%",
+            "html" :
+            [
+                {
+                    "type":"tr",                            
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Scansione (JPG, TIF, PDF, DOCX): "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name":"scan",
+                                    "id":"scan",
+                                    "type": "file",
+                                    "value": "",
+                                    "accept": ".jpg,.jpeg,.pdf,.doc,.docx,.tif,.tiff"
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html":
+                            [
+                                {
+                                    "value":"Inserisci",
+                                    "id":   "inserisci",
+				    "class":"inserisci",
+                                    "type": "submit"
+                                }
+                            ]
+                        }
+                    ]
+                }, 		
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Organismo: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "id":   "tipo_verbale",
+                                    "type":"select",
+	                            "options" : {
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+		},
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Data: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "data",
+                                    "id":   "data",
+                                    "type" : "text",
+                                    "placeholder":"AAAA-MM-GG",
+                                    "size":"12"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type":"tr",
+                    "html":
+                    [
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "type":"label",
+                                    "html":"Posizione: "
+                                }
+                            ]
+                        },
+                        {
+                            "type":"td",
+                            "html" :
+                            [
+                                {
+                                    "name": "num_contestuale",
+                                    "id":   "num_contestuale",
+                                    "value": "",
+                                    "cols":"10",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]                    
+                }
+            ]
+        }
+    ]
+}
+

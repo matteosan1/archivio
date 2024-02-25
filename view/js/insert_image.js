@@ -14,6 +14,7 @@ function openPage(pageName, elmnt) {
 }
 
 $(document).ready(function() {
+    
     setInterval(checkForWarning, 1000 * 60)
     $('html, body').animate({
         scrollTop: $('#scroll').scrollTop(0)
@@ -29,12 +30,13 @@ $(document).ready(function() {
         });
         
         request.done(function (response) {
-            console.debug(response);
+	    console.debug(response);
             var data = JSON.parse(response);
-            $('#insert_form').replaceWith('<form class="insert_form" id="insert_form"></form>');
-            $("#insert_form").dform(data);
+            $('#insert_form').html("");
+            //$("#insert_form").dform(data);
             return false;
         });
+	return true;
     });
 
     $(document).on('change', '.tagl1', function() {

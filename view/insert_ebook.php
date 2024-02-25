@@ -35,7 +35,7 @@ $categories = $m->getAllCategories("ebook_categories");
 
 	<div id="content">
 	    <div class="tab">
-  		<div class="testo" align="center"><h2>Bozzetti, Sonetti, Pergamene...</h2></div>
+  		<div class="testo" align="center"><h2>Documenti</h2></div>
 		<button class="tablink" onclick="openPage('Insert', this)">Inserimento</button>
 		<button class="tablink" onclick="openPage('Update', this)">Aggiornamento</button>
 		<button class="tablink" onclick="openPage('Delete', this)">Cancellazione</button>

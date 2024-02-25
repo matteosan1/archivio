@@ -106,6 +106,15 @@ function utf8enc($array, $data, $book=1) {
 }
 
 function findItem($cod) {
+    // FIXME 
+    $faldone_cats = array('STATUTI_E_REGOLAMENTI','LIBRI_VERBALI_E_DELIBERAZIONI','ELEZIONI',
+     		          'ORATORIO_E_AFFARI_DI_CULTO','AFFARI_INTERNI','PROTETTORATO','BENI_IMMOBILI',
+		  	  'PATRIMONIO_ARTISTICO_MUSEO_ARCHIVIO','COSTUMI','ECONOMATO','PROTOCOLLI_CORRISPONDENZA',
+		      	  'CARRIERE_E_PUBBLICI_SPETTACOLI','CELEBRAZIONI_RICORRENZE_ATTIVITA_CULTURALI',
+		      	  'TERRITORIO','CONTABILITA_GENERALE','MISCELLANEA','PRESIDENTI_SOCIETA',
+		      	  'SOC_PUBBLICHE_RAPPRESENTANZE','SOC_IL_RISORGIMENTO','SOC_UNIONE',
+		      	  'SOC_AVANGUARDISTA','SOC_IL_LEONE','CIRCOLO_IL_LEONE');
+
     global $client;
     $m = new Member();
     $libri = $m->getAllCategories("book_categories", true);
@@ -140,12 +149,16 @@ function findItem($cod) {
             $filename = $dir."update_libro.json";
         } else if ($res['tipologia'] == "DELIBERA") {
             $filename = $dir."update_delibera.json";
+	} else if ($res['tipologia'] == "VERBALE") {
+	    $filename = $dir."update_verbale.json";
         } else if ($res['tipologia'] == 'VIDEO') {
             $filename = $dir."update_video.json";
         } else if ($res['tipologia'] == 'MONTURATO') {
             $filename = $dir."update_vestizione.json";
 	} else if ($res['tipologia'] == 'DOCUMENTO') {
 	    $filename = $dir."update_doc.json";
+	} else if (in_array($res['tipologia'], $faldone_cats)) {
+	    $filename = $dir."update_faldoni.json";
         }
     } else {
         $res = array('error'=>"ERRORE CI SONO TROPPI DOCUMENTI");
@@ -172,6 +185,8 @@ function findItem($cod) {
         if ($res['straordinaria'] == 0) {
             unset($json['html'][0]['html'][6]['html'][1]['html'][0]['checked']);
         }
+    } else if ($res['tipologia'] == "VERBALE") {
+	$json = addOptionsUpd($res['tipo_verbale'], $m, 'verbale_categories', 'name', 'id', $json, 2, 1, 0);
     } else if ($res['tipologia'] == "PERGAMENA") {
 	$json = addOptionsUpd($res['tecnica'], $m, 'pergamena_techniques', 'name', 'id', $json, 3, 1, 0);
     } else if ($res['tipologia'] == "SONETTO") {
@@ -179,12 +194,14 @@ function findItem($cod) {
     } else if ($res['tipologia'] == "MONTURATO") {
 	$json = addOptionsUpd($res['evento'], $m, 'ricorrenze', 'ricorrenza', 'ricorrenza', $json, 2, 1, 0);
 	$json = addOptionsUpd($res['ruolo'], $m, 'ruoli_monturati', 'ruolo', 'ruolo', $json, 3, 1, 0);
+    } else if (in_array($res['tipologia'], $faldone_cats)) {
+        $json = addOptionsUpd($res['argomento_breve'], $m, "faldoni_categories", 'name', 'name', $json, 0, 1, 0, "", $res['tipologia']); 
     }
     print_r (json_encode($json));
 }
 
-function addOptionsUpd($r, $m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="") {
-    $cat = $m->fillCombo($db, $field, $ord);
+function addOptionsUpd($r, $m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="", $selection="") {
+    $cat = $m->fillCombo($db, $field, $ord, $selection);
     $i = 0;
     foreach ($cat as $row) {
 	$data = $row[$field];
@@ -226,7 +243,7 @@ function addOptions($m, $db, $field, $ord, $json, $i2, $i3, $i4, $custom_idx="",
     return $json;
 }
 
-function newItem($type) {
+function newItem($type, $subtype="") {
     $dir = "../view/json_form/";
     if ($type == 'LIBRO'	) {
 	$filename = $dir."insert_libro.json";
@@ -237,24 +254,29 @@ function newItem($type) {
     } else if ($type == "PERGAMENA") {
 	$filename = $dir."insert_pergamena.json";
     } else if ($type == "FOTOGRAFIA") {
-	$filename = $dir."insert_photo.json";
+        $filename = $dir."empty.json";
+	//$filename = $dir."insert_photo.json";
     } else if ($type == "STAMPA" or $type == "LASTRA") {
 	$filename = $dir."insert_stampa.json";
     } else if ($type == "VIDEO") {
 	$filename = $dir."insert_video.json";
     } else if ($type == "DELIBERA") {
 	$filename = $dir."insert_delibera.json";
+    } else if ($type == "VERBALE") {
+        $filename = $dir."insert_verbale.json";
     } else if ($type == "VESTIZIONE") {
 	$filename = $dir."insert_vestizione.json";
     } else if ($type == "DOCUMENTO") {
 	$filename = $dir."insert_doc.json";
+    } else if ($type == "FALDONI") {
+        $filename = $dir."insert_faldoni.json";
     } else if ($type == "----") {
 	$filename = $dir."empty.json";
     }
 
     $str = file_get_contents($filename);
     $json = json_decode($str, true);
-
+    
     $m = new Member();
     if ($type == "LIBRO") {
 	$json = addOptions($m, "codice_archivio", 'prefix', 'prefix', $json, 0, 1, 0, 'prefix');
@@ -267,7 +289,7 @@ function newItem($type) {
 	} else {
 	    $json['html'][0]['html'][0]['html'][0]['html'] = "Lastra (JPG o TIFF): ";
 	}
-	$json = addOptions($m, "tags", '', '', $json, 3, 1, 0);
+	$json = addOptions($m, "tags", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "BOZZETTO") {
 	$json = addOptions($m, "bozzetto_categories", 'name', 'id', $json, 1, 1, 0);
 	$json = addOptions($m, "bozzetto_techniques", 'name', 'id', $json, 3, 1, 0);
@@ -275,11 +297,15 @@ function newItem($type) {
 	$json = addOptions($m, "pergamena_techniques", 'name', 'id', $json, 2, 1, 0);
     } else if ($type == "DELIBERA") {
 	$json = addOptions($m, "delibera_categories", 'name', 'id', $json, 2, 1, 0);
+    } else if ($type == "VERBALE") {
+        $json = addOptions($m, "verbale_categories", 'name', 'id', $json, 1, 1, 0);
     } else if ($type == "SONETTO") {
 	$json = addOptions($m, "sonetto_events", 'name', 'id', $json, 3, 1, 0);
     } else if ($type == "VESTIZIONE") {
 	$json = addOptions($m, "ricorrenze", 'ricorrenza', 'ricorrenza', $json, 0, 1, 0, 'ricorrenza');
 	$json = addOptions($m, "ruoli_monturati", 'ruolo', 'ruolo', $json, 1, 1, 0, 'ruolo');
+    } else if ($type == "FALDONI") {
+        $json = addOptions($m, "faldoni_categories", 'name', 'name', $json, 0, 1, 0, "", $subtype);
     }
 
     print_r (json_encode($json));
@@ -378,7 +404,11 @@ if (isset($_POST['callback'])) {
     if ($_POST['callback'] == 'finditem') {
 	findItem($_POST['codice_archivio']);
     } else if ($_POST['callback'] == 'newitem') {
-	newItem($_POST['type']);
+      	if (isset($_POST['subtype'])) {
+	   newItem($_POST['type'], $_POST['subtype']);
+	} else {
+	  newItem($_POST['type']);
+	}
     } else if ($_POST['callback'] == 'backup') {
 	backup($_POST['last_upload']);
     } else if ($_POST['callback'] == 'restore') {

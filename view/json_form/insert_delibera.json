@@ -1,5 +1,6 @@
 {
-    "id":"new_delibera",
+    "id":"insert_form",
+    "class":"insert_form",
     "enctype":"multipart/form-data",
     "action":"",
     "method":"post",

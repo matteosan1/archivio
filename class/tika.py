@@ -1,4 +1,3 @@
-#! /usr/bin/python3
 import json, sys, datetime
 from subprocess import Popen, PIPE
 from utils import readConfiguration
@@ -8,7 +7,7 @@ from utils import readConfiguration
 filename = sys.argv[1]
 G = readConfiguration()
 
-command = "/usr/bin/java -jar " + G['TIKA_APP'] + " -j -t -J '" + filename + "'"
+command = f"/usr/bin/java -jar {G['TIKA_APP']} -j -t -J '{filename}'"
 
 with Popen(command, stdout=PIPE, stderr=PIPE, shell=True) as process:
     output, error = process.communicate()
@@ -52,7 +51,10 @@ try:
     elif "jpeg" in d['Content-Type']:
         keys = {'Content-Length':'size', 'Content-Type':'type', 'File Modified Date':'cdate', 'X-TIKA:content':'testo', 'resourceName':'resourceName'}
         for k, v in keys.items():
-            payload[v] = d[k]
+            if k not in d:
+                payload[v] = ""
+            else:
+                payload[v] = d[k]
         payload['note'] = ''
         payload['titolo'] = ''
         payload['autore'] = ''

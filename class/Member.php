@@ -24,7 +24,6 @@ class Member
 
     function getAllCategories($table_name="book_categories", $only_names=false)
     {
-	$group = 1;
 	if ($table_name == 'ebook_categories') {
 	    $group = 2;
         } else if ($table_name == 'photo_categories') {
@@ -33,12 +32,17 @@ class Member
             $group = 3;
         } else if ($table_name == 'digital_photo') {
             $group = 3;
-        }  else if ($table_name == 'delibera_categories') {
+        } else if ($table_name == 'verbale_categories') {
             $group = 6;
-        }  else if ($table_name == 'vestizione_categories') {
+        } else if ($table_name == 'vestizione_categories') {
             $group = 4;
-        }
-        
+        } else if ($table_name == 'faldoni_categories') {
+	    $group = 7;
+	} else {
+	  $group = 1;
+	}
+
+	// AGGIUNGERE ORDINAMENTO OPZIONALE
 	if ($table_name == 'all') {
             $query = "SELECT * FROM categories";
 	} else {
@@ -299,15 +303,19 @@ class Member
     
     function fillCombo($table_name, $col_name="name", $ord_col="name", $cgroup=NULL)
     {
-	if (! is_null($cgroup)) {
+	if (! is_null($cgroup) && $table_name != "faldoni_categories") {
 	   return $this->getAllCategories();
 	}
 
         if ($table_name == "tags") {
             return $this->getL1Tags();
         }
-        
-        $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$col_name;
+
+	if ($table_name == "faldoni_categories") {
+	   $query = "SELECT ".$col_name." FROM ".$table_name." WHERE parent='".$cgroup."' ORDER BY ".$ord_col;
+	} else {
+            $query = "SELECT ".$col_name." FROM ".$table_name." ORDER BY ".$ord_col;
+	}
 	
         $paramType = array();
     	$paramArray = array();
